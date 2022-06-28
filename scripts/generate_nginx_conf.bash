@@ -1,10 +1,20 @@
+#!/bin/bash
 # write the conf for nginx
 #
 
+if [ "$#" -lt 3 ]; then
+    echo "Illegal number of parameters"
+    echo "$0 SERVER_NAME IP_ALLOWED ROOT_PATH"
+    echo "Example:"
+    echo "$0 localhost 143.89.0.0/16 ../arxiv"
+    echo "or"
+    echo "$0 localhost all ../arxiv"
+    exit 
+fi
 
-SERVER_NAME=kez371.ust.hk
-IP_ALLOWED=143.89.0.0/16
-ROOT_PATH=../arxiv
+SERVER_NAME=$1
+IP_ALLOWED=$2
+ROOT_PATH=$3
 #-----------------------------Change the SERVER_NAME, IP_ALLOWED, ROOT_PATH properly.----------------
 #-----------------------------Do NOT change any other settings below
 
@@ -93,7 +103,7 @@ http {
 
         root $ROOT_PATH;
 	    listen 8709;
-        server_name localhost ${SERVER_NAME};
+        server_name ${SERVER_NAME} localhost;
 
 
         location / {

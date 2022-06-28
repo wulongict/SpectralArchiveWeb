@@ -1,0 +1,9 @@
+html{
+font-size: 0.75rem;
+}
+.container-fluid{
+    width: 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+    
+}

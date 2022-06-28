@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <style>
+        .links line {
+            /*stroke: #999;*/
+            /*stroke-opacity: 0.6;*/
+        }
+
+        .nodes circle {
+            stroke: #fff;
+            /*stroke-width: 1.5px;*/
+        }
+    </style> -->
+
+<style>
+    #networksvg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .links line {
+      /*stroke: #999;*/
+      /*stroke-opacity: 0.6;*/
+    }
+
+    .nodes circle {
+      stroke: #fff;
+      cursor: pointer;
+      /*stroke-width: 1.5px;*/
+    }
+
+    .contextmenu {
+      position: absolute;
+      padding: 0px;
+      background: #fff;
+      color: #555;
+      border: 1px solid #C6C6C6;
+    }
+
+    .contextmenu a {
+      display: block;
+      color: #555;
+      padding: 2px;
+      cursor: default;
+    }
+
+    .contextmenu a:hover {
+      color: #fff;
+      background: #3879D9;
+    }
+
+    .tooltip-inner {
+      max-width: 100% !important;
+      /* text-align: left !important; */
+    }
+
+    #denovoplot {
+      width: 100%;
+      overflow: auto;
+      border: 1px solid lightgrey;
+    }
+
+    #nodestable tbody tr td:first-child {
+      cursor: pointer;
+    }
+  </style>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="/lorikeet/css/my.css" rel="stylesheet" type="text/css">
+    <!-- <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script> -->
+    <!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- add our script for bootstrap -->
+
+    <!-- We are happy now -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+
+
+    <!-- this is the code for Data Table, responsive: -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../run.js"></script>
+    <script src="../shared_functions.js"></script>
+
+
+    <!-- those are for lorikeet -->
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js" ></script> -->
+    <script type="text/javascript" src="/lorikeet/js/jquery.flot.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/jquery.flot.selection.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/specview.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/peptide.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/aminoacid.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/ion.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/internal.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lorikeet/css/lorikeet.css">
+
+
+    <title>Cloud Search Cluster Viewer</title>
+</head>
+
+
+<!-- The header are the same -->
+
+<body>
+
+
+    <div class="container-fluid" id="archive_navigation_bar">
+    </div>
+
+    <!-- Searching a Local file in mz format -->
+    <div class="container-fluid">
+
+        <div class="row-no-padding   bg-light ">
+            <ul class="container-fluid nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#networkMaindiv">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#psmviewerdiv">PSM Viewer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#nodesdiv">Nodes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#linksdiv">Edges(X,Y)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#denovodiv">De Novo</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="tab-content container-fluid">
+            <!-- Spectral network, the force directed graph -->
+            <div class="container-fluid tab-pane active" id="networkMaindiv" style="width:100%">
+                
+                <div class="row-no-padding   bg-light ">
+                    <ul class="nav nav-tabs" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#queryParam">Query</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#menu1">Visualization</a>
+                      </li>
+                      <!--
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#menu2">Query</a>
+                      </li>
+                      -->
+                    </ul>
+                  </div>
+          
+                  <!-- Tab panes -->
+                  <div class="tab-content container-fluid" style="border: 1px solid lightgrey; border-top: none;">
+          
+                    <div id="queryParam" class="container-fluid tab-pane active">
+                        <div class="row no-gutters">
+                            <!-- Main Parameters -->
+                            <div class="form-row col-12  no-gutters">
+        
+                                <!-- open file  -->
+                                <div class="form-group col-2 col-md-4 col-lg-3  col-sm-1 col-xd-1">
+                                    <label for="newfile">
+                                        <a href="#" data-toggle="tooltip" title="Open local file">
+                                            Open file
+                                        </a>
+                                    </label>
+                                    <input id="newfile" type="file" class="form-control" />
+        
+                                </div>
+                                <!-- search prev -->
+                                <div class="form-group col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1 align-self-end align-bottom">
+                                    <button id="filesearchbtnPre" type="button"
+                                        class="btn btn-primary form-control">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                          </svg>
+                                        <!-- Previous -->
+                                    </button>
+                                </div>
+                                <!-- spectrum id -->
+                                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 align-self-end align-bottom">
+                                    <input type="text" class="form-control" id="specid" name="specid" onsubmit="return false;"
+                                        value="1">
+                                </div>
+                                <!-- search next  -->
+                                <div class="form-group col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1 align-self-end align-bottom">
+                                    <button id="filesearchbtnNext" type="button"
+                                        class="btn btn-primary form-control">
+                                        <!-- Next -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                          </svg>
+                                    </button>
+                                </div>
+                                <!-- search button on cloud  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2 align-self-end align-bottom">
+                                    <button id="filesearchbtn" type="button" class="btn btn-primary form-control"
+                                        onmousedown="return false">
+                                        Cloud Search
+                                    </button>
+                                </div>
+        
+                                <!-- something unknow -->
+                                <div class="form-group col-sm-6 col-lg-6" style="display: none;">
+                                    <div id="result"></div>
+                                    <div id="specs"> </div>
+        
+                                </div>
+                                <!-- label on off  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2 align-self-end align-bottom">
+                                    <button id="peptidelabelbtn" type="button" class="btn btn-primary form-control">
+                                        Label ON/OFF
+                                    </button>
+                                </div>
+                                <!-- Search button  -->
+                                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 align-self-end align-bottom"
+                                    style="display: none;">
+                                    <button id="searchbtn" type="button" class="btn btn-primary form-control">Search</button>
+                                </div>
+        
+                              
+                            </div>
+        
+                        </div>
+                    </div>
+
+                    <div id="menu1" class="container-fluid tab-pane fade">
+                        <div class="row no-gutters">
+                            <!-- Main Parameters -->
+                            <div class="form-row col-12  no-gutters">
+      
+   
+                                <!-- Port  -->
+                                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                                    <label for="port">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="the port for searching service. Default: 8700; Valid range  8700~8710">
+                                            Port
+                                        </a>
+                                    </label>
+                                    <select class="form-control " id="port" onchange="portOnChange()">
+                                        <option value="8701">8701</option>
+                                        <option value="8702">8702</option>
+                                        <option value="8703">8703</option>
+                                        <option value="8708">8708</option>
+                                        <option value="8709" selected>8709</option>
+                                    </select>
+                                </div>
+                                <!-- Coloring method  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="peptidecolor">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="The methods for coloring peptides: use sequence determined color, or use group based color.">
+                                            Coloring Method
+                                        </a>
+                                    </label>
+                                    <select class="form-control" id="peptidecolor" onchange="peptidecolorchanged()">
+                                        <option value=group>group</option>
+                                        <option value=sequence selected>sequence</option>
+        
+                                    </select>
+        
+                                </div>
+        
+                                
+                                <!-- Width  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2"  style="display: none;">
+        
+                                    <label for="svgwidth">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="the width of svg figure for spectral network visualization. Valid range: 700 ~ 1700">
+                                            Width
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="svgwidth" name="svgwidth" value="800">
+                                </div>
+                                <!-- Height  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2"  style="display: none;">
+        
+                                    <label for="svgheight">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="the height of svg figure for spectral network visualization. Valid range: 700 ~ 1700">
+                                            Height
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="svgheight" name="svgheight" value="800">
+                                </div>
+                                <!-- Gravity Strength  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+        
+                                    <label for="svggravitystrength">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="the strength of gravity to the center of the svg figure for spectral network visualization. Valid range: 0.01 ~ 100">
+                                            Gravity Strength
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="svggravitystrength" name="svggravitystrength"
+                                        value="0.1">
+                                </div>
+                                <!-- Neighbors  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+        
+                                    <label for="topn">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Number of items returned in each round. Valid range: 1 ~ 80">
+                                            #Neighbours
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="topn" name="topn" value="20">
+                                </div>
+                                <!-- Node size  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="nodesize">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Size of the node in network plot. Valid range: 1 ~ 12">
+                                            Node Size
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="nodesize" name="nodesize" value="6">
+                                </div>
+        
+                                <!-- Max Dist  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="MAXDist">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Maximal Euclidian distance allowed to draw a edge. Valid range: 0.01 to 1.414. L2[x,y]=sqrt(2-2*cos[x,y]); L2<0.8 ~ Cos>0.68">
+                                            Max Distance
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="MAXDist" name="MAXDist" value="0.8" onchange="update_with_max_dist()"  />
+                                </div>
+                                <!-- Prob Score  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="ProbType">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="The type of probability score to be used to filter PSMs. Significance, is either binary indicator for whether a PSM node is significant(above FDR<0.01 threshold) or not ">
+                                            Probability Score
+                                        </a>
+                                    </label>
+                                    <select class="form-control" id="ProbType" onchange="peptidecolorchanged()">
+                                        <option value=Significance selected>Significance</option>
+                                        <option value=PeptideProphet>PeptideProphet</option>
+                                        <option value=iProphet>iProphet</option>
+        
+                                    </select>
+                                    <!-- <input type="text" class="form-control" id="ProbType" name="ProbType" value="peptideProphet"> -->
+                                </div>
+        
+                                <!-- Min Prob  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="MinProb">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Minimal peptideProphet or iProphet probability reqiured to show a node as identified by a peptide.">
+                                            Minimal Probability
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="MinProb" name="MinProb" value="0.8">
+                                </div>
+                                <!-- QueryID  not used now. -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2"  style="display: none;">
+                                    <label for="QUERYID">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="The archive unique id for query. Valid range: 1 ~ 2,000,000">
+                                            Query ID
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="QUERYID" name="QUERYID" value="1312081">
+                                </div>
+        
+                                <!-- # BUCKETS  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="NPROBE">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="The number of buckets to use. Valid range: 1 ~ 256">
+                                            No. of Buckets
+                                        </a>
+                                    </label>
+                                    <input type="text" class="form-control" id="NPROBE" name="NPROBE" value="256"
+                                        onchange="StoreValues()">
+                                </div>
+                                <!-- Edge between candidates -->
+        
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="NeighborDistance">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Calculate distance between candidates/neighbors (YES) or not (NO).">
+                                            Connect Neighbors
+                                        </a>
+                                    </label>
+                                    <select class="form-control" id="NeighborDistance" onchange="change_IsNetwork()">
+                                        <option value=1 selected>YES</option>
+                                        <option value=0>NO</option>
+        
+                                    </select>
+                                    <!-- <input type="text" class="form-control" id="ProbType" name="ProbType" value="peptideProphet"> -->
+                                </div>
+                                <!-- TopHits  -->
+                                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
+                                    <label for="ViewTopPSMs">
+                                        <a href="#" data-toggle="tooltip"
+                                            title="Choose candiates for PSM viewer. Valid range 1~ #Neighbours">
+                                            Choose Top Hits
+                                        </a>
+                                    </label>
+                                    <input class="form-control" id="HitRank" onchange="ReDrawOnRank()" value="1">
+                                   
+                                </div>
+                            </div>
+        
+                        </div>
+                    </div>
+                    </div>
+
+
+
+
+
+
+                <div class="container-fluid row justify-content-left" style="margin: 0px; padding: 2px;">
+                    <div class="col-md-12 col-lg-5 col-sm-12 " id="networksvg" style="padding: 0px;">
+                        <div style="width: 100%; border: 1px solid lightgrey;">
+                            <svg id="spectralnetwork" class="spectralnetwork" xmlns="http://www.w3.org/2000/svg"></svg>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-7 col-sm-12" style="padding: 2px;">
+                        <div id="lorikeet2" width="100%" style="overflow-x: auto;">
+                            <p class="text-primary ">
+                                User Manual: mouse over one of the node on left side. Press 's' on
+                                keyboard or left click to show the PSM with
+                                <a href="https://github.com/jmchilton/lorikeet" target="_blank">Lorikeet viewer</a>
+                                on right side.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- info of the node selected -->
+                <div class="row-no-padding  bg-light ">
+                    <div id="nodeinfo2" class="container-fluid bg-light">
+                        <div class="container-fluid text-primary ">
+                            User Manual: mouse over one of the node on left side. Press 's'
+                            (lower case) on keyboard or left click to show the PSM with
+                            <a href="https://github.com/jmchilton/lorikeet" target="_blank">Lorikeet viewer</a>
+                            on right side.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The PSM viewer of the query -->
+            <div class="container-fluid tab-pane fade" id="psmviewerdiv">
+                <h2>PSM Viewer</h2>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <form class="form-horizotal" onsubmit="return false;">
+                            <!-- <div class="form-group">
+                                                                    <button id="peptidelabelbtn" type="button" class="btn btn-primary">Label ON/OFF</button>
+                                                                </div> -->
+                            <div class="form-group" style="display: none;">
+                                <label for="peptide"  >
+                                    <a href="#" data-toggle="tooltip" title="Peptide Sequence for Selected node">
+                                        Peptide
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="peptide" name="peptide" value="AAACCCK">
+                            </div>
+                            <div class="form-group">
+                                <label for="precursor">
+                                    <a href="#" data-toggle="tooltip" title="precursor neutral mass">
+                                        Precursor Mass
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="precursor" name="precursor" value="1000">
+                            </div>
+                            <div class="form-group">
+                                <label for="peptideptm">
+                                    <a href="#" data-toggle="tooltip"
+                                        title="Peptide (with PTM in bracket, e.g. M[147], C[160]) for query node">
+                                        Peptide[PTM]
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="peptideptm" name="peptideptm"
+                                    value="AAACCCK" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="charge">
+                                    <a href="#" data-toggle="tooltip"
+                                        title="precursor charge state; valid range 1 to 6">
+                                        Charge
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="charge" name="charge" value="2">
+                            </div>
+                            <div class="form-group"  style="display: none;">
+                                <label for="modification">
+                                    <a href="#" data-toggle="tooltip"
+                                        title="modifications in string format. For example:  mass1@position1|mass2@position2|mass3@possition3|">
+                                        Modification
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="modification" name="modification"
+                                    value="UNMODIFIED">
+                            </div>
+                            <div class="form-group"  style="display: none;">
+                                <label for="ctermMod">
+                                    <a href="#" data-toggle="tooltip" title="cterm modification">
+                                        c-terminal
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="cterm" name="cterm" value="0">
+                            </div>
+                            <div class="form-group"  style="display: none;">
+                                <label for="ntermMod">
+                                    <a href="#" data-toggle="tooltip" title="nterm modification">
+                                        n-terminal
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="nterm" name="nterm" value="0">
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="peaks">
+                                    <a href="#" data-toggle="tooltip"
+                                        title="The peaks of tandem mass spectra; m/z intensity pairs;">
+                                        Peak List
+                                    </a>
+                                </label>
+                                <textarea id="peaks" class="form-control" rows=10></textarea>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <button id="showspecview" type="button" class="btn btn-primary form-control"
+                                    onclick="get_spectra_byid()">Update
+                                    PSM</button>
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <div class="col-sm-10">
+                        <div id="lorikeet"> </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            <!-- De novo sequencing viualization -->
+            <div class="container-fluid tab-pane fade" id="denovodiv">
+                <h2>De Novo Sequencing</h2>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <form class="form-horizotal" onsubmit="return false;">
+                            <!-- So it really save my day! I do not know why it works sometime! -->
+
+                            <div class="form-group">
+                                <label for="peaksfordenovo">
+                                    <a href="#" data-toggle="tooltip"
+                                        title="The peaks of tandem mass spectra for denovo; m/z intensity pairs;">
+                                        Peak List
+                                    </a>
+                                </label>
+                                <textarea id="peaksfordenovo" class="form-control" rows=10></textarea>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tolerance">
+                                    <a href="#" data-toggle="tooltip" title="Mass error for denovo">
+                                        Mass Error (Da)
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="tolerance" name="tolerance" value="0.5">
+                            </div>
+
+                            <div class="form-group">
+                                <button id="denovobtn" type="button" class="btn btn-primary form-control"
+                                    onclick="do_denovo_sequencing()">De
+                                    Novo</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-10" id="denovoplot">
+                        <svg width="960" height="700" class="denovo" id="denovo"></svg>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            <!-- Table of Nodes  -->
+            <div id="nodesdiv" class="table-responsive container-fluid tab-pane fade" style="width:100%">
+                <!-- <h2>Table of nodes</h2> -->
+                <table id="nodestable" class="table  table-bordered container-fluid" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sequence</th>
+                            <th>Score</th>
+                            <th>Prob</th>
+                            <th>iProb</th>
+                            <th>RFscore</th>
+                            <th>Precursor m/z</th>
+                            <th>Charge</th>
+                            <!-- <th>C terminus Modification</th>
+                            <th>N terminus Modification</th>
+                            <th>Other modifications</th> -->
+                            <th>File Name</th>
+                            <th>Scan</th>
+                            <th>RT(s)</th>
+                            <th>Group</th>
+                            <!-- 'id', 'peptide', 'score', 'group','precursor','charge','cterm','nterm','othermod' -->
+
+                        </tr>
+
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Table of Edges/Links -->
+            <div id="linksdiv" class="table-responsive container-fluid tab-pane fade" style="width:100%">
+                <!-- <h2>Table of links/edges</h2> -->
+                <table id="linkstable" class="table  table-bordered container-fluid" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID(X)</th>
+                            <th>Peptide(X)</th>
+                            <th>Score(X)</th>
+                            <th>Gropu(X)</th>
+                            <th>ID(Y)</th>
+                            <th>Peptide(Y)</th>
+                            <th>Score(Y)</th>
+                            <th>Group(Y)</th>
+                            <th>Δmass(X-Y)</th>
+                            <th>ΔRT(X-Y)</th>
+                            <th>Dist</th>
+                            <th>Cos</th>
+                            <th>p-value</th>
+                            <!-- <th>delta mass</th>
+                            <th>distance</th>
+                            <th>real L2 distance</th>
+                            <th>cosine</th> -->
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div class="alert alert-info container" role="alert">
+        <p id="errorinfo"></p>
+
+    </div>
+    </div>
+
+    <!-- Scripts Section -->
+
+    <script>
+
+        // logger.disableLogger();
+        $(document).ready(onCloudDocReady);
+
+
+
+    </script>
+
+</body>
+
+</html>

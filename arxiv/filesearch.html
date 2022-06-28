@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        .links line {
+            /*stroke: #999;*/
+            /*stroke-opacity: 0.6;*/
+        }
+
+        .nodes circle {
+            stroke: #fff;
+            /*stroke-width: 1.5px;*/
+        }
+    </style>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+          crossorigin="anonymous">
+          <link href="/lorikeet/css/my.css" rel="stylesheet" type="text/css" >
+    <!-- <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script> -->
+    <!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- add our script for bootstrap -->
+
+    <!-- We are happy now -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+
+
+    <!-- this is the code for Data Table, responsive: -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../peptidesearch.js"></script>
+    <script src="../shared_functions.js"></script>
+    <script src="../run.js"></script>
+
+
+    <!-- those are for lorikeet -->
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js" ></script> -->
+    <script type="text/javascript" src="/lorikeet/js/jquery.flot.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/jquery.flot.selection.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/specview.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/peptide.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/aminoacid.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/ion.js"></script>
+    <script type="text/javascript" src="/lorikeet/js/internal.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lorikeet/css/lorikeet.css">
+
+
+    <title>Spectral Cluster Viewer</title>
+</head>
+
+<body>
+<!-- <a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a> -->
+<!-- todo: add distance threshold; add circle size; -->
+
+<div id="archive_navigation_bar"></div>
+
+<div class="container">
+
+
+    <div class="row">
+        <!--                <h2>File Search</h2>-->
+
+        <!-- <div class="col-lg-2"></div> -->
+        <div class="form-row">
+            <div class="form-group col-lg-3">
+                <label for="filename" class="form-conrol">
+                    <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
+                        FileName
+                    </a>
+                </label>
+                <input type="text" class="form-control " id="filename" name="file name" value="Heart">
+        </div>
+            <div class="form-group col-lg-3">
+
+                <label for="startscan" class="form-conrol">
+                    <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
+                        Start Scan
+                    </a>
+                </label>
+                <input type="text" class="form-control" id="startscan" name="startscan" value="0">
+            </div><div class="form-group col-lg-3">
+
+            <label for="endscan" class="form-conrol">
+                <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
+                    End Scan
+                </a>
+            </label>
+            <input type="text" class="form-control" id="endscan" name="endscan" value="100">
+        </div>
+
+            <div class="form-group col-lg-3 align-self-end">
+                <button id="getspectra" type="button" class="btn btn-primary form-control"
+                        onclick="get_spectra_by_filename_and_scanrange()">Go!
+                </button>
+        </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+
+        </div>
+
+    </div>
+
+
+</div>
+</div>
+
+<div id="nodesdiv" class="table-responsive container-fluid">
+<!--    <h2>List of PSMs</h2>-->
+    <table id="PSM_List" class="table  table-bordered">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>peptide</th>
+
+            <th>filename</th>
+            <th>scan</th>
+
+            <th>score</th>
+            <th>pProb</th>
+            <th>iProb</th>
+            <th>precursor</th>
+            <th>charge</th>
+            <th>cterm</th>
+            <th>nterm</th>
+            <th>othermod</th>
+            <th>rt</th>
+
+        </tr>
+
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+<div class="alert alert-info container" role="alert">
+    <p id="errorinfo"></p>
+
+</div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+        // $('#linkstable').DataTable();
+        var tmpgraph = JSON.parse("{\"nodes\":[]}");
+        // var color = generate_color();
+        try {
+            $("#PSM_List").DataTable({
+                responsive: true,
+                data: tmpgraph.nodes,
+                columns: [
+                    {data: 'id'},
+                    {data: 'peptide'},
+                    {data: 'filename'},
+                    {data: 'scan'},
+                    {data: 'score'},
+                    {
+                        data: 'pProb',
+                        render: function (data, type, row) {
+                            return data.toFixed(4);
+                        }
+                    },
+                    {
+                        data: 'iProb',
+                        render: function (data, type, row) {
+                            return data.toFixed(4);
+                        }
+                    },
+                    {data: 'precursor'},
+                    {data: 'charge'},
+                    {data: 'cterm'},
+                    {data: 'nterm'},
+                    {data: 'othermod'},
+                    {
+                        data: 'rt',
+                        render: function (data, type, row) {
+                            return parseInt(data / 60) + "m" + (data % 60).toFixed(0) + "s";
+                        }
+                    }
+
+                ]
+                ,
+                "rowCallback": function (row, data) {
+                    $('td:eq(0)', row).css('background-color', color(5));
+                }
+            });
+            // $('#linkstable').DataTable();
+        } catch (err) {
+            document.getElementById("errorinfo").innerHTML += "" + " <strong>Warning: </strong> " + err.message + "<br/>";
+            console.log('error message:', err.message);
+        }
+
+
+        console.log("Table converted to DataTable now Call ready now: ctrl+F5");
+        var table = $('#PSM_List').DataTable();
+
+        $('#PSM_List tbody').on('click', 'td', function () {
+            var thedata = table.cell(this).data();
+            var idx = table.cell(this).index();
+            if (idx.column == 1) {
+                console.log("first column", idx);
+            } else if (idx.column == 0) {
+                console.log("Index column: ", idx);
+                var portval = document.URL.split(":")[2].split("/")[0];
+                openInNewTab("http://spec.ust.hk:"+portval+"/id/" + thedata);
+            }
+            console.log('cell data clicked', thedata);
+            // alert('You clicked on ' + thedata["id"] + '\'s row');
+            //openInNewTab("http://spec.ust.hk:8709/id/"+thedata["id"])
+        });
+        get_spectra_by_filename_and_scanrange();
+
+        openDB();
+
+
+    });
+    addNavigationBarForFileSearch();
+    color = generate_color();
+
+
+    var SearchGo = document.getElementById("filename");
+    SearchGo.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode == 13 && event.which) {
+                console.log("haha");
+                get_spectra_by_filename_and_scanrange();
+                // d3.select(".spectralnetwork").selectAll("circle")
+                //     .attr("r", function (d) { if (d.id == $("#QUERYID").val()) { return $("#nodesize").val() * 2; } else { return $("#nodesize").val(); } });
+            }
+        }
+    );
+
+
+</script>
+
+</body>
+
+</html>

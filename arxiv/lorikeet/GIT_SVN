@@ -1,0 +1,10 @@
+sudo apt-get install rubygems
+sudo gem install svn2git 
+mkdir lorikeet
+cd lorikeet
+svn2git http://lorikeet.googlecode.com/svn/trunk/
+
+
+
+To Update:
+svn2git --rebase

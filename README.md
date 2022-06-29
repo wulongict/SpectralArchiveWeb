@@ -8,7 +8,11 @@ We have provided an example archive in smallArchive folder. To set up the web in
 cd scripts/
 # create the config file for nginx service
 # ATTENTION: BEFORE you run the following command, make sure edit it to make the SERVER_NAME correct. We are using kez371.ust.hk in our lab.
-./generate_nginx_conf.bash 
+# e.g. 
+# ./generate_nginx_conf.bash localhost 143.89.0.0/16 ../arxiv 
+#
+./generate_nginx_conf.bash <SERVER_NAME> <IP_RANGE> <ROOT_PATH> 
+
 # start nginx service
 ./start_nginx_server.bash 
 

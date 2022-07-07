@@ -110,6 +110,8 @@ http {
             include  /etc/nginx/mime.types;
             index faiss_ivf256_pq16_gpu.index.json.html;
                 allow $IP_ALLOWED;
+		allow 127.0.0.1;
+		allow localhost;
                 deny all;
         }
 

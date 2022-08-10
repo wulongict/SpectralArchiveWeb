@@ -10,7 +10,9 @@ cd scripts/
 # ATTENTION: BEFORE you run the following command, make sure edit it to make the SERVER_NAME correct. We are using kez371.ust.hk in our lab.
 # e.g. 
 # ./generate_nginx_conf.bash localhost 143.89.0.0/16 ../arxiv 
-#
+# using absolute path instead of relative path as shown above ../arxiv 
+# 
+
 ./generate_nginx_conf.bash <SERVER_NAME> <IP_RANGE> <ROOT_PATH> 
 
 # start nginx service

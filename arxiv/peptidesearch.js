@@ -121,66 +121,68 @@ function get_spectra_by_filename_and_scanrange() {
 
 function addNavigationBar()
 {
-    var navbar_html_string=String.raw`<nav class="navbar navbar-expand-sm navbar-expand-lg navbar-dark bg-primary">
-    <!-- Navbar content -->
-    <!-- <nav class="navbar  navbar-light bg-light"> -->
-    <a class="navbar-brand" href="#">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Spectral Cluster </a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/peptidesearch.html">Peptide Search <span class="sr-only">(current)</span> </a>
-        </li>
-         <li class="nav-item ">
-          <a class="nav-link" href="/filesearch.html">File Search  </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
-        </li>
-      </ul>
-      <span class="navbar-text">
-        Clustering
-      </span>
-    </div>
-  </nav>`
+  add_navigation_bar_cluster_page();
+  //   var navbar_html_string=String.raw`<nav class="navbar navbar-expand-sm navbar-expand-lg navbar-dark bg-primary">
+  //   <!-- Navbar content -->
+  //   <!-- <nav class="navbar  navbar-light bg-light"> -->
+  //   <a class="navbar-brand" href="#">Home</a>
+  //   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+  //     <span class="navbar-toggler-icon"></span>
+  //   </button>
+  //   <div class="collapse navbar-collapse" id="navbarText">
+  //     <ul class="navbar-nav mr-auto">
+  //       <li class="nav-item">
+  //         <a class="nav-link" href="/">Spectral Cluster </a>
+  //       </li>
+  //       <li class="nav-item active">
+  //         <a class="nav-link" href="/peptidesearch.html">Peptide Search <span class="sr-only">(current)</span> </a>
+  //       </li>
+  //        <li class="nav-item ">
+  //         <a class="nav-link" href="/filesearch.html">File Search  </a>
+  //       </li>
+  //       <li class="nav-item">
+  //         <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
+  //       </li>
+  //     </ul>
+  //     <span class="navbar-text">
+  //       Clustering
+  //     </span>
+  //   </div>
+  // </nav>`
 
-    $("#archive_navigation_bar").html(navbar_html_string);
+  //   $("#archive_navigation_bar").html(navbar_html_string);
 }
 
 function addNavigationBarForFileSearch()
 {
-    var navbar_html_string=String.raw`<nav class="navbar navbar-expand-sm navbar-expand-lg navbar-dark bg-primary">
-    <!-- Navbar content -->
-    <!-- <nav class="navbar  navbar-light bg-light"> -->
-    <a class="navbar-brand" href="#">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Spectral Cluster </a>
-        </li>
-        <li class="nav-item ">
-          <a class="nav-link" href="/peptidesearch.html">Peptide Search </a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/filesearch.html">File Search <span class="sr-only">(current)</span> </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
-        </li>
-      </ul>
-      <span class="navbar-text">
-        Clustering
-      </span>
-    </div>
-  </nav>`
+  add_navigation_bar_cluster_page();
+  //   var navbar_html_string=String.raw`<nav class="navbar navbar-expand-sm navbar-expand-lg navbar-dark bg-primary">
+  //   <!-- Navbar content -->
+  //   <!-- <nav class="navbar  navbar-light bg-light"> -->
+  //   <a class="navbar-brand" href="#">Home</a>
+  //   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+  //     <span class="navbar-toggler-icon"></span>
+  //   </button>
+  //   <div class="collapse navbar-collapse" id="navbarText">
+  //     <ul class="navbar-nav mr-auto">
+  //       <li class="nav-item">
+  //         <a class="nav-link" href="/">Spectral Cluster </a>
+  //       </li>
+  //       <li class="nav-item ">
+  //         <a class="nav-link" href="/peptidesearch.html">Peptide Search </a>
+  //       </li>
+  //       <li class="nav-item active">
+  //         <a class="nav-link" href="/filesearch.html">File Search <span class="sr-only">(current)</span> </a>
+  //       </li>
+  //       <li class="nav-item">
+  //         <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
+  //       </li>
+  //     </ul>
+  //     <span class="navbar-text">
+  //       Clustering
+  //     </span>
+  //   </div>
+  // </nav>`
 
-    $("#archive_navigation_bar").html(navbar_html_string);
+  //   $("#archive_navigation_bar").html(navbar_html_string);
 }

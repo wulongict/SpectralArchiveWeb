@@ -149,14 +149,14 @@
               <a class="nav-link active" data-toggle="tab" href="#queryParam">Query Param</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#menu1">Graph Param</a>
+              <a class="nav-link" data-toggle="tab" href="#graphparam">Graph Param</a>
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" data-toggle="pill" href="#menu2">PSM Param</a>
+              <a class="nav-link" data-toggle="pill" href="#psmparam">PSM Param</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="pill" href="#menu3">XIC Param</a>
+              <a class="nav-link" data-toggle="pill" href="#xicparam">XIC Param</a>
             </li>
            
           </ul>
@@ -231,11 +231,11 @@
                   <select class="form-control" id="NPROBE" name="NPROBE" onchange="StoreNPROBE()">
                     <option value="2">2</option>
                     <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="16" selected>16</option>
-                    <option value="32">32</option>
-                    <option value="64">64</option>
-                    <!-- <option value="128">128</option> -->
+                    <option value="8" selected>8</option>
+                    <option value="16" >16</option>
+                    <!-- <option value="32">32</option>
+                    <option value="64">64</option> 
+                    <option value="128">128</option> -->
 
 
                   </select>
@@ -298,12 +298,25 @@
                 </button>
               </div>
 
+              <!--tooltips-->
+              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                <label for="tooltip_flag">
+                  <a href="#" data-toggle="tooltip" title="Enable or disable tooltip (YES) or not (NO).">
+                    Tooltip
+                  </a>
+                </label>
+                <select class="form-control" id="tooltip_flag" onchange="disableToolTip()">
+                  <option value="1" selected>YES</option>
+                  <option value="0">NO</option>
+                </select>
+              </div>
+
               </div>
             </div>
 
 
           </div>
-          <div id="menu1" class="container-fluid tab-pane fade">
+          <div id="graphparam" class="container-fluid tab-pane fade">
 
             <div class="row">
 
@@ -366,7 +379,7 @@
                   <label for="NeighborCircles">
                     <a href="#" data-toggle="tooltip"
                       title="put neighbos in to circles (YES) or not (NO).">
-                      Circels
+                      Circles
                     </a>
                   </label>
                   <select class="form-control" id="NeighborCircles" onchange="change_NeighborCircles()">
@@ -389,21 +402,10 @@
                   </select>
                 </div>
 
-                <!--tooltips-->
-                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
-                  <label for="tooltip_flag">
-                    <a href="#" data-toggle="tooltip" title="Enable or disable tooltip (YES) or not (NO).">
-                      Tooltip
-                    </a>
-                  </label>
-                  <select class="form-control" id="tooltip_flag" onchange="disableToolTip()">
-                    <option value="1" selected>YES</option>
-                    <option value="0">NO</option>
-                  </select>
-                </div>
+
 
                 <!--node size-->
-                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                <div class="form-group col-3 col-md-2 col-lg-1 col-sm-3 col-xd-3">
                   <label for="nodesize">
                     <a href="#" data-toggle="tooltip" title="Radius of circle for each node.">
                       Node Size
@@ -502,11 +504,11 @@
 
                   <select class="form-control" id="DeltaMassToBeHighlighted" name="DeltaMassToBeHighlighted">
                     <option value="0.05">0.05</option>
-                    <option value="0.5">0.5</option>
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
+                    <option value="0.5"  >0.5</option>
+                    <option value="5" selected>5</option>
+                    <option value="10" >10</option>
                     <option value="100">100</option>
-                    <option value="200">200</option>
+                    <option value="200" >200</option>
                   </select>
                   <!-- <input
                     type="text"
@@ -517,6 +519,23 @@
                   /> -->
                 </div>
 
+                <!--DeltaMassToBeHighlighted-->
+                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                  <label for="CutDeltaMass">
+                    <a href="#" data-toggle="tooltip"
+                      title="Cut edges between two nodes of different precursor mz.">
+                      Cut@ΔM
+                    </a>
+                  </label>
+
+                  <select class="form-control" id="CutDeltaMass" name="CutDeltaMass" onchange="update_with_max_dist()">
+                    <option value="keep" selected>keep</option>
+                    <option value="cutMz" >cutMz</option>
+                    <option value="cutMass" >cutMass</option>
+
+                  </select>
+
+                </div>
 
                 <!--group-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
@@ -529,6 +548,7 @@
                   <select class="form-control " id="peptidecolor" onchange="peptidecolorchanged()">
                     <option value="group">group</option>
                     <option value="sequence" selected>sequence</option>
+                    <option value="seq[PTM]" >modified sequence</option>
                   </select>
                 </div>
 
@@ -540,7 +560,7 @@
             <!--      <h3>Menu 1</h3>-->
             <!--      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
           </div>
-          <div id="menu2" class="container-fluid tab-pane fade">
+          <div id="psmparam" class="container-fluid tab-pane fade">
             <div class="row no-gutters">
               <div class="form-row col-12 col-xd-12 col-sm-12 col-md-12  col-lg-11 no-gutters">
                 <!-- Peak type  -->
@@ -654,7 +674,9 @@
                     </a>
                   </label>
                   <select class="form-control" id="linewidth" onchange="plotAgain()">
-                    <option value="1" selected>1pt</option>
+                    <!-- <option value="0.25" >0.25pt</option>
+                    <option value="0.5" >0.5pt</option> -->
+                    <option value="1" >1pt</option>
                     <option value="2" >2pt</option>
                     <!-- <option value="3" >3pt</option>
                     <option value="4" >4pt</option>
@@ -691,7 +713,7 @@
               </div>
             </div>
           </div>
-          <div id="menu3" class="container-fluid tab-pane fade">
+          <div id="xicparam" class="container-fluid tab-pane fade">
             <div class="row no-gutters">
               <div class="form-row col-12 col-xd-12 col-sm-12 col-md-12  col-lg-11 no-gutters">
                 <!--rt window-->

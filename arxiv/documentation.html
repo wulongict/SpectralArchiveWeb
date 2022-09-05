@@ -55,6 +55,33 @@
     #nodestable tbody tr td:first-child {
       cursor: pointer;
     }
+    p {
+      font-size: 18px;
+    }
+
+    /* figcaption {
+      color:blue;
+      font-size: 16px;
+    } */
+
+    /* figure {
+  border: 1px #cccccc solid;
+  padding: 4px;
+  margin: auto;
+} */
+
+figcaption {
+  background-color: white;
+  color: green;
+  font-size: 20px;
+  /* font-style: italic; */
+  padding: 2px;
+  /* text-align: center; */
+}
+
+    /* h1 {color:red;}
+    p {color:blue;} */
+
   </style>
   <!-- Required meta tags -->
   <meta charset="utf-8" />
@@ -108,27 +135,68 @@
 
   <div class="container-fluid" id="archive_navigation_bar"></div>
 
-<div class="container-fluid col-11 col-sm-10 col-xl-8 col-lg-10 " class="mx-auto">
+<div class="container-fluid col-11  " class="mx-auto">
     <article>
-        <h2>Spectroscape</h2>
-        <section>
+        <h1>Spectroscape User Manual with GIFs</h1>
+        <!-- <section>
           <h3>Introduction</h3>
            <p class="text-justify">Traditional search uses user defined parameters, such as precursor/fragment mass tolerance window, sequence/spectral database, user-specified post-translational modifications (PTMs), to specify searching space. This results in inferior peptide spectrum matches (PSMs) when the correct peptide candiates is out of the search space. Here, we present spectral archive search as an alternative to make it possible for searching against the most complete spectral space. Using advanced indxing techniques and efficient data compressing step, we can build a real-time spectral archive tool without any parameters. The idea behind this archive search tool is simple: for each spectral, if it is reproducible, it must have a close spectral neighbor, given that we have collect a large number of spectra (annotated by others).  </p>
           <p class="text-justify">This new apporach enables one to detect recurring analytes, with the potential to detect PTMs based on the mass difference of the matched spectral pairs. It can also shed light to the so called "dark matter" as more and more data added to the spectral archive. The spectral archive approach can be built and updated incrementally in linear time. It provides an easy way for introspection on previously released data sets and correct the historical errors. It is a powerful tool to mining into historical data to support new hypothesis. After converted into our .mz format, the local mass spectral file can be searched directly against the spectral archive. </p>
-          <!-- <p>Paragraph</p> -->
-        </section>
+
+        </section> -->
+
+
         <section>
-           <h3>Dive into the spectral space</h3>
-          <p class="text-justify">Each MS2 spectrum in the archive is designated with an identifier (id). The identifier ranges from 0 to size of the archive (exclusive). For searching a given MS2 spectra with id 16189, just go to the Spectral Search tab, and type the query id into the input box as follows. (Figure 1) </p>
+           <!-- <h2>Dive into the spectral space</h2>
+          <p class="text-justify"> For searching a given MS2 spectra with id 16189, just go to the Spectral Search tab, and type the query id into the input box as follows. (Figure 1) </p>
 
           <figure class="figure">
             <img src="/images/fig1.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
             <figcaption class="figure-caption">Searching against spectral archive with query spectrum of id 16189 inside the spectral archive.</figcaption>
-          </figure>
+          </figure> -->
 
 
           <!-- <p>Paragraph</p>
           <p>Paragraph</p> -->
+          <h2>Search query</h2>
+          <p>Each MS2 spectrum in the archive is designated with an identifier (id). The identifier ranges from 0 to size of the archive (exclusive). The following example shows how to search an query spectra from NIST library. The query id is <a href="http://omics.ust.hk:8709/id/25757878">25757878</a>. </p>
+          <figure class="figure">
+            <img src="/images/library-bridge.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption >Fig.1 - library entry as a bridge of two clusters.</figcaption>
+          </figure>
+
+          <h2>Tooltip on node and edges, PSM visualization and search new query</h2>
+          <p>over any node or edge to show the tooltip information. Single click on any node to show the PSM on the right side using Lorikeet. Double click on any node to start a new search using that node as query spectrum.</p> 
+          
+          <figure class="figure">
+            <img src="/images/tooltip-node-edge-click.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption>Fig.2 - Tooltip on node and edges. Single click to show the PSM. Double click to start a new search.</figcaption>
+          </figure>
+
+          <h2>Tuning parameters of graph</h2>
+          <p>Change the strength of repulsive force between nodes and the attractive force (gravity) to the center. Also adapt the width of edges. </p>
+
+          <figure class="figure">
+            <img src="/images/tuning-parameters-of-graph.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption >Fig.3 - Tuning the parameters of the graph, repusive and attractive force, and edge width.</figcaption>
+          </figure>
+
+          <h2>Investigate unidentified PSM corresponding to semitryptic peptide</h2>
+          <p> The following examples shows how to find the correct solution of an unidentified peptide. The query id is <a href="http://omics.ust.hk:8709/id/18497303">18497303 </a>. In this case, the query node is in black color which means it is not identified. However, there are many neighbors in red are identified as DDPLTNLNTAFDVAEK, and the highlighted edge suggests that the delta mass is 230Da, which equals to mass of "DD". So we can guess if we remove the DD from "DDPLTNLNTAFDVAEK", the remaining part "PLTNLNTAFDVAEK" will match to the query node. In the PSM viewer, we edit the peptide and click update button, and see it is a very good PSM. The user can send a message to the server to report this error. </p>
+          <figure class="figure">
+            <img src="/images/semi-tryptic-case-study.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption >Fig.4 - Investigate into the unidentified PSM using the information of its neighbors. The highlighted edges shows the mass difference of 230 Da equals to the mass of "DD". And we find the red nodes are all matched with a peptide that starts with "DD". What if we remove the DD and use the remaining part to match with the query spectrum? Yes, it turns out that the correct anwser is "PLTNLNTAFDVAEK".</figcaption>
+          </figure>
+
+          <h2>Investigate into mixture spectra of two similar peptides</h2>
+          <p> The following example shows two similar peptides co-fragmented into one MS2 spectrum.  The query id is <a href="http://omics.ust.hk:8709/id/18793053">18793053 </a>. In this case, the neighbors of the query node form one tightly connected cluster. All of them are identified, but as two different peptides, ADIDVSGPK and ADVDISGPK. Thse two peptides share many fragment ions. From the back-to-back PSM plot implemented in Spectroscape interface, one can clearly see the query spectra contains peaks of both peptides.  </p>
+            
+            <p>There are four different mode when it comes to the back-to-back plot: query, neighbor, separate and mixture. In the first three mode, the back-to-back plot shows two spectra, the top spectrum is the one user selected by single clicking on the neighbouring node, and the bottom one is the query spectrum. The query method will annotate the two spectrum with the peptide of query node. The neighbor method will annotate the two spectrum with the peptide of the user selected spectra. The separate method will annotate the two spectra with their own peptide. The last method, the mixture annotation will show top and bottom with the same query spectrum, but annotated with query peptide (bottom) and peptide of user selected node (top).  </p>
+          <figure class="figure">
+            <img src="/images/mixture-spectra-case-study.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption >Fig.5 - Investigate into a mixture spectra. The cluster returned by Spectroscape contains two different peptides. According to the analysis with back-to-back PSM plot, we can tell the query node is a mixture of peptide ADIDVSGPK and ADVDISGPK . </figcaption>
+          </figure>
+
         </section>
       </article>
 

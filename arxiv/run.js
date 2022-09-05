@@ -95,6 +95,7 @@ class SpectralNetwork {
         },
         {
           name: "expand", handler: (e) => {
+            // remove double click feture, use the menu.
             const node = d3.select(e.target).data()[0];
             this.expand_node(node);
           }
@@ -380,6 +381,17 @@ class SpectralNetwork {
     NodesTable.update(graph.nodes);
     LinksTable.update(graph.links);
   }
+  static search_new_node(node){
+    $("#QUERYID").val(node.id);
+
+    var newurl = generate_base_url() + "/id/" + node.id;;
+    // console.log("will go to : ", newurl)
+    location.href = newurl;
+    window.history.pushState("", "", '/id/' + node.id);
+    SpectralNetwork.stopSimulation();
+
+    clicksearchbtn();
+  }
 
   /**
    * expand the graph with a node's neighbor.
@@ -527,24 +539,40 @@ class SpectralNetwork {
     var min_r = this.getMinR();
     var bgscore_length = 10000;
     if (isNeighborCircles == 1) {
-      var total_freq = { ">0.8": 0, ">0.6": 0, ">0.4": 0, ">0.2": 0, ">0.0": 0 };
+      // var total_freq = { ">0.8": 0, ">0.6": 0, ">0.4": 0, ">0.2": 0, ">0.0": 0 };
+      var total_freq = {">0.9":0,  ">0.8": 0, ">0.7":0,  ">0.6": 0, ">0.5":0, ">0.4": 0,">0.3":0,  ">0.2": 0, ">0.1":0 ,">0.0": 0 };
       if (bgscores != null && bgscores.length != 0) {
         // Yes we have bg score.
         bgscore_length = bgscores.length;
         var delta_freq = 1; //1.0 / bgscores.length;
         for (var i = 0; i < bgscores.length; i++) {
           var dp_norm = bgscores[i] / 42925.0;
+          if (dp_norm >= 0.9) {
+            total_freq[">0.9"] += delta_freq;
+          }
           if (dp_norm >= 0.8) {
             total_freq[">0.8"] += delta_freq;
+          }
+          if (dp_norm >= 0.7) {
+            total_freq[">0.7"] += delta_freq;
           }
           if (dp_norm >= 0.6) {
             total_freq[">0.6"] += delta_freq;
           }
+          if (dp_norm >= 0.5) {
+            total_freq[">0.5"] += delta_freq;
+          }
           if (dp_norm >= 0.4) {
             total_freq[">0.4"] += delta_freq;
           }
+          if (dp_norm >= 0.3) {
+            total_freq[">0.3"] += delta_freq;
+          }
           if (dp_norm >= 0.2) {
             total_freq[">0.2"] += delta_freq;
+          }
+          if (dp_norm >= 0.1) {
+            total_freq[">0.1"] += delta_freq;
           }
           if (dp_norm >= 0.0) {
             total_freq[">0.0"] += delta_freq;
@@ -552,8 +580,24 @@ class SpectralNetwork {
 
         }
       }
-      var refCircles = [{ "dp": 0.0, "color": "#AAAAAA", "freq": total_freq[">0.0"] }, { "dp": 0.2, "color": "#BBBBBB", "freq": total_freq[">0.2"] }, { "dp": 0.4, "color": "#CCCCCC", "freq": total_freq[">0.4"] },
-      { "dp": 0.6, "color": "#DDDDDD", "freq": total_freq[">0.6"] }, { "dp": 0.8, "color": "#EEEEEE", "freq": total_freq[">0.8"] }];
+      // var refCircles = [{ "dp": 0.0, "color": "#AAAAAA", "freq": total_freq[">0.0"] }, 
+      // { "dp": 0.2, "color": "#BBBBBB", "freq": total_freq[">0.2"] }, 
+      // { "dp": 0.4, "color": "#CCCCCC", "freq": total_freq[">0.4"] },
+      // { "dp": 0.6, "color": "#DDDDDD", "freq": total_freq[">0.6"] }, 
+      // { "dp": 0.8, "color": "#EEEEEE", "freq": total_freq[">0.8"] }];
+
+      var refCircles = [
+        { "dp": 0.0, "color": "#8A8A8A", "freq": total_freq[">0.0"] }, 
+        { "dp": 0.1, "color": "#AAAAAA", "freq": total_freq[">0.1"] }, 
+      { "dp": 0.2, "color": "#8B8B8B", "freq": total_freq[">0.2"] }, 
+      { "dp": 0.3, "color": "#BBBBBB", "freq": total_freq[">0.3"] }, 
+      { "dp": 0.4, "color": "#8C8C8C", "freq": total_freq[">0.4"] },
+      { "dp": 0.5, "color": "#CCCCCC", "freq": total_freq[">0.5"] }, 
+      { "dp": 0.6, "color": "#8D8D8D", "freq": total_freq[">0.6"] }, 
+      { "dp": 0.7, "color": "#DDDDDD", "freq": total_freq[">0.7"] }, 
+      { "dp": 0.8, "color": "#8E8E8E", "freq": total_freq[">0.8"] },
+      { "dp": 0.9, "color": "#EEEEEE", "freq": total_freq[">0.9"] }, ];
+
       let refcircles_nodes = this.element.select(".dp_ref_circles")
         .selectAll("g")
         .data(refCircles).enter()
@@ -781,7 +825,7 @@ class SpectralNetwork {
     //             repeatCount="indefinite"/>
 
     let keep_query_id_black = false;
-    if ($("#peptidecolor").val() == "sequence") {
+    if ($("#peptidecolor").val() == "sequence" || $("#peptidecolor").val() == "seq[PTM]") {
       circles.attr("style", d => {
         if (d.id == $("#QUERYID").val() && keep_query_id_black) {
           return "fill: #000000";
@@ -829,31 +873,39 @@ class SpectralNetwork {
 
     circles.call(d3.drag()
       .on("start", d => {
+        console.log('circle on drag start');
 
         // dragstart event handler for circles
-        if (!d3.event.active) _this.simulation.alphaTarget(0.3).restart();
+        
         if (d.id === $("QUERYID").val() || d.id == -1) {
           // console.log(d.id)
           // if this is the query node. we move it to the center
-          // d.fx = null;
-          // d.fy = null;
-          d.x = _this.width / 2;
-          d.y = _this.height / 2;
+          d.fx = null;
+          d.fy = null;
+          // d.x = _this.width / 2;
+          // d.y = _this.height / 2;
+          dx.fx = d.x; //_this.width /2;
+          dx.fy = d.y; //_this.height /4;
         }
         else {
           d.fx = d.x;
           d.fy = d.y;
         }
+        if (!d3.event.active) _this.simulation.alphaTarget(0.09).restart();
       })
       .on("drag", d => { // drag event handler for circles
+        console.log('circle on drag now');
         d.fx = d3.event.x;
         d.fy = d3.event.y;
 
       })
       .on("end", d => { // dragend event handler for circles
-        if (!d3.event.active) _this.simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
+        if (!d3.event.active) _this.simulation.alphaTarget(0).restart();
+      //  d.fx = d.x;
+      //  d.fy = d.y;
+        d.fx =null;
+        d.fy=null;
+        console.log('circle on drag end');
       })
     );
 
@@ -865,7 +917,7 @@ class SpectralNetwork {
     );
 
     // `single_click` and `double_click` are dispatched by the custom jQuery event.
-    circles.on("double_click", this.expand_node)
+    circles.on("double_click", this.search_new_node) //this.expand_node)
       .on("single_click", this.view_node.bind(this));
     // circles.append("animate")
     // .attr("attributeType","XML")
@@ -906,11 +958,18 @@ class SpectralNetwork {
             // console.log('--------------never call here:', d);
             // put the node to the center.
             d.fixed = true;
-            d.fx = _this.width / 2;
-            d.fy = _this.height / 2;
-            d.x = _this.width / 2;
-            d.y = _this.height / 2;
-
+            // console.log('query node: ', _this.width, _this.height,"current position:", 
+            // d.x, d.y, "fixed position", d.fx, d.fy , "volocity: ", d.vx, d.vy);
+            // console.log('query node: ', _this.width, _this.height,"current position:",  d.x, d.y)
+            // the following two lines allow moving the node around. but in the end, it goes back to this point. the center.
+            d.fx = _this.width *1/ 16+7*d.x/8;
+            d.fy = _this.height *1 / 16+7*d.y/8;
+            // the following two lines fix the node to center. 
+            // d.x = _this.width / 2;
+            // d.y = _this.height / 2;
+            // console.log('query node: ', _this.width, _this.height,"current position:", 
+            //  d.x, d.y, "fixed position", d.fx, d.fy , "volocity: ", d.vx, d.vy);
+            
             let info = `translate(${d.x}, ${d.y})`;
             $("#queyrnodesquare").attr("transform", info);
             return info;
@@ -2092,8 +2151,11 @@ function getColorOfCircleForGroupMethod(d, probmin, ProbType) {
 }
 
 function getContrastColor(hex) {
+  // console.log(hex);
+    
   [r, g, b] = hexColorToRGB(hex);
   // console.log("r,,g,b", r,g,b,hex)
+
   r = parseInt(r, 16);
   g = parseInt(g, 16);
   b = parseInt(b, 16);
@@ -2102,6 +2164,37 @@ function getContrastColor(hex) {
   // console.log(a);
   return (a < 0.5) ? "#000000" : "#FFFFFF";
 }
+
+function getColorOfCircleForModifiedSequenceMethod(d, probmin, ProbType) {
+  // probmin=0;
+  // console.log(d,"probmin:", probmin);
+  var keep_query_id_black = false;
+  var the_prob = 0;
+  if (ProbType == "PeptideProphet") {
+    the_prob = d.pProb;
+  } else if (ProbType == "iProphet") {
+    the_prob = d.iProb;
+  } else if (ProbType == "Significance") {
+    the_prob = d.significance;
+  }
+  //console.log('debug: d.filename.include sptxt: ', d.filename.includes(".sptxt"), d.filename);
+  if (the_prob >= probmin || d.filename.includes(".sptxt") || (d.filename.includes("out_") && d.filename.includes("0.mgf"))) {
+    if (d.id === $("#QUERYID").val() && keep_query_id_black) {
+      return "#000000";
+    }
+    // console.log('circle color')
+    console.log('--------------------------------call2152: -------------------', getModifiedSequence(d));
+    var current_color = color_of_string(getModifiedSequence(d));
+    console.log(current_color);
+    return "" + current_color;
+  } else {
+    // console.log('circle color')
+    var current_color = color_of_string("UNKNOWN");
+    console.log(current_color);
+    return "" + current_color;
+  }
+}
+
 
 function getColorOfCircleForSequenceMethod(d, probmin, ProbType) {
   // probmin=0;
@@ -2195,7 +2288,10 @@ function getEdgeColor(data, source_or_target) {
   }
   if ($("#peptidecolor").val() == "group") {
     return color(data[source_or_target + " group"]);
-  } else if ($("#peptidecolor").val() == "sequence") {
+  } else if ($("#peptidecolor").val() == "seq[PTM]") {
+    // console.log('edge color')
+    return color_of_string(data[source_or_target + " peptide"]);
+  }else if ($("#peptidecolor").val() == "sequence") {
     // console.log('edge color')
     return color_of_string(data[source_or_target + " peptide"]);
   }
@@ -2250,10 +2346,23 @@ function peptidecolorchanged() {
       return getColorOfCircleForSequenceMethod(d, probmin, ProbType);
     });
     circles.style("stroke", function (d) {
+      // console.log('call2311');
       return getContrastColor(getColorOfCircleForSequenceMethod(d, probmin, ProbType));
       //return invertColor(getColorOfCircleForSequenceMethod(d, probmin, ProbType));
     });
-  } else if ($("#peptidecolor").val() == "group") {
+  } else if ($("#peptidecolor").val() == "seq[PTM]") {
+    circles.style("fill", function (d) {
+      return getColorOfCircleForModifiedSequenceMethod(d, probmin, ProbType);
+      // return getColorOfCircleForGroupMethod(d, probmin, ProbType);
+    });
+    circles.style("stroke", function (d) {
+      var thiscolor = getColorOfCircleForModifiedSequenceMethod(d, probmin, ProbType);
+      // console.log('this color ', thiscolor);
+      // console.log('call2323');
+      return getContrastColor(thiscolor);
+      //return invertColor(getColorOfCircleForGroupMethod(d, probmin, ProbType));
+    });
+  }else if ($("#peptidecolor").val() == "group") {
     circles.style("fill", function (d) {
       return getColorOfCircleForGroupMethod(d, probmin, ProbType);
     });
@@ -2379,7 +2488,28 @@ function filterjsonstringwithMaxDistance(jsonstring, maxdist) {
   var data = JSON.parse(jsonstring);
 
   for (var i = data.links.length - 1; i >= 0; i--) {
-    if (data.links[i].realdist > maxdist) {
+    // console.log('what',data.links[i].source, data);
+    var s=data.links[i].source;
+    var t = data.links[i].target;
+    // var targetnode = data.nodes.find(v => v.id==t);
+    // console.log(targetnode);
+    var snode = data.nodes.find(v => v.id==s);
+    var tnode = data.nodes.find(v => v.id==t);
+    var mzdiff = snode.precursor - tnode.precursor;
+    const pmass = 1.007276;
+    // let source_mass = d.source.charge * (d.source.precursor - pmass);
+    var s_mass = snode.charge * (snode.precursor-pmass);
+    var t_mass = tnode.charge * (tnode.precursor-pmass);
+    var massdiff = s_mass - t_mass;
+    // console.log(s, t, '-- mass diff of edge ', massdiff, data.nodes.find(v => v.id==s).precursor, data.nodes.find(v => v.id==t).precursor);
+    if(Math.abs(mzdiff)>2 && $("#CutDeltaMass").val()=='cutMz'){
+      data.links.splice(i, 1);
+    }
+    else if(Math.abs(massdiff)>2 && $("#CutDeltaMass").val()=='cutMass'){
+      data.links.splice(i, 1);
+    }
+    else if (data.links[i].realdist > maxdist) {
+      // to cut the edge.
       data.links.splice(i, 1);
     } else if ((data.links[i].source !== $("#QUERYID").val() && data.links[i].source != -1) && EdgeDist === "0") {
       data.links.splice(i, 1);
@@ -2778,7 +2908,12 @@ function redraw(queryindex, hitrank) {
     // massError: 0.5,
     // massErrorPlotDefaultUnit: 'Da',
     ctermMod: ctermMod,
-    peaks: peaks
+    peaks: peaks,
+    // width: f.width-150,
+    //   height: e.height-220,
+      // the following options could fix the xaxis
+      minDisplayMz: 0.01,
+      maxDisplayMz: 1999.99
   });
 
 }
@@ -3045,7 +3180,7 @@ function search_with_queryid(queryid) {
   var nprobe = $("#NPROBE").val();
   // console.log("We are going to the following query queryid: ", + queryid + "; topN: " + topN);
 
-  var params = 'QUERYID=' + queryid + "TOPN=" + topN + "EDGE=" + NeighborEdges + "NPROBE=" + nprobe;//+"VISUALIZATION=1";
+  var params = 'QUERYID=' + queryid + "TOPN=" + topN + "EDGE=" + NeighborEdges + "NPROBE=" + nprobe + "TNNINDEXNUM=2";//+"VISUALIZATION=1";
 
   var getVal = $('#MinProb').val();
   console.log("We have : ", getVal);
@@ -4384,20 +4519,7 @@ function feellucky() {
   console.log("will go to : ", newurl)
   location.href = newurl;
 }
-function getlaunchtime() {
-  var x = $(".page-header").text();
-  var platform = "CPU";
-  if (x.includes("GPU")) {
-    platform = "GPU";
-  }
-  var launchtime = "";
-  var y = x.match(/updated[0-9 A-Za-z\n,)]*/g);
-  //console.log(y)
-  var z = y[0];
-  z = z.split('on ')[1];
-  z = z.split(")")[0]
-  return z;
-}
+
 
 function tableColColorOnOption(data) {
   var minprob = parseFloat($("#MinProb").val());
@@ -4415,8 +4537,10 @@ function tableColColorOnOption(data) {
   // console.log('color determined by ', data.peptide, data);
   if ($("#peptidecolor").val() == "group") {
     return tableColColorOnGroup(the_prob, data.filename, data.group, minprob);
-  }
-  else if ($("#peptidecolor").val() == "sequence") {
+  }else if ($("#peptidecolor").val() == "seq[PTM]") {
+    console.log("--table col color on option: ", data, the_prob, minprob)
+    return tableColColorOnSequence(the_prob, data.filename, data.modPep, minprob);
+  } else if ($("#peptidecolor").val() == "sequence") {
     // console.log("table col color on option: ", data, the_prob, minprob)
     return tableColColorOnSequence(the_prob, data.filename, data.modPep, minprob);
   }
@@ -4431,6 +4555,7 @@ function tableColColorOnGroup(the_prob, filename, group, minprob) {
 }
 
 function tableColColorOnSequence(the_prob_th, filename, peptide, minprob) {
+  // console.log('call4507')
   if (the_prob_th >= minprob || filename.includes(".sptxt")) {
     // console.log('sptxt minpro color: ', the_prob_th, filename,minprob,peptide)
     return color_of_string(peptide);
@@ -4439,120 +4564,9 @@ function tableColColorOnSequence(the_prob_th, filename, peptide, minprob) {
   }
 }
 
-function add_navigation_bar_cluster_page() {
-  var x = $(".page-header").text();
-  var platform = "CPU";
-  if (x.includes("GPU")) {
-    platform = "GPU";
-  }
-  var launchtime = getlaunchtime();
-  // var y =x.match("(updated");
-  // if(y!== null)
-  // {
-  //   var m=x.match(/(updated.*)/);
-  //   console.log("find m: ", m);
-  // }
-
-  var totalnum = x.split("from ")[1].split("(")[0]
-  var htmlnavstring = String.raw`<nav class="navbar fixed-top  navbar-expand-sm navbar-expand-lg navbar-dark bg-primary " >
-  <!-- Navbar content -->
-  <!-- <nav class="navbar  navbar-light bg-light"> -->
-
-  <a class="navbar-brand" onclick="feellucky()">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Spectral Cluster <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>
-      </li>
-          <li class="nav-item ">
-          <a class="nav-link" href="/filesearch.html">File Search  </a>
-        </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/documentation.html">Documentation</a>
-      </li>
-    </ul>
-    <span class="navbar-text">
-       ${totalnum} Spectra | ${platform} | ${launchtime}
-    </span>
-  </div>
-
-</nav>`
-
-  $("#archive_navigation_bar").html(htmlnavstring);
-  // this is how sticky navbar works in bootstrap, not sure why this is not handled by bootstrap js.
-  $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight); // add space to prevent navbar covering top content.
-  window.addEventListener("resize", () => { // update padding whenever window size is changed.
-    $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight);
-  });
-}
-
-function add_navigation_bar_doc_page() {
-  var x = $(".page-header").text();
-  var platform = "CPU";
-  if (x.includes("GPU")) {
-    platform = "GPU";
-  }
-  var launchtime = getlaunchtime();
-  // var y =x.match("(updated");
-  // if(y!== null)
-  // {
-  //   var m=x.match(/(updated.*)/);
-  //   console.log("find m: ", m);
-  // }
-
-  var totalnum = x.split("from ")[1].split("(")[0]
-  var htmlnavstring = String.raw`<nav class="navbar fixed-top  navbar-expand-sm navbar-expand-lg navbar-dark bg-primary " >
-  <!-- Navbar content -->
-  <!-- <nav class="navbar  navbar-light bg-light"> -->
-
-  <a class="navbar-brand" onclick="feellucky()">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/">Spectral Cluster </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>
-      </li>
-          <li class="nav-item ">
-          <a class="nav-link" href="/filesearch.html">File Search  </a>
-        </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/cloudsearch.html">Cloud Search</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/documentation.html">Documentation <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-    <span class="navbar-text">
-       ${totalnum} Spectra | ${platform} | ${launchtime}
-    </span>
-  </div>
-
-</nav>`
-
-  $("#archive_navigation_bar").html(htmlnavstring);
-  // this is how sticky navbar works in bootstrap, not sure why this is not handled by bootstrap js.
-  $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight); // add space to prevent navbar covering top content.
-  window.addEventListener("resize", () => { // update padding whenever window size is changed.
-    $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight);
-  });
-}
-
 
 function add_denovo_section_to_page() {
+
   var denovodiv = String.raw`<h2>De Novo Sequencing</h2>
   <div class="row justify-content-left">
     <div class="col-sm-2 col-lg-2 col-md-2">
@@ -4593,6 +4607,7 @@ function add_denovo_section_to_page() {
       <svg viewBox="0 0 1500 500" width="100%" height="100%" class="denovo" id="denovo"></svg>
     </div>
   </div>`;
+  // This part is under development.
   $("#denovodiv").html(denovodiv);
 
 }
@@ -4979,7 +4994,7 @@ class SvgImage {
     .attr('class', 'attractive_pks')
     .style('stroke', 'white')
     .style('stroke-opacity',0)
-    .style('stroke-width', linewidth*10)
+    .style('stroke-width', linewidth*10) // to show the tooltip, we use another transparent peak
     .attr("x1", d => this.xf(d.x))
     .attr("y1", this.yf(0))
     .attr("x2", d => this.xf(d.x)) 
@@ -4988,7 +5003,7 @@ class SvgImage {
     pks_lines.append('line')
       .attr("class", "pks")
       .style("stroke", function (d) {
-        var strokecol = "black";
+        var strokecol = "#111111";
         if (d.annotation != "") {
           if (d.annotation[0] == 'b') {
             strokecol = 'blue';
@@ -5021,9 +5036,9 @@ class SvgImage {
       // })
       .style("stroke-width", function (d) {
         if (d.annotation == "") {
-          return 1*linewidth;
+          return linewidth;
         } else {
-          return 2*linewidth;
+          return linewidth+1;
         }
       })
       .attr("x1", d => this.xf(d.x))

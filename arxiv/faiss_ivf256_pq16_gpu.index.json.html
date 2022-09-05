@@ -99,7 +99,7 @@
   <script type="text/javascript" src="/lorikeet/js/ion.js"></script>
   <script type="text/javascript" src="/lorikeet/js/internal.js"></script>
   <link rel="stylesheet" type="text/css" href="/lorikeet/css/lorikeet.css" />
-  <title>Spectral Cluster Viewer</title>
+  <title>Spectroscape</title>
 
 </head>
 
@@ -205,6 +205,12 @@
                     <option value="80">80</option>
                     <option value="90">90</option>
                     <option value="100">100</option>
+                    <option value="200">200</option>
+                    <!-- for n nodes, there are n*n edges. the browser crash when there are more than 400 nodes.
+                    out of memory. -->
+                    <!-- <option value="300">300</option>
+                    <option value="400">400</option>
+                    <option value="800">800</option> -->
                   </select>
 
                   <!-- <input
@@ -412,16 +418,51 @@
                     <option value="18">18</option>
                   </select>
 
-                  <!-- <input
-                    type="text"
-                    class="form-control"
-                    id="nodesize"
-                    name="nodesize"
-                    value="6"
-                  /> -->
+
+                </div>
+
+                <!--edge width-->
+                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                  <label for="edgewidth">
+                    <a href="#" data-toggle="tooltip" title="The width of edges in the network.">
+                      Edge Width
+                    </a>
+                  </label>
+                  <select class="form-control" id="edgewidth" name="edgewidth" onchange="onEdgeWidthChange()">
+                    <option value="0.25">0.25</option>
+                    <option value="0.5">0.5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="8" selected>8</option>
+                    <option value="16">16</option>
+                  </select>
+
+
                 </div>
 
                
+                <!-- lets addd a repulsive force strength. -->
+                <!-- repulsive force  -->
+                <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                  <label for="svgnoderepulsivecoef">
+                    <a href="#" data-toggle="tooltip"
+                      title="the strength of repulsive force between nodes. Valid range: 0.01 ~ 100">
+                      Repulsive
+                    </a>
+                  </label>
+
+                  <select class="form-control" id="svgnoderepulsivecoef" name="svgnoderepulsivecoef">
+                    <option value="0.25">0.25</option>
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="4">4</option>
+                    <option value="8" >8</option>
+                    <!-- <option value="10">10</option>
+                    <option value="100">100</option> -->
+                  </select>
+
+                </div>
 
                 <!--gravity-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
@@ -433,6 +474,9 @@
                   </label>
 
                   <select class="form-control" id="svggravitystrength" name="svggravitystrength">
+                    <option value="0.0001">0.0001</option>
+                    <option value="0.001">0.001</option>
+                    <option value="0.01">0.01</option>
                     <option value="0.1">0.1</option>
                     <option value="0.5" selected>0.5</option>
                     <option value="1">1</option>
@@ -881,7 +925,7 @@
 
   <div class="container-fluid" style="visibility: hidden">
     <div class="page-header" color="blue">
-      <h1>Spectral Cluster Viewer</h1>
+      <h1>Spectroscape</h1>
       <p>
         This is a spectral archive built from 7,849,350 MS2 spectra (updated
         on August 14, 2018). No spectra is filtered out from this process.

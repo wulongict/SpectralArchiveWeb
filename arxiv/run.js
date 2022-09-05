@@ -77,6 +77,13 @@ class SpectralNetwork {
           name: "search", handler: (e) => {
             const node = d3.select(e.target).data()[0];
             $("#QUERYID").val(node.id);
+
+            var newurl = generate_base_url() + "/id/" + node.id;;
+            // console.log("will go to : ", newurl)
+            location.href = newurl;
+            window.history.pushState("", "", '/id/' + node.id);
+            SpectralNetwork.stopSimulation();
+
             clicksearchbtn();
           }
         },
@@ -231,6 +238,15 @@ class SpectralNetwork {
         .alpha(0.2).restart();
     });
 
+    $("#svgnoderepulsivecoef").change(() => { // gravity selectbox `onchange` handler, re-calculate gravity strength.
+      let strength = _this.get_repulsive_force_strength();
+      _this.simulation.stop()
+        .force("charge", d3.forceManyBody().strength(-500*strength).distanceMax(500).distanceMin(1))
+        // .force("forceX", d3.forceX(_this.width / 2).strength(gravity_strength))
+        // .force("forceY", d3.forceY(_this.height / 2).strength(gravity_strength))
+        .alpha(0.08).restart();
+    });
+
     $("#DeltaMassToBeHighlighted").change(() => { // DeltaMaxx selectbox `onchange` handler, re-color links.
       console.log('delta mass changed: ', $("#DeltaMassToBeHighlighted").val())
       localStorage.setItem("DeltaMassToBeHighlighted", $("#DeltaMassToBeHighlighted").val());
@@ -283,10 +299,11 @@ class SpectralNetwork {
           return $("#nodesize").val();
       }))
       .force("link", d3.forceLink().distance(d => {
-        let new_score = (d.realdist - 0.4) / 0.4 * 8 - 4;
-        return 1 / (1 + Math.exp(-new_score)) * 80 + 30;
+        // simplified.
+        let new_score = 20* d.realdist - 12;
+        return 80 / (1 + Math.exp(-new_score))  + 30;
       }).strength(1).id(d => d.id))
-      .force("charge", d3.forceManyBody().strength(-500).distanceMax(500).distanceMin(1))
+      .force("charge", d3.forceManyBody().strength(-500*$("#svgnoderepulsivecoef").val()).distanceMax(500).distanceMin(1))
   }
 
   /**
@@ -303,10 +320,27 @@ class SpectralNetwork {
       gravity_strength = 100;
       console.warn("gravity strength must be smaller than 100.\ngravity strength corrected to 100.");
     }
-    gravity_strength *= num_nodes / (this.width / 5) * 0.1;
+    gravity_strength *= num_nodes / this.width  /2;
     return gravity_strength;
   }
 
+  /**
+   * calculate the repulsive force strength for a simulation.
+   * @param {Number} num_nodes number of nodes in the simulation.
+   */
+   static get_repulsive_force_strength() {
+    let strength = parseFloat($("#svgnoderepulsivecoef").val());
+    if (strength < 0.00000001) {
+      strength = 0.00000001;
+      console.warn("gravity strength must be greater than 0.00000001.\ngravity strength corrected to 0.00000001.");
+    }
+    if (strength > 100) {
+      strength = 100;
+      console.warn("gravity strength must be smaller than 100.\ngravity strength corrected to 100.");
+    }
+
+    return strength;
+  }
   /**
    * update the links of the graph, nodes are preserved.
    * used for update gravity, isNetwork and maxDist.
@@ -658,7 +692,7 @@ class SpectralNetwork {
       .attr("class", "link")
       // .attr("stroke-width", function (d) { return 2 * ((1 - d.value)); })  // use d.value or d.realdist?
       // .attr("stroke-opacity", function (d) { return Math.pow(1 - d.value, 5); });
-      .attr("stroke-width", d => 8 * Math.sqrt(1 - d.realdist / 1.42)) // use d.value or d.realdist?
+      .attr("stroke-width", d => $("#edgewidth").val() * Math.sqrt(1 - d.realdist / 1.42)) // use d.value or d.realdist?
       .attr("stroke-opacity", d => Math.sqrt(1 - d.realdist / 1.42));
 
     /* ryan @ 22/7/2020: commented, maybe only allow this to execute when the graph is updated.
@@ -1339,7 +1373,7 @@ function searchNext() {
   if (queryid + 1 < totalnum) {
     var newurl = generate_base_url() + "/id/" + (queryid + 1);;
     // console.log("will go to : ", newurl)
-    // location.href = newurl;
+    location.href = newurl;
     window.history.pushState("", "", '/id/' + (queryid + 1));
     SpectralNetwork.stopSimulation();
     $("#QUERYID").val(queryid + 1);
@@ -1353,13 +1387,14 @@ function searchPrev() {
   // console.log("key left: query id is  ", queryid, queryid - 1, event.which);
   if (queryid - 1 >= 0) {
     var newurl = generate_base_url() + "/id/" + (queryid - 1);;
+    location.href = newurl;
     // console.log("will go to : ", newurl)
     window.history.pushState("", "", '/id/' + (queryid - 1));
     SpectralNetwork.stopSimulation();
     $("#QUERYID").val(queryid - 1);
     // $("#QUERYID").val(queryid+1);
     clicksearchbtn();
-    // location.href = newurl;
+    
   }
 }
 
@@ -3058,6 +3093,16 @@ function onNodeSizeChange() {
     });
 }
 
+
+function onEdgeWidthChange() {
+  localStorage.setItem("EdgeWidth", $("#edgewidth").val());
+  d3.select(".links")
+    .selectAll("line")
+    .attr("stroke-width", function (d) {
+      return $("#edgewidth").val()  * Math.sqrt(1 - d.realdist / 1.42);
+    });
+}
+
 function StoreValues() {
   // console.log('0000000000000000000')
   // console.log("0----------------------current value is connect (YES/NO): ", $("#NeighborDistance").val());
@@ -3125,6 +3170,15 @@ function RestoreValues() {
   }
   else {
     $("#nodesize").val(nodeSize);
+  }
+
+  var edgewidth = localStorage.getItem("EdgeWidth");
+  if (edgewidth == null) {
+    edgewidth = $("#edge").val();
+    localStorage.setItem("EdgeWidth", $("#edgewidth").val());
+  }
+  else {
+    $("#edgewidth").val(edgewidth);
   }
 
   var PeakType = localStorage.getItem("PEAKTYPE");
@@ -5230,7 +5284,7 @@ class Peptide2Frag{
       if(i < min_id) bions[i] = -1;
       else bions[i] = bions[i] / charge;
     }
-    console.log('bions', bions);
+    // console.log('bions', bions);
     return bions;
   }
 

@@ -311,6 +311,20 @@
                 </select>
               </div>
 
+
+              <!--showpeaklist-->
+              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                <label for="showpeaklistflag">
+                  <a href="#" data-toggle="showpeaklist" title="search with peak list">
+                    search a peak list
+                  </a>
+                </label>
+                <select class="form-control" id="showpeaklist_flag" onchange="showPeakList()">
+                  <option value="1" >YES</option>
+                  <option value="0" selected>NO</option>
+                </select>
+              </div>
+
               </div>
             </div>
 
@@ -775,12 +789,21 @@
         <!--      ---------------->
 
         <div class="container-fluid row justify-content-left" style="margin: 0px; padding: 2px;">
+          <div  id="peaklistsearcharea" style="padding: 0px; visibility: hidden;">
+            
+    
+
+          </div>
+
 
           <div class="col-md-12 col-lg-4 col-sm-12 " id="networksvg" style="padding: 0px;">
-            <div style="width: 100%; border: 1px solid lightgrey;">
+            <div style="height: 100%; width: 100%; border: 1px solid lightgrey;">
               <svg id="spectralnetwork" class="spectralnetwork" xmlns="http://www.w3.org/2000/svg"></svg>
             </div>
           </div>
+
+
+
           <div class="col-md-12 col-lg-8 col-sm-12" style="padding: 2px;">
             <div class="container-fluid" id="my_dataviz1"></div>
             <div class="container-fluid" id="my_dataviz2"></div>

@@ -1,17 +1,3 @@
-// commit message:
-// change network from 800px to 700px
-// add mixture/separate plot for two spec view
-// remark response to error section.
-// refactoring: peptide2Frag for genearting theoretical ions.
-// refactoring: SpectrumAnno for annotation of spectrum.
-// SpectrumAnno: normalize and flip spectrum.
-// SpectrumAnno: combine match error, peak plot data. 
-// Annotation: support NH3 and H2O together.
-// add precursor to two PSM view
-// clean code, remove code that are not used. 
-// default using 2000Th for xaxis, 0.05 error of mz; font size 10, supported
-// default NL H2O and NH3
-// network col-5 to col-4. smaller
 
 /**
  * custom jQuery event to distinguish single click and double click using a timer,
@@ -884,8 +870,8 @@ class SpectralNetwork {
           d.fy = null;
           // d.x = _this.width / 2;
           // d.y = _this.height / 2;
-          dx.fx = d.x; //_this.width /2;
-          dx.fy = d.y; //_this.height /4;
+          d.fx = d.x; //_this.width /2;
+          d.fy = d.y; //_this.height /4;
         }
         else {
           d.fx = d.x;
@@ -1118,6 +1104,7 @@ class SpectralNetwork {
         <strong>Protein</strong>: ${uniprotProteinLink(d.protein)}&nbsp;
       </h6>`;
 
+      console.log('---------------Call this function with d.id ', d.id);
     update_lorikeet_2(d.id);
 
     this.element.selectAll(".node")
@@ -1960,8 +1947,9 @@ String.prototype.hashCode = function () {
     // console.log(this.charCodeAt(i), this[i],);
 
 
-    hash = ((hash << 5) - hash) + chr;
-    hash = hash % (1 << 24);
+    // hash = ((hash << 5) - hash) + chr;
+    hash = hash * 31 + chr;
+    hash = hash % (1 << 24); // keep only 3 bytes.
     hash |= 0; // Convert to 32bit integer
   }
   return hash;
@@ -2096,7 +2084,7 @@ function color_of_string(s) {
     // console.log("got UNKNOWN as peptide sequence, return black!");
     return "#000000";
   }
-  // console.log("peptide: ", s);
+  // console.log("peptide: ", s, s.hashCode());
   var randomint = s.hashCode() * 64 + 63;
   randomint = Math.abs(randomint);
   var hexstring = randomint.toString(16);
@@ -2183,7 +2171,7 @@ function getColorOfCircleForModifiedSequenceMethod(d, probmin, ProbType) {
       return "#000000";
     }
     // console.log('circle color')
-    console.log('--------------------------------call2152: -------------------', getModifiedSequence(d));
+    // console.log('--------------------------------call2152: -------------------', getModifiedSequence(d));
     var current_color = color_of_string(getModifiedSequence(d));
     console.log(current_color);
     return "" + current_color;
@@ -2539,7 +2527,7 @@ function generate_base_url() {
   var theport = $("#port").val();
   var hostname=window.location.hostname;
   var url = 'http://'+ hostname +':' + theport;
-  console.log("base url: ", url);
+  // console.log("base url: ", url);
   return url;
 }
 
@@ -2575,6 +2563,7 @@ function redraw2(queryindex, hitrank, pk_str) {
     console.log("Incorrect");
     queryindex = "-1";
   }
+  // console.log(queryindex, hitrank, pk_str);
   var aamass = {
     'G': 57.02146,
     'A': 71.03711,
@@ -2792,6 +2781,7 @@ function split_modstr(modificationstr, sequence, aamass) {
 
 
 
+// plot lorikeet figure in PSM Viewer.
 function redraw(queryindex, hitrank) {
   // if(queryindex=="-1"){
   //   console.log("Correct");
@@ -2951,16 +2941,17 @@ function add_remark_options() {
 
 }
 
-// never called
+
 function plotAgain() {
+  console.log('==================plot Again ====================');
   // StoreValues();
   localStorage.setItem("PEAKTYPE", $('#PEAKTYPE').val());
   // console.log("peak type: ", $('#PEAKTYPE').val());
   var PeakType = $("#PEAKTYPE").val();
   var queryid = $("#QUERYID").val();
-  redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+  
   if (g_global_id_selected > 0) {
-
+    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
     redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
   }
   // update_lorikeet_1();
@@ -3061,6 +3052,28 @@ function redraw_with_peakinfo(info, PeakType, queryid) {
  * @param {*} queryid 
  * @returns {Deferred} an ajax call to be handled
  */
+ function get_summary() {
+  console.log('-----------------summary-------------');
+  // refactored get, get2 into get, update1, update2
+  return $.ajax({
+    type: "GET",
+    url: `${generate_base_url()}/summary`,
+    dataType: "text",
+    contentType: "application/x-www-form-urlencoded",
+    async: true,
+    timeout: 25000,
+    error: (xhr, status, error) => {
+      alert(`${Error(error)} at get_summary(...)`);
+      ErrorInfo.log(error);
+    }
+  });
+}
+
+/**
+ * request a spectra.
+ * @param {*} queryid 
+ * @returns {Deferred} an ajax call to be handled
+ */
 function get_spectra_byid(queryid) {
   // refactored get, get2 into get, update1, update2
   return $.ajax({
@@ -3115,6 +3128,13 @@ function update_lorikeet_1() {
     ErrorInfo.log('Error: ', err.message);
   }
   let PeakType = $("#PEAKTYPE").val(), queryid = $("#QUERYID").val();
+  $.when(get_summary()).done((data, status, xhr)=>{
+    if(xhr.readyState==4 && xhr.status == 200){
+      console.log('running here.===============', data)
+      g_summary=JSON.parse(data);
+      console.log(g_summary);
+    }
+  })
   $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       // console.log("geet sppectrum by id: ", data);
@@ -3127,31 +3147,43 @@ function update_lorikeet_1() {
 
 /**update the lorikeet viewer near the clustering graph. */
 function update_lorikeet_2(queryid) {
+  console.log('update_lorikeet_2(queryid) ', queryid);
   g_global_id_selected = queryid;
-  if (queryid == -1) {
-    var spec = getQueryForCloud();
-    let PeakType = 0;
-    // console.log("spec get for cloud search: ", spec, PeakType);
-    var mz = spec.split(",").map(Number);
-    for (var i = 0; i < mz.length; i++) {
-      mz[i] = mz[i] / 65535 * 2000; // todo: to check this part
-    }
-    // console.log("the mz peaks", mz);
-    // PSMViewer.plotPSM($())
+  if (queryid === "-1") {
 
-    var pkstr = "";
-    for (var i = 0; i < mz.length; i++) {
-      if (i != 0) {
-        pkstr += " ";
+    console.log('query id is -1', queryid, "  try to get the query spectra from cloud/or local area?. ", document.URL, generate_base_url);
+    if (document.URL != generate_base_url() +"/cloudsearch.html") {
+      // var realpeaks={"mz":"", "intensity":""}
+      console.log('if ========================> -----------====================> peaks---------------: ', $("#peaks").val());
+      redraw2(-1,1, $("#peaks").val());
+    } else {
+      console.log('=================haha, in else');
+      var spec = getQueryForCloud();
+      let PeakType = 0;
+      // console.log("spec get for cloud search: ", spec, PeakType);
+      var mz = spec.split(",").map(Number);
+      for (var i = 0; i < mz.length; i++) {
+        mz[i] = mz[i] / 65535 * 2000; // todo: to check this part
       }
-      pkstr += mz[i].toFixed(4);
+      // console.log("the mz peaks", mz);
+      // PSMViewer.plotPSM($())
+
+      var pkstr = "";
+      for (var i = 0; i < mz.length; i++) {
+        if (i != 0) {
+          pkstr += " ";
+        }
+        pkstr += mz[i].toFixed(4);
+      }
+      var dt = "{\"mzs\": \"" + pkstr + "\"}";
+      g_pkdata2 = JSON.parse(dt);
+      // print the mz values
+      // todo: make a string out of the list of float values. space sep. 
+      redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
     }
-    var dt = "{\"mzs\": \"" + pkstr + "\"}";
-    g_pkdata2 = JSON.parse(dt);
-    // print the mz values
-    // todo: make a string out of the list of float values. space sep. 
-    redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
+
   } else {
+    
     let PeakType = $("#PEAKTYPE").val();
     $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
       if (xhr.readyState == 4 && xhr.status == 200) {
@@ -3188,7 +3220,7 @@ function search_with_queryid(queryid) {
     localStorage.setItem("MinProb", $("#MinProb").val());
   }
   // localStorage.setItem("EdgeDist",$("#NeighborDistance").val());
-  console.log("request sent as post:" + params);
+  console.log("request sent as POST with payload: " + params);
 
   return $.ajax({
     type: "POST",
@@ -3380,7 +3412,7 @@ function change_IsNetwork() {
   console.log("Running change is Netowrk", $("#MAXDist").val())
   StoreValues();
   let data = filterjsonstringwithMaxDistance(g_jsonstring, $("#MAXDist").val());
-  console.log("the data is : ", data, data.backgroundscores)
+  // console.log("the data is : ", data, data.backgroundscores)
   SpectralNetwork.update_links(data.links);
   console.log('link updated! the background scores, ', data.backgroundscores)
   SpectralNetwork.addRefCircles(data.backgroundscores);
@@ -3482,7 +3514,7 @@ function clickfilesearchbtn() {
     console.log("queryid " + queryid + " out of range, corrected to " + $("#specid").val());
   }
   var spec = getQueryForCloud();
-
+  console.log('-----',spec, 'the string of spec to search');
   search_with_spec(spec);
   // update_page(true);
 
@@ -3752,22 +3784,12 @@ function do_denovo_sequencing() {
     ])
       .on("zoom", zoom));
 
-  //var circlesdata = [{ cx: 20, cy: 20, r: 20 }, { cx: 200, cy: 200, r: 100 }];
-  //svg.selectAll('circle').data(circlesdata).enter().append('circle').attr('cx', function (d) { return d.cx; })
-  //  .attr('cy', function (d) { return d.cy; })
-  //.attr('r', function (d) { return d.r; })
+
   var g = svg.append("g").attr('class', 'peaks')
     .attr("transform",
       "translate(" + 50 + "," + 50 + ")"
     );
-  //
-  //        var view = g.append("rect")
-  //    .attr("class", "view")
-  //        .attr('fill', "black")
-  //    .attr("x", 0)
-  //    .attr("y", 0)
-  //    .attr("width", width - 100)
-  //    .attr("height", height - 100);
+
   var xf = d3.scaleLinear()
     .domain([0, d3.max(datax)])
     .range([0, width - 100]);
@@ -3792,9 +3814,7 @@ function do_denovo_sequencing() {
       return yf(d.inten)
     })
   //
-  //   x.domain(d3.extent(data, function(d) {console.log(d); return d.mz }));
-  //   y.domain(d3.extent(data, function(d) { return d.inten }));
-  // add peak
+
   var data = [{
     mz: 300.0,
     inten: 40.0
@@ -3805,19 +3825,7 @@ function do_denovo_sequencing() {
     mz: 700.00,
     inten: 20.0
   }];
-  // console.log(data);
-  // example
-  //        svg.selectAll("circle")
-  //  .data(circles)
-  //  .enter().append("circle")
-  //    .attr("cx", function(d) { return d.x; })
-  //    .attr("cy", function(d) { return d.y; })
-  //    .attr("r", radius)
-  //    .style("fill", function(d, i) { return color(i); })
-  //    .call(d3.drag()
-  //    .on("start", dragstarted)
-  //    .on("drag", dragged)
-  //    .on("end", dragended));
+
   function dragstarted(d) {
     d3.select(this).raise().classed("active", true);
   }
@@ -4253,8 +4261,7 @@ function do_denovo_sequencing() {
   }
 
   function zoomed() {
-    // console.log("here", d3.event.translate, d3.event.scale);
-    //            svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+
 
   }
   var datamap = peaklistToPeakMap(newdata);
@@ -4421,14 +4428,7 @@ function do_denovo_sequencing() {
   function backnormal() {
     d3.select(this).style("stroke-width", 2);
   }
-  // add one peak
-  //    svg.append('line').style("stroke","black").attr("x1",0).attr("y1",0).attr( "x2",2000).attr("y2", 500)
-  //    svg.append("line")          // attach a line
-  //    .style("stroke", "black")  // colour the line
-  //    .attr("x1", 100)     // x position of the first end of the line
-  //    .attr("y1", 50)      // y position of the first end of the line
-  //    .attr("x2", 300)     // x position of the second end of the line
-  //    .attr("y2", 150);
+
   function zoom_old() {
     //              console.log(d3.event.transform, 'd3.event.sourceEvent', d3.event.sourceEvent);
     var kfold = d3.event.transform.k;
@@ -4470,25 +4470,25 @@ function do_denovo_sequencing() {
     newxf = d3.event.transform.rescaleX(xf);
     gX.call(xaxis.scale(d3.event.transform.rescaleX(xf)));
     // the following code will start drag and drop
-    d3.selectAll('.denovo > .vpeaks').each(
+    d3.selectAll('.vpeaks').each(
       function (d, i) {
         // console.log(d,i);
         d3.select(this).attr("x1", newxf(d.x1)).attr("y1", yf(d.y1))
           .attr("x2", newxf(d.x2)).attr("y2", yf(d.y2));
       });
-    d3.selectAll('.denovo > .vpeaksext').each(
+    d3.selectAll('.vpeaksext').each(
       function (d, i) {
-        // console.log(d,i);
+        console.log('updating vpeaksext', d,i);
         d3.select(this).attr("x1", newxf(d.x1)).attr("y1", yf(d.y1))
           .attr("x2", newxf(d.x2)).attr("y2", yf(d.y2));
       });
     d3.selectAll('.aaedgelines').each(
       function (d, i) {
-        // console.log(d,i);
+        console.log('zoom aaedgelines updating', d,i);
         d3.select(this).attr("x1", newxf(d.x1)).attr("y1", yf(d.y1))
           .attr("x2", newxf(d.x2)).attr("y2", yf(d.y2));
       });
-    d3.selectAll('.denovo > .edgelabel').each(
+    d3.selectAll('.edgelabel').each(
       function (d, i) {
         // console.log(d,i);
         d3.select(this).attr("x", newxf(d.x1 * 0.5 + d.x2 * 0.5))
@@ -4567,7 +4567,7 @@ function tableColColorOnSequence(the_prob_th, filename, peptide, minprob) {
 
 function add_denovo_section_to_page() {
 
-  var denovodiv = String.raw`<h2>De Novo Sequencing</h2>
+  var denovodiv = String.raw`<h2>Peak Gaps</h2>
   <div class="row justify-content-left">
     <div class="col-sm-2 col-lg-2 col-md-2">
       <form class="form-horizotal" onsubmit="return false;">
@@ -5863,3 +5863,248 @@ class PSMViewer {
 
 
 };
+
+
+
+// search a peak list 
+function showPeakList(){
+
+  var peaklisthtml=`        
+  <div class="form-group">
+  <label for="peaks">
+    <a href="#" data-toggle="tooltip" title="The peaks of tandem mass spectra; m/z intensity pairs;">
+      Peak List
+    </a>
+  </label>
+  <textarea id="peaksforsearching"  class="form-control" rows=30 maxlength="1000" style="margin: 0px; overflow: auto; padding: 1px; height:auto; box-sizing:border-box">
+  110.071 6044
+111.075 304
+114.535 127
+115.160 123
+119.049 189
+120.081 307
+120.388 122
+123.531 124
+124.039 211
+129.066 518
+129.103 295
+129.981 124
+131.118 159
+136.076 217
+136.385 123
+138.066 142
+141.066 548
+146.398 137
+150.102 117
+150.384 125
+152.035 231
+155.850 139
+157.097 141
+158.093 268
+169.061 833
+171.532 137
+175.119 1719
+186.088 484
+193.179 125
+206.436 127
+215.137 124
+223.156 981
+238.024 139
+238.130 152
+242.150 546
+249.099 256
+251.151 1056
+253.094 306
+262.703 137
+273.120 388
+290.147 443
+305.137 344
+323.147 692
+343.565 138
+361.198 525
+362.204 132
+370.099 143
+379.209 404
+386.261 127
+390.473 129
+392.229 376
+393.164 140
+393.240 244
+395.612 131
+420.029 120
+436.232 408
+439.389 133
+440.537 125
+443.354 159
+453.212 305
+453.261 240
+454.215 133
+457.242 143
+458.296 128
+492.296 382
+502.247 123
+519.979 152
+520.391 131
+522.233 139
+539.088 140
+540.242 1929
+541.247 305
+564.291 280
+605.205 132
+614.636 132
+618.219 201
+637.262 159
+655.269 2243
+656.274 333
+677.376 416
+727.717 145
+772.071 215
+792.328 1138
+793.332 284
+843.452 212
+869.327 143
+892.476 258
+904.367 155
+905.415 405
+906.420 317
+906.505 179
+1033.480 414
+1039.420 149
+1245.650 176
+1371.750 188
+1401.080 165
+  </textarea>
+</div>  
+<!--searchpeaklist-->
+<div class="form-group ">
+  <button id="searchbtn" type="button" class="btn btn-primary form-control  " onclick="clickpeaklistsearchbtn()">
+    Search peak list
+  </button>
+</div>
+`;
+  if ($("#showpeaklist_flag").val() == "0") {
+    //  hide the peak list search part 
+    document.getElementById("peaklistsearcharea").innerHTML=``;
+    d3.select('#networksvg').attr('class', 'col-md-12 col-lg-4 col-sm-12');
+    
+  }else{
+    // get doc ready for searching peak list, then search.
+    // show the peak list search part 
+  document.getElementById("peaklistsearcharea").innerHTML=peaklisthtml;
+  var element = d3.select('#peaklistsearcharea' );
+  element.attr('style', "padding: 0px;");
+
+  // <div class="col-md-12 col-lg-3 col-sm-12 " id="networksvg" style="padding: 0px;"></div>
+  d3.select('#networksvg').attr('class', 'col-md-12 col-lg-3 col-sm-12');
+  ;
+  // add button to this part . 
+  }
+  
+  
+
+}
+
+function clickpeaklistsearchbtn(){
+  var spec = $('#peaksforsearching').val().trim();
+  
+
+  spec=spec.split('\n');
+  
+  for(var i = 0; i < spec.length; i ++){
+    spec[i]=spec[i].trim().split(' ').join(':');
+  }
+  spec=spec.join('_');
+  spec= '#raw#'+ spec;
+  
+  // console.log("The spec is : -----", spec);
+  var topN = $("#topn").val();
+  RestoreValues();
+  var NeighborEdges = $("#NeighborDistance").val();
+  var nprobe = $("#NPROBE").val();
+  // console.log("queryid: ", + queryid + "; topN: " + topN);
+  var http = new XMLHttpRequest();
+  var url = generate_base_url() + "/id/";
+
+  var params = "TOPN=" + topN + "EDGE=" + NeighborEdges + "NPROBE=" + nprobe + "SPEC=" + spec;
+  http.open("POST", url, true);
+  http.timeout = 25000;
+  //Send the proper header information along with the request
+  http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  http.onreadystatechange = function () { //Call a function when the state changes.
+    if (this.readyState == 4 && this.status == 200) {
+      g_jsonstring = this.responseText;
+      try {
+        // console.log("page updaged: ", g_jsonstring);
+        var EdgeDist = localStorage.getItem("EdgeDist");
+        $("#NeighborDistance").val(EdgeDist);
+        $("#QUERYID").val(-1);
+        // g_jsonstring = data;
+      // update_page(false);
+        SpectralNetwork.update(filterjsonstringwithMaxDistance(g_jsonstring,    $("#MAXDist").val()));
+
+          var pk_str = $('#peaksforsearching').val().trim();
+  
+
+          pk_str=pk_str.split('\n');
+          
+          for(var i = 0; i < pk_str.length; i ++){
+            pk_str[i]=pk_str[i].trim();
+          }
+          pk_str=pk_str.join('\n');
+          // console.log('updated pkstr is ', pk_str);
+        // update_spec(spec);
+        $("#peaks").val(pk_str);
+        $('#peaksfordenovo').val(pk_str);
+        do_denovo_sequencing();
+        // update_lorikeet_1();
+
+        // update_lorikeet_2(-1);
+
+        peptidecolorchanged();
+
+
+      } catch (err) {
+        ErrorInfo.log(err.message);
+        console.log('Error: ' + err.message);
+      }
+    }
+  }
+  http.send(params);
+  var getVal = $('#MinProb').val();
+  // console.log("We have : ", getVal);
+  if (getVal != "0.8") {
+    localStorage.setItem("MinProb", $("#MinProb").val());
+  }
+  // localStorage.setItem("EdgeDist",$("#NeighborDistance").val());
+  console.log("request sent as post:" + params);
+}
+
+// to be implemented.
+function update_spec_raw(spec) {
+  var mz = spec.split(",").map(Number);
+  for (var i = 0; i < mz.length; i++) {
+    mz[i] = mz[i] / 65535 * 2000; // todo: to check this part
+  }
+
+  var peak = []
+  for (var i = 0; i < mz.length; i++) {
+    if (mz[i] == 0) break;
+    peak.push([mz[i], mz.length - i]);
+  }
+  peak = peak.sort(function (a, b) {
+    return a[0] - b[0]
+  });
+  var pk_str = "";
+  for (var i = 0; i < peak.length; i++) {
+    pk_str += peak[i][0].toFixed(3);
+    pk_str += " ";
+    pk_str += peak[i][1].toFixed(0);
+    pk_str += "\n";
+  }
+  console.log("peaks: ", pk_str);
+  $("#peaks").val(pk_str);
+  $('#peaksfordenovo').val(pk_str);
+  do_denovo_sequencing();
+  var hitrank = parseInt($("#HitRank").val());
+  redraw(-1, hitrank);
+}

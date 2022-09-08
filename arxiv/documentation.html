@@ -69,6 +69,7 @@
     p {
       font-size: 1.25rem; 
       font-family: Harding,Palatino,serif;
+      line-height: 2em;
     }
 
     /* figcaption {
@@ -159,26 +160,16 @@ figcaption {
 
 
         <section>
-           <!-- <h2>Dive into the spectral space</h2>
-          <p class="text-justify"> For searching a given MS2 spectra with id 16189, just go to the Spectral Search tab, and type the query id into the input box as follows. (Figure 1) </p>
 
-          <figure class="figure">
-            <img src="/images/fig1.png" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-            <figcaption class="figure-caption">Searching against spectral archive with query spectrum of id 16189 inside the spectral archive.</figcaption>
-          </figure> -->
-
-
-          <!-- <p>Paragraph</p>
-          <p>Paragraph</p> -->
           <h2>Search query</h2>
-          <p>Each MS2 spectrum in the archive is designated with an identifier (id). The identifier ranges from 0 to size of the archive (exclusive). The following example shows how to search an query spectra from NIST library. The query id is <a href="http://omics.ust.hk:8709/id/25757878">25757878</a>. </p>
+          <p class="text-justify">Each MS2 spectrum in the archive is designated with an identifier (id). The identifier ranges from 0 to size of the archive (exclusive). The following example shows how to search an query spectra from NIST library. The query id is <a href="http://omics.ust.hk:8709/id/25757878">25757878</a>. </p>
           <figure class="figure">
             <img src="/images/library-bridge.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
             <figcaption >Fig.1 - library entry as a bridge of two clusters.</figcaption>
           </figure>
 
           <h2>Tooltip on node and edges, PSM visualization and search new query</h2>
-          <p>Mouse over any node or edge to show the tooltip information. Single click on any node to show the PSM on the right side using Lorikeet. Double click on any node to start a new search using that node as query spectrum.</p> 
+          <p class="text-justify">Mouse over any node or edge to show the tooltip information. Single click on any node to show the PSM on the right side using Lorikeet. Double click on any node to start a new search using that node as query spectrum.</p> 
           
           <figure class="figure">
             <img src="/images/tooltip-node-edge-click.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
@@ -186,7 +177,7 @@ figcaption {
           </figure>
 
           <h2>Tuning parameters of graph</h2>
-          <p>Change the strength of repulsive force between nodes and the attractive force (gravity) to the center. Also adapt the width of edges. </p>
+          <p class="text-justify">Change the strength of repulsive force between nodes and the attractive force (gravity) to the center. Also adapt the width of edges. </p>
 
           <figure class="figure">
             <img src="/images/tuning-parameters-of-graph.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
@@ -194,14 +185,14 @@ figcaption {
           </figure>
 
           <h2>Investigate unidentified PSM corresponding to semitryptic peptide</h2>
-          <p> The following examples shows how to find the correct solution of an unidentified peptide. The query id is <a href="http://omics.ust.hk:8709/id/18497303">18497303 </a>. In this case, the query node is in black color which means it is not identified. However, there are many neighbors in red are identified as DDPLTNLNTAFDVAEK, and the highlighted edge suggests that the delta mass is 230Da, which equals to mass of "DD". So we can guess if we remove the DD from "DDPLTNLNTAFDVAEK", the remaining part "PLTNLNTAFDVAEK" will match to the query node. In the PSM viewer, we edit the peptide and click update button, and see it is a very good PSM. The user can send a message to the server to report this error. </p>
+          <p class="text-justify"> The following examples shows how to find the correct solution of an unidentified peptide. The query id is <a href="http://omics.ust.hk:8709/id/18497303">18497303 </a>. In this case, the query node is in black color which means it is not identified. However, there are many neighbors in red are identified as DDPLTNLNTAFDVAEK, and the highlighted edge suggests that the delta mass is 230Da, which equals to mass of "DD". So we can guess if we remove the DD from "DDPLTNLNTAFDVAEK", the remaining part "PLTNLNTAFDVAEK" will match to the query node. In the PSM viewer, we edit the peptide and click update button, and see it is a very good PSM. The user can send a message to the server to report this error. </p>
           <figure class="figure">
             <img src="/images/semi-tryptic-case-study.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
             <figcaption >Fig.4 - Investigate into the unidentified PSM using the information of its neighbors. The highlighted edges shows the mass difference of 230 Da equals to the mass of "DD". And we find the red nodes are all matched with a peptide that starts with "DD". What if we remove the DD and use the remaining part to match with the query spectrum? Yes, it turns out that the correct anwser is "PLTNLNTAFDVAEK".</figcaption>
           </figure>
 
           <h2>Investigate into mixture spectra of two similar peptides</h2>
-          <p> The following example shows two similar peptides co-fragmented into one MS2 spectrum.  The query id is <a href="http://omics.ust.hk:8709/id/18793053">18793053 </a>. In this case, the neighbors of the query node form one tightly connected cluster. All of them are identified, but as two different peptides, ADIDVSGPK and ADVDISGPK. Thse two peptides share many fragment ions. From the back-to-back PSM plot implemented in Spectroscape interface, one can clearly see the query spectra contains peaks of both peptides.  </p>
+          <p class="text-justify"> The following example shows two similar peptides co-fragmented into one MS2 spectrum.  The query id is <a href="http://omics.ust.hk:8709/id/18793053">18793053 </a>. In this case, the neighbors of the query node form one tightly connected cluster. All of them are identified, but as two different peptides, ADIDVSGPK and ADVDISGPK. Thse two peptides share many fragment ions. From the back-to-back PSM plot implemented in Spectroscape interface, one can clearly see the query spectra contains peaks of both peptides.  </p>
             
             <p>There are four different mode when it comes to the back-to-back plot: query, neighbor, separate and mixture. In the first three mode, the back-to-back plot shows two spectra, the top spectrum is the one user selected by single clicking on the neighbouring node, and the bottom one is the query spectrum. The query method will annotate the two spectrum with the peptide of query node. The neighbor method will annotate the two spectrum with the peptide of the user selected spectra. The separate method will annotate the two spectra with their own peptide. The last method, the mixture annotation will show top and bottom with the same query spectrum, but annotated with query peptide (bottom) and peptide of user selected node (top).  </p>
           <figure class="figure">
@@ -210,7 +201,7 @@ figcaption {
           </figure>
 
           <h2>Search a peak list out of archive</h2>
-          <p> It is possible to search a peak list out of the archive, the only information we need is a peak list. The peak list should contain multiple rows, each row is a pair of values, mz and intensity. Here is an example peak list. </p>
+          <p class="text-justify"> It is possible to search a peak list out of the archive, the only information we need is a peak list. The peak list should contain multiple rows, each row is a pair of values, mz and intensity. Here is an example peak list. </p>
           
           <p>
 120.058 48</br>
@@ -251,7 +242,7 @@ figcaption {
 1145.586 15</br>
 
           </p>
-          <p> This Peak list above actually is the query spectrum <a href="http://omics.ust.hk:8709/id/21958751">21958751</a>. Now we can open the Spectroscape web interface, choose to search a peak list, then we can paste the peaks above to the text box and click button "search peak list". It's done. The web interface will show the network between the query spectra and its neighbors. Note that this spectrum is out of the archive, therefore its query id become "-1". 
+          <p class="text-justify"> This Peak list above actually is the query spectrum <a href="http://omics.ust.hk:8709/id/21958751">21958751</a>. Now we can open the Spectroscape web interface, choose to search a peak list, then we can paste the peaks above to the text box and click button "search peak list". It's done. The web interface will show the network between the query spectra and its neighbors. Note that this spectrum is out of the archive, therefore its query id become "-1". 
           </p>
           <figure class="figure">
             <img src="/images/search-a-peak-list.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">

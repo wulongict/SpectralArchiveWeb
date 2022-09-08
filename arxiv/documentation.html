@@ -55,8 +55,20 @@
     #nodestable tbody tr td:first-child {
       cursor: pointer;
     }
+
+    h1 {
+      font-size: 1.5rem; 
+      font-family: Harding,Palatino,serif;
+    }
+
+    h2 {
+      font-size: 1.5rem; 
+      font-family: Harding,Palatino,serif;
+    }
+
     p {
-      font-size: 18px;
+      font-size: 1.25rem; 
+      font-family: Harding,Palatino,serif;
     }
 
     /* figcaption {
@@ -73,7 +85,7 @@
 figcaption {
   background-color: white;
   color: green;
-  font-size: 20px;
+  font-size: 16px;
   /* font-style: italic; */
   padding: 2px;
   /* text-align: center; */
@@ -166,7 +178,7 @@ figcaption {
           </figure>
 
           <h2>Tooltip on node and edges, PSM visualization and search new query</h2>
-          <p>over any node or edge to show the tooltip information. Single click on any node to show the PSM on the right side using Lorikeet. Double click on any node to start a new search using that node as query spectrum.</p> 
+          <p>Mouse over any node or edge to show the tooltip information. Single click on any node to show the PSM on the right side using Lorikeet. Double click on any node to start a new search using that node as query spectrum.</p> 
           
           <figure class="figure">
             <img src="/images/tooltip-node-edge-click.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
@@ -195,6 +207,55 @@ figcaption {
           <figure class="figure">
             <img src="/images/mixture-spectra-case-study.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
             <figcaption >Fig.5 - Investigate into a mixture spectra. The cluster returned by Spectroscape contains two different peptides. According to the analysis with back-to-back PSM plot, we can tell the query node is a mixture of peptide ADIDVSGPK and ADVDISGPK . </figcaption>
+          </figure>
+
+          <h2>Search a peak list out of archive</h2>
+          <p> It is possible to search a peak list out of the archive, the only information we need is a peak list. The peak list should contain multiple rows, each row is a pair of values, mz and intensity. Here is an example peak list. </p>
+          
+          <p>
+120.058 48</br>
+156.100 35</br>
+175.113 39</br>
+201.114 50</br>
+207.095 36</br>
+214.054 38</br>
+229.099 43</br>
+258.122 32</br>
+298.131 31</br>
+303.105 30</br>
+312.169 25</br>
+333.135 23</br>
+362.188 46</br>
+379.156 26</br>
+425.238 21</br>
+433.234 45</br>
+438.178 22</br>
+441.169 28</br>
+466.163 29</br>
+496.284 27</br>
+566.293 18</br>
+583.322 47</br>
+596.292 42</br>
+682.383 41</br>
+759.350 37</br>
+765.423 16</br>
+783.429 49</br>
+873.396 33</br>
+893.477 19</br>
+894.453 34</br>
+911.482 44</br>
+974.441 24</br>
+1044.450 17</br>
+1058.549 20</br>
+1061.479 40</br>
+1145.586 15</br>
+
+          </p>
+          <p> This Peak list above actually is the query spectrum <a href="http://omics.ust.hk:8709/id/21958751">21958751</a>. Now we can open the Spectroscape web interface, choose to search a peak list, then we can paste the peaks above to the text box and click button "search peak list". It's done. The web interface will show the network between the query spectra and its neighbors. Note that this spectrum is out of the archive, therefore its query id become "-1". 
+          </p>
+          <figure class="figure">
+            <img src="/images/search-a-peak-list.gif" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+            <figcaption >Fig.6 - Search a peak list. It turns out that this is a mixture spectrum. It is actually from the archive, where the query id is <a href="http://omics.ust.hk:8709/id/21958751">21958751</a>. </figcaption>
           </figure>
 
         </section>

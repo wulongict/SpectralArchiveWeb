@@ -371,32 +371,8 @@ function parseModifiedPeptide(modstr)
 
 function add_naviation_bar_cloud_search()
 {
-  add_navigation_bar_cluster_page();
-//   var htmlnavstring = String.raw`<nav class="navbar navbar-expand-sm navbar-expand-lg navbar-dark bg-primary">
-//   <!-- Navbar content -->
-//   <!-- <nav class="navbar  navbar-light bg-light"> -->
-//   <a class="navbar-brand" href="#">Home</a>
-//   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-//     <span class="navbar-toggler-icon"></span>
-//   </button>
-//   <div class="collapse navbar-collapse" id="navbarText">
-//     <ul class="navbar-nav mr-auto">
-//       <li class="nav-item">
-//         <a class="nav-link" href="/">Spectral Cluster </a>
-//       </li>
-//       <li class="nav-item">
-//         <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>
-//       </li>
-//       <li class="nav-item active">
-//         <a class="nav-link" href="/cloudsearch.html">Cloud Search<span class="sr-only">(current)</span></a>
-//       </li>
-//     </ul>
-//     <span class="navbar-text">
-//       Clustering
-//     </span>
-//   </div>
-// </nav>`
-// $("#archive_navigation_bar").html(htmlnavstring);
+  add_navigation_bar("cloudsearch");
+
 }
 
 function getlaunchtime() {
@@ -415,75 +391,38 @@ function getlaunchtime() {
 }
 
 function add_navigation_bar_cluster_page() {
-  var x = $(".page-header").text();
-  var platform = "CPU";
-  if (x.includes("GPU")) {
-    platform = "GPU";
-  }
-  var launchtime = getlaunchtime();
-  // var y =x.match("(updated");
-  // if(y!== null)
-  // {
-  //   var m=x.match(/(updated.*)/);
-  //   console.log("find m: ", m);
-  // }
-
-  var totalnum = x.split("from ")[1].split("(")[0]
-  var htmlnavstring = String.raw`<nav class="navbar fixed-top  navbar-expand-sm navbar-expand-lg navbar-dark bg-primary " >
-  <!-- Navbar content -->
-  <!-- <nav class="navbar  navbar-light bg-light"> -->
-
-  <a class="navbar-brand" onclick="feellucky()">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Spectral Cluster <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>
-      </li>
-          <li class="nav-item ">
-          <a class="nav-link" href="/filesearch.html">File Search  </a>
-        </li>
-
-        <!--  <li class="nav-item"> -->
-        <!--   <a class="nav-link" href="/cloudsearch.html">Cloud Search</a> -->
-        <!-- </li> -->
-      <li class="nav-item">
-        <a class="nav-link" href="/documentation.html">Documentation</a>
-      </li>
-    </ul>
-    <span class="navbar-text">
-       ${totalnum} Spectra | ${platform} | ${launchtime}
-    </span>
-  </div>
-
-</nav>`
-
-  $("#archive_navigation_bar").html(htmlnavstring);
-  // this is how sticky navbar works in bootstrap, not sure why this is not handled by bootstrap js.
-  $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight); // add space to prevent navbar covering top content.
-  window.addEventListener("resize", () => { // update padding whenever window size is changed.
-    $("body").css("padding-top", $("#archive_navigation_bar > nav")[0].offsetHeight);
-  });
+  add_navigation_bar();
 }
 
 function add_navigation_bar_doc_page() {
+  add_navigation_bar("documentation");
+}
+
+function add_navigation_bar(activeItem="Spectral Cluster") {
   var x = $(".page-header").text();
   var platform = "CPU";
   if (x.includes("GPU")) {
     platform = "GPU";
   }
   var launchtime = getlaunchtime();
-  // var y =x.match("(updated");
-  // if(y!== null)
-  // {
-  //   var m=x.match(/(updated.*)/);
-  //   console.log("find m: ", m);
-  // }
+
+  var spectralclusterActive = "";
+  var peptidesearchActive = "";
+  var filesearchActive="";
+  var cloudsearchActive = "";
+  var documentationActive = "";
+  if(activeItem == "Spectral Cluster"){
+    spectralclusterActive = "active";
+  } else if (activeItem == "peptidesearch"){
+    peptidesearchActive = "active";
+  }else if (activeItem == "filesearch"){
+    filesearchActive = "active";
+  } else if (activeItem == "cloudsearch"){
+    cloudsearchActive = "active";
+  } else if (activeItem == "documentation"){
+    documentationActive = "active";
+  }
+
 
   var totalnum = x.split("from ")[1].split("(")[0]
   var htmlnavstring = String.raw`<nav class="navbar fixed-top  navbar-expand-sm navbar-expand-lg navbar-dark bg-primary " >
@@ -496,21 +435,21 @@ function add_navigation_bar_doc_page() {
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
+      <li class="nav-item ${spectralclusterActive}">
         <a class="nav-link" href="/">Spectral Cluster </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item ${peptidesearchActive}">
         <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>
       </li>
-          <li class="nav-item ">
+          <li class="nav-item ${filesearchActive}">
           <a class="nav-link" href="/filesearch.html">File Search  </a>
         </li>
 
-      <!--  <li class="nav-item"> -->
-      <!--   <a class="nav-link" href="/cloudsearch.html">Cloud Search</a> -->
-      <!-- </li> -->
+       <li class="nav-item ${cloudsearchActive}"> 
+        <a class="nav-link" href="/cloudsearch.html">Cloud Search</a> 
+     </li> 
 
-      <li class="nav-item active">
+      <li class="nav-item ${documentationActive}">
         <a class="nav-link" href="/documentation.html">Documentation <span class="sr-only">(current)</span></a>
       </li>
     </ul>

@@ -410,6 +410,7 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
   var peptidesearchActive = "";
   var filesearchActive="";
   var cloudsearchActive = "";
+  var peaklistsearchActive="";
   var documentationActive = "";
   if(activeItem == "Spectral Cluster"){
     spectralclusterActive = "active";
@@ -419,7 +420,9 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
     filesearchActive = "active";
   } else if (activeItem == "cloudsearch"){
     cloudsearchActive = "active";
-  } else if (activeItem == "documentation"){
+  } else if (activeItem == "peaklistsearch"){
+    peaklistsearchActive = "active";
+  }else if (activeItem == "documentation"){
     documentationActive = "active";
   }
 
@@ -446,8 +449,12 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
         </li>
 
        <li class="nav-item ${cloudsearchActive}"> 
-        <a class="nav-link" href="/cloudsearch.html">Cloud Search</a> 
+        <a class="nav-link" href="/cloudsearch.html" style="display: none;">Cloud Search</a> 
      </li> 
+
+      <li class="nav-item ${peaklistsearchActive}"> 
+      <a class="nav-link" href="/peaklistsearch.html" >PeakList Search</a> 
+    </li> 
 
       <li class="nav-item ${documentationActive}">
         <a class="nav-link" href="/documentation.html">Documentation <span class="sr-only">(current)</span></a>

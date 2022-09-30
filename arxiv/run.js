@@ -215,7 +215,39 @@ class SpectralNetwork {
           });
       }
       _this.label_visiblity = !_this.label_visiblity;
+      
+      // let strength = _this.get_repulsive_force_strength();
+      // _this.simulation.stop()
+      //   .force("charge", d3.forceManyBody().strength(-500*strength).distanceMax(500).distanceMin(1))
+      //   // .force("forceX", d3.forceX(_this.width / 2).strength(gravity_strength))
+      //   // .force("forceY", d3.forceY(_this.height / 2).strength(gravity_strength))
+      //   .alpha(0.08).restart();
     });
+
+
+    // $("#peptidelabelbtn").click(() => { // label button `onclick` handler: toggle peptide label.
+    //   let labels = _this.element.select(".nodes").selectAll(".peptide-label");
+    //   if (_this.label_visiblity)
+    //     labels.attr("visibility", "hidden");
+    //   else {
+    //     labels.attr("visibility", "visibile")
+    //       .attr("x", (d, i, elms) => { // label coordinates are calculated only when visibility is toggled on, not calculated on `tick` due to performance issue.
+    //         const text_width = elms[i].getComputedTextLength();
+    //         if (d.x + 6 + text_width > _this.width)
+    //           return -6 - text_width;
+    //         else
+    //           return 6;
+    //       })
+    //       .attr("y", (d, i, elms) => {
+    //         const text_height = elms[i].getBBox().height;
+    //         if (d.y + 3 - text_height / 2 < 0)
+    //           return 3 + text_height / 2;
+    //         else
+    //           return 3;
+    //       });
+    //   }
+    //   _this.label_visiblity = !_this.label_visiblity;
+    // });
 
     $("#svggravitystrength").change(() => { // gravity selectbox `onchange` handler, re-calculate gravity strength.
       let gravity_strength = _this.get_gravity(_this.simulation.nodes().length);
@@ -877,7 +909,7 @@ class SpectralNetwork {
           d.fx = d.x;
           d.fy = d.y;
         }
-        if (!d3.event.active) _this.simulation.alphaTarget(0.09).restart();
+        if (!d3.event.active) _this.simulation.alphaTarget(0.03).restart();
       })
       .on("drag", d => { // drag event handler for circles
         console.log('circle on drag now');
@@ -991,7 +1023,11 @@ class SpectralNetwork {
       });
     var d3_alpha = 0.5;
     this.simulation.force("link").links(graph.links);
-    this.simulation.alpha(0.05).restart();
+    // try different alpha values. 
+    // alpha = 0.5, makes it very fast but not stop too early. not in good position yet. 
+    // alpha = 0.05 make it very slow. 
+    // try the value in between 0.25
+    this.simulation.alpha(0.25).restart();
 
     // todo: we could add delta mass to our table
     link.attr("data-toggle", "tooltip")
@@ -1779,9 +1815,18 @@ function onDocReady() {
   }
 
   console.log("Table converted to DataTable now Call ready now: ctrl+F5");
-  clicksearchbtn();
-  console.log('ready----------');
-  add_navigation_bar_cluster_page();
+  
+
+  
+  if($("#showpeaklist_flag").val()=="1"){
+    showPeakList();
+    add_navigation_bar("peaklistsearch")
+  }else{
+    clicksearchbtn();
+    console.log('ready----------');
+    add_navigation_bar_cluster_page();
+  }
+
 }
 // end of the onload function
 
@@ -2316,6 +2361,18 @@ function update_remark() {
 
 }
 
+function scoreTypeChanged(){
+  if($("#ProbType").val()=="Significance"){
+    $("#min-prob-option").val(0.8);
+    $("#min-prob-option").hide();
+  }else{
+
+    $("#min-prob-option").show();
+    $("#min-prob-option").val(0.8);
+  }
+  peptidecolorchanged();
+}
+
 function peptidecolorchanged() {
   localStorage.setItem("MinProb", $("#MinProb").val());
   var getVal = $("#MinProb").val();
@@ -2683,13 +2740,29 @@ function redraw2(queryindex, hitrank, pk_str) {
   }
   width=f.width;
   height=e.height;
+  console.log("======================Start to get value of plot mode. =================================", $("#plotPSM").val());
   if ($("#plotPSM").val() == 1) {
+    // plot One PSM
+    // show Options
+    // or Hide options.
+    $( ".native-plot-options" ).show();
+    d3.selectAll('.native-plot-options').each(
+      function (d, i) {
+        console.log(d,i);
+        // d3.select(this).attr("x1", newxf(d.x1)).attr("y1", yf(d.y1))
+        //   .attr("x2", newxf(d.x2)).attr("y2", yf(d.y2));
+      });
     PSMViewer.removeSvgImage('my_dataviz1', 'svg1');
     PSMViewer.removeSvgImage('my_dataviz2', 'svg12');
     PSMViewer.plotPSM(modified_sequence, mz, intensity, 'my_dataviz1', 'svg1', thenode.charge, thescan, thefilename, f.width, e.height * 0.75, precursormass);
     // var modstring_querynode = document.getElementById("peptideptm").value;
     // PSMViewer.plotTowPSMs(modstring_querynode, mz,mz1, intensity,intensity1, "my_dataviz2", 'svg12', thenode.charge, thescan, thefilename);
   } else if ($("#plotPSM").val() == 2) {
+    console.log("Starting to clean figure, the value of pepforspecpair ", $("#pepForSpecPair").val())
+    // plot Two PSMs
+    // show Options
+    // or Hide options.
+    $( ".native-plot-options" ).show();
     PSMViewer.removeSvgImage('my_dataviz1', 'svg1');
     PSMViewer.removeSvgImage('my_dataviz2', 'svg12');
     // PSMViewer.plotPSM(modified_sequence,mz,intensity,'my_dataviz1','svg1',thenode.charge, thescan, thefilename);
@@ -2716,6 +2789,10 @@ function redraw2(queryindex, hitrank, pk_str) {
       // console.log(twoPSM, '------- the two psm ------ as an object')
     PSMViewer.plotTwoPSMs(modstring_querynode, mz, mz1, intensity, intensity1, "my_dataviz2", 'svg12', thenode.charge, thescan, thefilename, f.width, e.height * 0.75, theQueryNode.filename, theQueryNode.scan, theQueryNode.charge, precursormass,twoPSM);
   } else {
+    $( ".native-plot-options" ).hide();
+    // Using Lorikeet for plot figure.
+    // show Options
+    // or Hide options.
     PSMViewer.removeSvgImage('my_dataviz1', 'svg1');
     PSMViewer.removeSvgImage('my_dataviz2', 'svg12');
     $("#lorikeet2").specview({
@@ -3227,13 +3304,22 @@ function search_with_queryid(queryid) {
     url: generate_base_url() + "/id/" + queryid,
     async: true,
     data: params,
-    timeout: 25000,
-    contentType: "application/x-www-form-urlencoded",
+    timeout: 5000,
+    processData: false,
+    contentType: false,
+    cache: false,
+    // contentType: "application/x-www-form-urlencoded",
     dataType: "text",
-    error: (xhr, status, error) => {
-      alert(`${Error(error)} at search_with_queryid(...)`);
-      ErrorInfo.log(error);
-    }
+    error:(err) =>{
+      console.log(err);
+      alert(`${Error(error)} at search_with_queryid(...) ${err}  ${xhr}`);
+    },
+    // error: (xhr, status, error) => {
+    //   console.log('error on safari: ', error, "status ",  status, "xhr", xhr.statusText);
+
+    //   alert(`${Error(error)} at search_with_queryid(...) ${error} ${status} ${xhr}`);
+    //   ErrorInfo.log(error);
+    // }
   });
 }
 

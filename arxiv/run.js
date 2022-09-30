@@ -193,8 +193,11 @@ class SpectralNetwork {
       d3.select(_this.element.node().parentNode).selectAll(".contextmenu").remove();
     });
 
-    $("#peptidelabelbtn").click(() => { // label button `onclick` handler: toggle peptide label.
+    $("#peptidelabel_flag").change(() => { 
+      console.log('changed flag',$("#peptidelabel_flag").val() );
       let labels = _this.element.select(".nodes").selectAll(".peptide-label");
+      _this.label_visiblity = true;
+      if ($("#peptidelabel_flag").val() == "1"){_this.label_visiblity = false;}
       if (_this.label_visiblity)
         labels.attr("visibility", "hidden");
       else {
@@ -5962,7 +5965,7 @@ function showPeakList(){
       Peak List
     </a>
   </label>
-  <textarea id="peaksforsearching"  class="form-control" rows=30 maxlength="1000" style="margin: 0px; overflow: auto; padding: 1px; height:auto; box-sizing:border-box">
+  <textarea id="peaksforsearching"  class="form-control" rows=15 maxlength="1000" style="margin: 0px; overflow: auto; padding: 1px; height:auto; box-sizing:border-box">
   110.071 6044
 111.075 304
 114.535 127

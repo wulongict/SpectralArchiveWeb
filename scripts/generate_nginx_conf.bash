@@ -91,7 +91,7 @@ http {
 
 
 
-        location ~ ^/(id|spectrum|peptideseq|identification|remark) {
+        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
             fastcgi_pass   127.0.0.1:8711;
         }
 
@@ -145,7 +145,7 @@ http {
         }
 
 
-        location ~ ^/(id|spectrum|peptideseq|identification|remark) {
+        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
             fastcgi_pass   127.0.0.1:8710;
         }
 
@@ -192,7 +192,7 @@ http {
         }
 
 
-        location ~ ^/(id|spectrum|peptideseq|identification|remark) {
+        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
             fastcgi_pass   127.0.0.1:8713;
         }
 
@@ -241,7 +241,7 @@ http {
 
 
 
-        location ~ ^/(id|spectrum|peptideseq|identification|remark) {
+        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
             fastcgi_pass   127.0.0.1:8712;
         }
 

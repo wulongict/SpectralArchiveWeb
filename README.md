@@ -27,8 +27,6 @@ cd scripts/
 
 Notice that we need the spectral archive tool to be called. User should change the path inside launch_archive.bash to make the script work. 
 
-Then you can start 
-
 ## stop the spectral archive web interface
 To stop the spectral archive interface, one can type-in CTRL+C to terminate the spawn-fcgi process. 
 

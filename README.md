@@ -1,13 +1,13 @@
-# Web interface of spectral archive
+# Web interface of Spectroscape
 
-## Set up spectral archive web interface.
+## Set up the interface.
 
 We have provided an example archive in smallArchive folder. To set up the web interface, we should run the following command to start the web interface.
 
 ```bash
 cd scripts/
 # create the config file for nginx service
-# ATTENTION: BEFORE you run the following command, make sure edit it to make the SERVER_NAME correct. We are using kez371.ust.hk in our lab.
+# ATTENTION: BEFORE you run the following command, make sure SERVER_NAME is correct. it's OK to use localhost. 
 # e.g. 
 # ./generate_nginx_conf.bash localhost 143.89.0.0/16 ../arxiv 
 # using absolute path instead of relative path as shown above ../arxiv 
@@ -27,7 +27,7 @@ cd scripts/
 
 Notice that we need the spectral archive tool to be called. User should change the path inside launch_archive.bash to make the script work. 
 
-## stop the spectral archive web interface
+## stop the web interface
 To stop the spectral archive interface, one can type-in CTRL+C to terminate the spawn-fcgi process. 
 
 ## stop the nginx service

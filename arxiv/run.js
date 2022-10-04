@@ -1266,12 +1266,12 @@ class NodesTable extends DataTable {
           return data.toFixed(4);
         }
       },
-      {
-        data: "rfscore",
-        render: function (data, type, row) {
-          return data.toFixed(4);
-        }
-      },
+      // {
+      //   data: "rfscore",
+      //   render: function (data, type, row) {
+      //     return data.toFixed(4);
+      //   }
+      // },
       {
         data: "precursor"
       },
@@ -1829,6 +1829,7 @@ function onDocReady() {
   if($("#showpeaklist_flag").val()=="1"){
     showPeakList();
     add_navigation_bar("peaklistsearch")
+    clickpeaklistsearchbtn();
   }else{
     clicksearchbtn();
     // console.log('ready----------');
@@ -2627,6 +2628,7 @@ function update_page(isCloud) {
  * In javascript, comparison without implicit conversion is ===, not ==.   
 */
 function redraw2(queryindex, hitrank, pk_str) {
+  console.log('redraw 2')
 
   if (queryindex === "-1") {
     console.log("Correct");
@@ -2756,6 +2758,8 @@ function redraw2(queryindex, hitrank, pk_str) {
   height=e.height;
   console.log("======================Start to get value of plot mode. =================================", $("#plotPSM").val());
   if ($("#plotPSM").val() == 1) {
+    console.log("plot single plot");
+
     // plot One PSM
     // show Options
     // or Hide options.
@@ -2772,11 +2776,13 @@ function redraw2(queryindex, hitrank, pk_str) {
     // var modstring_querynode = document.getElementById("peptideptm").value;
     // PSMViewer.plotTowPSMs(modstring_querynode, mz,mz1, intensity,intensity1, "my_dataviz2", 'svg12', thenode.charge, thescan, thefilename);
   } else if ($("#plotPSM").val() == 2) {
+    console.log("plot two plot");
     console.log("Starting to clean figure, the value of pepforspecpair ", $("#pepForSpecPair").val())
     // plot Two PSMs
     // show Options
     // or Hide options.
     $( ".native-plot-options" ).show();
+    $( ".native-plot-options-back2back" ).show();
     PSMViewer.removeSvgImage('my_dataviz1', 'svg1');
     PSMViewer.removeSvgImage('my_dataviz2', 'svg12');
     // PSMViewer.plotPSM(modified_sequence,mz,intensity,'my_dataviz1','svg1',thenode.charge, thescan, thefilename);
@@ -2803,7 +2809,9 @@ function redraw2(queryindex, hitrank, pk_str) {
       // console.log(twoPSM, '------- the two psm ------ as an object')
     PSMViewer.plotTwoPSMs(modstring_querynode, mz, mz1, intensity, intensity1, "my_dataviz2", 'svg12', thenode.charge, thescan, thefilename, f.width, e.height * 0.75, theQueryNode.filename, theQueryNode.scan, theQueryNode.charge, precursormass,twoPSM);
   } else {
+    console.log("plot with lorikeet");
     $( ".native-plot-options" ).hide();
+    $( ".native-plot-options-back2back" ).hide();
     // Using Lorikeet for plot figure.
     // show Options
     // or Hide options.
@@ -2890,7 +2898,7 @@ function redraw(queryindex, hitrank) {
   var thescan = graph.nodes[0].scan;
   var thefilename = "demo";
   var precursormass_mz = 0;
-  if (queryindex == -1) {
+  if (queryindex == -1 && document.URL != generate_base_url() +"/peaklistsearch.html") { // make sure it is not for peaks list.
     thefilename = "localfile --> " + graph.nodes[hitrank].filename;
     console.log('the first filename is : ', graph.nodes);
     var offset = 0;
@@ -3032,7 +3040,10 @@ function add_remark_options() {
 
 }
 
-
+/**
+ * This function relies on g_pkdata, and g_pkdata2.
+ * And also the g_global_id_selected.
+ */ 
 function plotAgain() {
   console.log('==================plot Again ====================');
   // StoreValues();
@@ -3040,10 +3051,20 @@ function plotAgain() {
   // console.log("peak type: ", $('#PEAKTYPE').val());
   var PeakType = $("#PEAKTYPE").val();
   var queryid = $("#QUERYID").val();
+
+  // consider the following status. 
+  // The data is not from server, and query id, but from local peak list. 
+  // if select id is positive, for normal main page, we can directly plot. 
+  
   
   if (g_global_id_selected > 0) {
-    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+    console.log('g_pkdata2', g_pkdata2);
     redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+  }else{
+    console.log('g_pkdata2', g_pkdata2);
+    redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
   }
   // update_lorikeet_1();
   // update_lorikeet_2();
@@ -3114,6 +3135,7 @@ function realPeakToPeakstr(realpeak) {
   return peakToPeakstr(peak);
 }
 function redraw_with_peakinfo2(info, PeakType, queryid) {
+  console.log(" redraw_with_peakinfo2 data as json: ", info)
 
   if (PeakType == 1) {
     var pk_realstr = realPeakToPeakstr(info.realpeaks);
@@ -3127,7 +3149,7 @@ function redraw_with_peakinfo2(info, PeakType, queryid) {
   // redraw2(queryid, -1, pk_str);
 }
 function redraw_with_peakinfo(info, PeakType, queryid) {
-  // console.log("data as json: ", info)
+  console.log("redraw_with_peakinfo data as json: ", info)
   var pktext = info.mzs;
   // text to peaks
   var peak = mzpeakTextToPeaks(pktext);
@@ -3212,9 +3234,7 @@ function update_remark_by_id(){
     if (xhr.readyState == 4 && xhr.status == 200) {
       console.log("get remark by id : ", data);
       ErrorInfo.log('remark the spectrum'+ data);
-      //g_pkdata = JSON.parse(data);
-      // re-plot
-      // redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+
     }
   });
 }
@@ -3241,19 +3261,59 @@ function update_lorikeet_1() {
       console.log(g_summary);
     }
   })
+  console.log("Error in --------------------------------case that query id is -1", queryid);
+  if(queryid == -1){
+    console.log("Error in --------------------------------case that query id is -1");
+    // if the query id is -1, we will not use the follow logic. 
 
-  // getting peaks .
-  console.log(" Before Done-------------------------- update_lorikeet_1");
-  $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      console.log("Get back data from server... Done-------------------------- update_lorikeet_1");
-      // console.log("....>>>>getting spectrum by id. what if id is -1, .........., get sppectrum by id: ",queryid, 'data\n', data);
-      g_pkdata = JSON.parse(data);
-      // re-plot
+    if (document.URL == generate_base_url() +"/peaklistsearch.html"){
+      console.log("Error in --------------------------------case that query id is -1");
+      console.log("----------------------------------HERE");
+      var pk_str = $('#peaksforsearching').val().trim();
+  
+
+      pk_str=pk_str.split('\n');
+      
+      for(var i = 0; i < pk_str.length; i ++){
+        pk_str[i]=pk_str[i].trim();
+      }
+
+      var mzs='', intensitystr='' ;
+      for(var i=0; i < pk_str.length; i ++){
+        mzinten = pk_str[i].split(' ');
+        mzs += mzinten[0];
+        intensitystr += mzinten[1];
+        if(i!=pk_str.length-1){
+          mzs += ' ';
+          intensitystr += ' ';
+        }
+      }
+      // to be modified.
+      var dt="{\"mzs\": \"\", \"realpeaks\": {\"mz\":\"" +mzs+"\", \"intensity\": \""+intensitystr+"\" }}";
+      console.log('dt: ', dt);
+      g_pkdata=JSON.parse(dt);
+      if(g_pkdata2=='')   g_pkdata2=g_pkdata;
       redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+      // redraw(-1,-1);
+
     }
-  });
-  console.log("Done--- update_lorikeet_1");
+    console.log("Error in --------------------------------case that query id is -1");
+
+  }else{
+        // getting peaks .
+    console.log(" Before Done-------------------------- update_lorikeet_1");
+    $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        console.log("Get back data from server... Done-------------------------- update_lorikeet_1", data);
+
+        g_pkdata = JSON.parse(data);
+        // re-plot
+        redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+      }
+    });
+    console.log("Done--- update_lorikeet_1");
+  }
+
 }
 
 /**update the lorikeet viewer near the clustering graph. */
@@ -3266,7 +3326,7 @@ function update_lorikeet_2(queryid) {
     if (document.URL == generate_base_url() +"/cloudsearch.html"){
       console.log('=================haha, in else');
       var spec = getQueryForCloud();
-      let PeakType = 0;
+      let PeakType = 0;  // use top 50 peaks.
       // console.log("spec get for cloud search: ", spec, PeakType);
       var mz = spec.split(",").map(Number);
       for (var i = 0; i < mz.length; i++) {
@@ -3290,7 +3350,26 @@ function update_lorikeet_2(queryid) {
     } 
     else if (document.URL == generate_base_url() +"/peaklistsearch.html"){
       console.log(" -- peak list search! -- ",$("#peaks").val());
-      redraw2(-1,-1,$("#peaks").val());
+      // use all peaks.
+      let PeakType = 1;
+      $("#PEAKTYPE").val(PeakType);
+      g_pkdata2 = g_pkdata;
+      // g_pkdata2 = JSON.parse(data);
+      // console.log("query spec from cloud: ", g_pkdata2, PeakType);
+      // redraw with pkdata2
+      redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
+      // $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
+      //   if (xhr.readyState == 4 && xhr.status == 200) {
+      //     // console.log("get spectrum by id 2: ", data)
+      //     g_pkdata2 = JSON.parse(data);
+      //     // console.log("query spec from cloud: ", g_pkdata2, PeakType);
+      //     // redraw with pkdata2
+      //     redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
+      //   }
+      // });
+      
+      // console.log("plot with g_pkdata2 ", g_pkdata2);
+      // redraw_with_peakinfo2(g_pkdata2, PeakType, -1);
     }
     else  {
       // var realpeaks={"mz":"", "intensity":""}
@@ -3370,7 +3449,13 @@ function StoreNPROBE() {
 
   // localStorage.setItem("EdgeDist", $("#NeighborDistance").val());
   localStorage.setItem("NPROBE", $("#NPROBE").val());
-  clicksearchbtn();
+  let queryindex = $("#QUERYID").val();
+  if (queryindex == -1 && document.URL == generate_base_url() +"/peaklistsearch.html"){
+    clickpeaklistsearchbtn();
+  }else{
+    clicksearchbtn();
+  }
+  
 }
 
 function onNodeSizeChange() {
@@ -3499,7 +3584,14 @@ function RestoreValues() {
 
 function isTopNChanged() {
   StoreValues();
-  clicksearchbtn();
+  let queryindex = $("#QUERYID").val();
+  console.log('query index is ', queryindex, document.URL)
+  if (queryindex == -1 && document.URL == generate_base_url() +"/peaklistsearch.html"){
+    clickpeaklistsearchbtn();
+  }else{
+    clicksearchbtn();
+  }
+  
 }
 
 /**
@@ -3646,7 +3738,11 @@ function clickfilesearchbtn() {
 
 }
 
-// todo
+/**
+ * Called by clickfilesearchbtn
+ * Used for cloud search...
+ * @param {string} spec 
+ */
 function search_with_spec(spec) {
   console.log("The spec is : -----", spec);
   var topN = $("#topn").val();
@@ -6013,7 +6109,7 @@ function showPeakList(){
     </a>
   </label>
   <textarea id="peaksforsearching"  class="form-control" rows=15 maxlength="1000" style="margin: 0px; overflow: auto; padding: 1px; height:auto; box-sizing:border-box">
-  110.071 6044
+110.071 6044
 111.075 304
 114.535 127
 115.160 123
@@ -6169,16 +6265,7 @@ function clickpeaklistsearchbtn(){
   http.onreadystatechange = function () { //Call a function when the state changes.
     if (this.readyState == 4 && this.status == 200) {
       g_jsonstring = this.responseText;
-      try {
-        // console.log("page updaged: ", g_jsonstring);
-        var EdgeDist = localStorage.getItem("EdgeDist");
-        $("#NeighborDistance").val(EdgeDist);
-        $("#QUERYID").val(-1);
-        // g_jsonstring = data;
-      // update_page(false);
-        SpectralNetwork.update(filterjsonstringwithMaxDistance(g_jsonstring,    $("#MAXDist").val()));
-
-          var pk_str = $('#peaksforsearching').val().trim();
+      var pk_str = $('#peaksforsearching').val().trim();
   
 
           pk_str=pk_str.split('\n');
@@ -6187,10 +6274,21 @@ function clickpeaklistsearchbtn(){
             pk_str[i]=pk_str[i].trim();
           }
           pk_str=pk_str.join('\n');
-          console.log('updated pkstr is ', pk_str);
+          // console.log('updated pkstr is ', pk_str);
         // update_spec(spec);
         $("#peaks").val(pk_str);
         $('#peaksfordenovo').val(pk_str);
+      update_page(false);
+      try {
+        console.log("page updaged: --------------------------------------------- ", g_jsonstring);
+        var EdgeDist = localStorage.getItem("EdgeDist");
+        $("#NeighborDistance").val(EdgeDist);
+        $("#QUERYID").val(-1);
+        // g_jsonstring = data;
+      // update_page(false);
+        SpectralNetwork.update(filterjsonstringwithMaxDistance(g_jsonstring,    $("#MAXDist").val()));
+
+          
         do_denovo_sequencing();
         // update_lorikeet_1();
 

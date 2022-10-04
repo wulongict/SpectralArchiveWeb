@@ -261,7 +261,7 @@
                       Query ID
                     </a>
                   </label>
-                  <input type="text" class="form-control" id="QUERYID" name="QUERYID" value="16189"
+                  <input type="text" class="form-control" id="QUERYID" name="QUERYID" value="-1"
                     onchange="clicksearchbtn()" />
                 </div>
                 
@@ -723,21 +723,7 @@
                   </select>
                 </div>
 
-                <!-- Native PSM viewer, annotation-->
-                <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
-                  <label for="pepForSpecPair">
-                    <a href="#" data-toggle="tooltip"  title='Only works for back-to-back plot;  Selected: annotate selected spectrum and query spectrum with peptide of selected node; Query: annotate the selected spectrum and query spectrum with the peptide of query node; Separate: annotate selected node and query node with their own peptde; Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
-                      Peptide Annotation 
-                    </a>
-                  </label>
-                  <select class="form-control" id="pepForSpecPair" onchange="plotAgain()">
-                    <option value="neighbor" >Selected</option>
-                    <option value="query" selected>Query</option>
-                    <option value="separate" >Separate</option>
-                    <option value="mixture" >Mixture</option>
-                    
-                  </select>
-                </div>
+                
 
                 <!-- Lorikeet annotation font size-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
@@ -795,6 +781,22 @@
                   <select class="form-control" id="nh3_nl" onchange="plotAgain()">
                     <option value="1" selected >YES</option>
                     <option value="0"  >NO</option>
+                  </select>
+                </div>
+
+                <!-- Native PSM viewer, annotation-->
+                <div class="native-plot-options-back2back form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                  <label for="pepForSpecPair">
+                    <a href="#" data-toggle="tooltip"  title='Only works for back-to-back plot;  Selected: annotate selected spectrum and query spectrum with peptide of selected node; Query: annotate the selected spectrum and query spectrum with the peptide of query node; Separate: annotate selected node and query node with their own peptde; Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
+                      Peptide Annotation 
+                    </a>
+                  </label>
+                  <select class="form-control" id="pepForSpecPair" onchange="plotAgain()">
+                    <option value="neighbor" >Selected</option>
+                    <option value="query" selected>Query</option>
+                    <option value="separate" >Separate</option>
+                    <option value="mixture" >Mixture</option>
+                    
                   </select>
                 </div>
 
@@ -990,7 +992,7 @@
               <th>Score</th>
               <th>Prob</th>
               <th>iProb</th>
-              <th>RFscore</th>
+              <!-- <th>RFscore</th> -->
               <th>Precursor m/z</th>
               <th>Charge</th>
               <th>File name</th>

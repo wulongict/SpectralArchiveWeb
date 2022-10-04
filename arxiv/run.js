@@ -3227,7 +3227,6 @@ function update_remark_by_id(){
 function update_lorikeet_1() {
   console.log('call update_lorikeet_1() ')
   try{
-
     update_remark_by_id();
   }catch(err){
     ErrorInfo.log('Error: ', err.message);
@@ -3248,13 +3247,13 @@ function update_lorikeet_1() {
   $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       console.log("Get back data from server... Done-------------------------- update_lorikeet_1");
-      console.log("..........................>>>>>>>>>>>>>>>getting spectrum by id. what if id is -1, .........., get sppectrum by id: ",id, 'data\n', data);
+      // console.log("....>>>>getting spectrum by id. what if id is -1, .........., get sppectrum by id: ",queryid, 'data\n', data);
       g_pkdata = JSON.parse(data);
       // re-plot
       redraw_with_peakinfo(g_pkdata, PeakType, queryid);
     }
   });
-  console.log("Done-------------------------- update_lorikeet_1");
+  console.log("Done--- update_lorikeet_1");
 }
 
 /**update the lorikeet viewer near the clustering graph. */

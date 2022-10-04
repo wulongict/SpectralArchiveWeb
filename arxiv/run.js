@@ -921,7 +921,8 @@ class SpectralNetwork {
 
       })
       .on("end", d => { // dragend event handler for circles
-        if (!d3.event.active) _this.simulation.alphaTarget(0).restart();
+        // if (!d3.event.active)
+         _this.simulation.alphaTarget(0.0).restart();
       //  d.fx = d.x;
       //  d.fy = d.y;
         d.fx =null;
@@ -1101,12 +1102,13 @@ class SpectralNetwork {
   }
 
   /**
-   * open lorikeet viewer
+   * open lorikeet viewer next to network on the main tab.
    * @param {Node} d
    */
   static view_node(d) {
     const _this = this;
 
+    // attach a peptide label to the selected node.
     let last_selected = this.element.select(".peptide-label-selected");
     if (last_selected.size())
       last_selected.attr("class", "peptide-label")
@@ -1128,6 +1130,7 @@ class SpectralNetwork {
             return 3;
         });
 
+    // put information into the bottom status bar.
     document.getElementById("nodeinfo2").innerHTML =
       `<h6>
         <span class="label label-default">Selected Node:</span>&nbsp;
@@ -1144,8 +1147,10 @@ class SpectralNetwork {
       </h6>`;
 
       console.log('---------------Call this function with d.id ', d.id);
+    // Then call the following function to show the plot of given id. 
     update_lorikeet_2(d.id);
 
+    // Add peptide label of the new node. 
     this.element.selectAll(".node")
       .filter(node => node.id == d.id)
       .select(".peptide-label")
@@ -1826,7 +1831,7 @@ function onDocReady() {
     add_navigation_bar("peaklistsearch")
   }else{
     clicksearchbtn();
-    console.log('ready----------');
+    // console.log('ready----------');
     add_navigation_bar_cluster_page();
   }
 
@@ -2613,10 +2618,16 @@ function update_page(isCloud) {
   }
 }
 
-//-------------------------lorikeet 2
-// Note:
-// In javascript, comparison without implicit conversion is ===, not ==. 
+
+/**
+ * plot peaks in pk_str string. 
+ *   
+ * -------------------------lorikeet 2  
+ * Note:  
+ * In javascript, comparison without implicit conversion is ===, not ==.   
+*/
 function redraw2(queryindex, hitrank, pk_str) {
+
   if (queryindex === "-1") {
     console.log("Correct");
   } else if (queryindex === -1) {
@@ -3061,11 +3072,13 @@ function submit_remarks_for_id() {
 }
 
 function stringToVector(pktext) {
+  console.log('pktext: ', pktext)
   pktext = pktext.trim();
   var vec = pktext.split(" ").map(Number);
   return vec;
 }
 function mzpeakTextToPeaks(pktext) {
+  console.log('pktext: ', pktext);
   var mz = stringToVector(pktext);
   var peak = []
   for (var i = 0; i < mz.length; i++) {
@@ -3090,6 +3103,7 @@ function peakToPeakstr(peak) {
 }
 
 function realPeakToPeakstr(realpeak) {
+  console.log('pktext: ', realpeak);
   var mz = stringToVector(realpeak.mz);
   var intensity = stringToVector(realpeak.intensity);
   var peak = [];
@@ -3150,11 +3164,17 @@ function redraw_with_peakinfo(info, PeakType, queryid) {
 }
 
 /**
- * request a spectra.
+ * request a spectra. 
+ * 
+ * This should not be called when queryid is -1.
+ * 
  * @param {*} queryid 
  * @returns {Deferred} an ajax call to be handled
  */
 function get_spectra_byid(queryid) {
+  if(queryid == -1){
+    console.log("Warning: do not call get_spectra_byid when queryid is -1, queryid = ", queryid);
+  }  
   // refactored get, get2 into get, update1, update2
   return $.ajax({
     type: "GET",
@@ -3199,8 +3219,13 @@ function update_remark_by_id(){
   });
 }
 
-/**update the lorikeet viewer in the PSM Viewer part. */
+/**
+ * update the lorikeet viewer in the PSM Viewer part.   
+ * Getting peaks from query id.  
+ * redraw_with_peakinfo  
+ * */
 function update_lorikeet_1() {
+  console.log('call update_lorikeet_1() ')
   try{
 
     update_remark_by_id();
@@ -3208,6 +3233,8 @@ function update_lorikeet_1() {
     ErrorInfo.log('Error: ', err.message);
   }
   let PeakType = $("#PEAKTYPE").val(), queryid = $("#QUERYID").val();
+
+  // getting summary, the total number of spectra in archive.
   $.when(get_summary()).done((data, status, xhr)=>{
     if(xhr.readyState==4 && xhr.status == 200){
       console.log('running here.===============', data)
@@ -3215,28 +3242,29 @@ function update_lorikeet_1() {
       console.log(g_summary);
     }
   })
+
+  // getting peaks .
+  console.log(" Before Done-------------------------- update_lorikeet_1");
   $.when(get_spectra_byid(queryid)).done((data, status, xhr) => {
     if (xhr.readyState == 4 && xhr.status == 200) {
-      // console.log("geet sppectrum by id: ", data);
+      console.log("Get back data from server... Done-------------------------- update_lorikeet_1");
+      console.log("..........................>>>>>>>>>>>>>>>getting spectrum by id. what if id is -1, .........., get sppectrum by id: ",id, 'data\n', data);
       g_pkdata = JSON.parse(data);
       // re-plot
       redraw_with_peakinfo(g_pkdata, PeakType, queryid);
     }
   });
+  console.log("Done-------------------------- update_lorikeet_1");
 }
 
 /**update the lorikeet viewer near the clustering graph. */
 function update_lorikeet_2(queryid) {
-  console.log('update_lorikeet_2(queryid) ', queryid);
+  console.log('update_lorikeet_2(queryid) ', queryid);   
   g_global_id_selected = queryid;
   if (queryid === "-1") {
 
     console.log('query id is -1', queryid, "  try to get the query spectra from cloud/or local area?. ", document.URL, generate_base_url);
-    if (document.URL != generate_base_url() +"/cloudsearch.html") {
-      // var realpeaks={"mz":"", "intensity":""}
-      console.log('if ========================> -----------====================> peaks---------------: ', $("#peaks").val());
-      redraw2(-1,1, $("#peaks").val());
-    } else {
+    if (document.URL == generate_base_url() +"/cloudsearch.html"){
       console.log('=================haha, in else');
       var spec = getQueryForCloud();
       let PeakType = 0;
@@ -3260,7 +3288,17 @@ function update_lorikeet_2(queryid) {
       // print the mz values
       // todo: make a string out of the list of float values. space sep. 
       redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
+    } 
+    else if (document.URL == generate_base_url() +"/peaklistsearch.html"){
+      console.log(" -- peak list search! -- ",$("#peaks").val());
+      redraw2(-1,-1,$("#peaks").val());
     }
+    else  {
+      // var realpeaks={"mz":"", "intensity":""}
+      console.log('if ========================> -----------====================> peaks---------------: ', $("#peaks").val());
+      redraw2(-1,1, $("#peaks").val());
+    }
+ 
 
   } else {
     
@@ -3664,6 +3702,16 @@ function search_with_spec(spec) {
   console.log("request sent as post:" + params);
 }
 
+/** 
+ *  For input spec, split by comma,   
+ * convert each into integer from 0 to 65536  
+ * mapping mz back to range 0 to 2000  
+ * push peaks mz and intensity/ranking into matrix, peak   
+ * sort peaks with mz   
+ * convert peak list into pkstr  
+ * push the peakstr into #peaks and #peaksfordenovo part  
+ * call redraw.  
+*/
 function update_spec(spec) {
   var mz = spec.split(",").map(Number);
   for (var i = 0; i < mz.length; i++) {
@@ -6140,7 +6188,7 @@ function clickpeaklistsearchbtn(){
             pk_str[i]=pk_str[i].trim();
           }
           pk_str=pk_str.join('\n');
-          // console.log('updated pkstr is ', pk_str);
+          console.log('updated pkstr is ', pk_str);
         // update_spec(spec);
         $("#peaks").val(pk_str);
         $('#peaksfordenovo').val(pk_str);

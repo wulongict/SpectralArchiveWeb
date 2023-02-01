@@ -2597,8 +2597,16 @@ function generate_base_url() {
   return url;
 }
 
+function activaTab(tab){
+  $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+
 function update_page(isCloud) {
   try {
+    // The web page refreshed, but the tab was not refreshed to the default tab. Now it is fixed.
+    console.log('switching tab-------------');
+    activaTab('networkMaindiv');
+    activaTab('queryParam');
     // console.log("page updaged: ", g_jsonstring);
     var EdgeDist = localStorage.getItem("EdgeDist");
     $("#NeighborDistance").val(EdgeDist);

@@ -3060,23 +3060,55 @@ function plotAgain() {
   var PeakType = $("#PEAKTYPE").val();
   var queryid = $("#QUERYID").val();
 
-  // consider the following status. 
-  // The data is not from server, and query id, but from local peak list. 
-  // if select id is positive, for normal main page, we can directly plot. 
+
+  redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+
+  // update PSM Viewer. with updated peptide sequence
+  redraw_with_peakinfo(g_pkdata, PeakType, queryid);
   
   
-  if (g_global_id_selected > 0) {
-    console.log('g_pkdata2', g_pkdata2);
-    // we remove this line. it works now. Feb. 2
-    //redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
-    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
-  }else{
-    console.log('g_pkdata2', g_pkdata2);
-    redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
-    redraw_with_peakinfo(g_pkdata, PeakType, queryid);
-  }
-  // update_lorikeet_1();
-  // update_lorikeet_2();
+}
+
+
+/**
+ * refresh PSMViewer on new peptide
+ */ 
+function refreshPSMViewer() {
+  console.log('==================plot Again ====================');
+  // StoreValues();
+  localStorage.setItem("PEAKTYPE", $('#PEAKTYPE').val());
+  // console.log("peak type: ", $('#PEAKTYPE').val());
+  var PeakType = $("#PEAKTYPE").val();
+  var queryid = $("#QUERYID").val();
+
+  
+  // redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+
+  // update PSM Viewer. with updated peptide sequence
+  redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+  
+  
+}
+
+
+/**
+ * This function relies on g_pkdata, and g_pkdata2.
+ * And also the g_global_id_selected.
+ */ 
+function onViewerChange() {
+  console.log('==================plot Again ====================');
+  // StoreValues();
+  localStorage.setItem("PEAKTYPE", $('#PEAKTYPE').val());
+  // console.log("peak type: ", $('#PEAKTYPE').val());
+  var PeakType = $("#PEAKTYPE").val();
+  var queryid = $("#QUERYID").val();
+
+
+  redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+
+
+  
+  
 }
 
 function submit_remarks_for_id() {

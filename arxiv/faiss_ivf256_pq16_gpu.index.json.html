@@ -668,7 +668,7 @@
                       PSM Viewers
                     </a>
                   </label>
-                  <select class="form-control" id="plotPSM" onchange="plotAgain()">
+                  <select class="form-control" id="plotPSM" onchange="onViewerChange()">
                     <option value="2">Native Butterfly Plot</option>
                     <option value="1" >Native</option>
                     <option value="0" selected >Lorikeet</option>
@@ -682,7 +682,7 @@
                       Max Mz
                     </a>
                   </label>
-                  <select class="form-control" id="mzRangeMax" onchange="plotAgain()">
+                  <select class="form-control" id="mzRangeMax" onchange="onViewerChange()">
                     <option value="2000" selected>2000</option>
                     <option value="0" >auto</option>
                   </select>
@@ -695,7 +695,7 @@
                       Mz Tolerance
                     </a>
                   </label>
-                  <select class="form-control" id="psm_mz_tol" onchange="plotAgain()">
+                  <select class="form-control" id="psm_mz_tol" onchange="onViewerChange()">
                     <option value="0.01" >0.01</option>
                     <option value="0.02" selected >0.02</option>
                     <option value="0.05" >0.05</option>
@@ -710,7 +710,7 @@
                       Ignore Peaks
                     </a>
                   </label>
-                  <select class="form-control" id="noise_baseline" onchange="plotAgain()">
+                  <select class="form-control" id="noise_baseline" onchange="onViewerChange()">
                     <option value="0.001" >0.001</option>
                     <option value="0.005" >0.005</option>
                     <option value="0.01" selected>0.01</option>
@@ -727,7 +727,7 @@
                       Peptide Annotation 
                     </a>
                   </label>
-                  <select class="form-control" id="pepForSpecPair" onchange="plotAgain()">
+                  <select class="form-control" id="pepForSpecPair" onchange="onViewerChange()">
                     <option value="neighbor" >Selected</option>
                     <option value="query" selected>Query</option>
                     <option value="separate" >Separate</option>
@@ -743,7 +743,7 @@
                       Font Size
                     </a>
                   </label>
-                  <select class="form-control" id="fontsize" onchange="plotAgain()">
+                  <select class="form-control" id="fontsize" onchange="onViewerChange()">
                     <option value="4" >4pt</option>
                     <option value="8" selected>8pt</option>
                     <option value="10" >10pt</option>
@@ -760,7 +760,7 @@
                       Line Width
                     </a>
                   </label>
-                  <select class="form-control" id="linewidth" onchange="plotAgain()">
+                  <select class="form-control" id="linewidth" onchange="onViewerChange()">
                     <option value="1" selected>1pt</option>
                     <option value="2" >2pt</option>
                     <!-- <option value="3" >3pt</option>
@@ -776,7 +776,7 @@
                       H2O Loss
                     </a>
                   </label>
-                  <select class="form-control" id="h2o_nl" onchange="plotAgain()">
+                  <select class="form-control" id="h2o_nl" onchange="onViewerChange()">
                     <option value="1" selected >YES</option>
                     <option value="0"  >NO</option>
                   </select>
@@ -789,7 +789,7 @@
                       NH3 Loss
                     </a>
                   </label>
-                  <select class="form-control" id="nh3_nl" onchange="plotAgain()">
+                  <select class="form-control" id="nh3_nl" onchange="onViewerChange()">
                     <option value="1" selected >YES</option>
                     <option value="0"  >NO</option>
                   </select>
@@ -943,7 +943,7 @@
           </div>
 
           <div class="form-group">
-            <button id="showspecview" type="button" class="btn btn-primary form-control" onclick="plotAgain()">
+            <button id="showspecview" type="button" class="btn btn-primary form-control" onclick="refreshPSMViewer()">
               Update PSM
             </button>
           </div>

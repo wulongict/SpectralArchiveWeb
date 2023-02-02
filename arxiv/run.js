@@ -3067,7 +3067,8 @@ function plotAgain() {
   
   if (g_global_id_selected > 0) {
     console.log('g_pkdata2', g_pkdata2);
-    redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+    // we remove this line. it works now. Feb. 2
+    //redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
     redraw_with_peakinfo(g_pkdata, PeakType, queryid);
   }else{
     console.log('g_pkdata2', g_pkdata2);

@@ -632,10 +632,7 @@ class SpectralNetwork {
         .attr("data-container", "body")
         .attr("html", "true")
         .attr("title", d => {
-          return `<p style="text-align: left">
-    <em>dp > </em> ${d.dp}<br/>
-    <em>p-value  </em> ${d.freq}/${bgscore_length}<br/>
-  </p>`});
+          return `<em>dp > </em> ${d.dp}<br/><em>p-value  </em> ${d.freq}/${bgscore_length}<br/>`});
       // var min_r = Math.min(_this.width, _this.height)/2.0*0.9;
       refcircles_nodes.append("circle")
         .attr("r", d => {
@@ -796,20 +793,7 @@ class SpectralNetwork {
       .attr("data-container", "body")
       .attr("html", "true")
       .attr("title", d => {
-        return `<p style="text-align: left">
-                                        <em>id</em>: ${d.id}<br/>
-                                        <em>scan</em>: ${d.scan}<br/>
-                                        <em>Peptide</em>: ${getModifiedSequence(d)}<br/>
-                                        <em>pProb</em>: ${d.pProb.toFixed(4)}<br/>
-                                        <em>iProb</em>: ${d.iProb.toFixed(4)}<br/>
-                                        <em>rfscore</em>: ${d.rfscore.toFixed(4)}<br/>
-                                        <em>Score</em>: ${d.score}<br/>
-                                        <em>Precursor</em>: ${d.precursor}<br/>
-                                        <em>Charge</em>: ${d.charge}<br/>
-                                        <em>RT</em>: ${d.rt.toFixed(0)}s<br/>
-                                        <em>protein</em>: ${d.protein}<br/>
-                                        <em>File</em>: ${d.filename}
-                                      </p>`;
+        return `<em>id</em>: ${d.id}<br/><em>scan</em>: ${d.scan}<br/><em>Peptide</em>: ${getModifiedSequence(d)}<br/><em>pProb</em>: ${d.pProb.toFixed(4)}<br/><em>iProb</em>: ${d.iProb.toFixed(4)}<br/><em>rfscore</em>: ${d.rfscore.toFixed(4)}<br/><em>Score</em>: ${d.score}<br/><em>Precursor</em>: ${d.precursor}<br/><em>Charge</em>: ${d.charge}<br/><em>RT</em>: ${d.rt.toFixed(0)}s<br/><em>protein</em>: ${d.protein}<br/><em>File</em>: ${d.filename}`;
       });
 
     /**@type {d3.selection} svg nodes */
@@ -1036,7 +1020,7 @@ class SpectralNetwork {
     // todo: we could add delta mass to our table
     link.attr("data-toggle", "tooltip")
       .attr("data-container", "body")
-      .attr("html", "true")
+      .attr("data-html", "true")
       .attr("stroke", (d) => {
         // ryan @ 10/7/2020: link color is set based on delta mass.
         const pmass = 1.007276;
@@ -1066,14 +1050,7 @@ class SpectralNetwork {
                 deltamassstr += `${key};`;
         }
 
-        return `<p style="text-align: left">
-                    <em>d(p,q)</em>: ${d.realdist.toFixed(4)}<br/>
-                    <em>cos θ</em>: ${cosinescore.toFixed(4)}<br/>
-                    <em>dp</em>: ${dpscore_norm.toFixed(4)}<br/>
-                    <em>θ</em>: ${(Math.acos(cosinescore) * 180 / Math.PI).toFixed(0)}°<br/>
-                    <em>Evalue</em>: ${d.pvalue.toExponential(2)}<br/>
-                    <em>ΔMass</em>: ${deltaMass.toFixed(4)} Da ${deltamassstr}
-                  </p>`
+        return `<em>d(p,q)</em>: ${d.realdist.toFixed(4)}<br/><em>cos θ</em>: ${cosinescore.toFixed(4)}<br/><em>dp</em>: ${dpscore_norm.toFixed(4)}<br/><em>θ</em>: ${(Math.acos(cosinescore) * 180 / Math.PI).toFixed(0)}°<br/><em>Evalue</em>: ${d.pvalue.toExponential(2)}<br/><em>ΔMass</em>: ${deltaMass.toFixed(4)} Da ${deltamassstr}`
       });
 
     // every thing about circles
@@ -4999,14 +4976,11 @@ class SvgImage {
       .enter().append('g')
       .attr('class','pts_circles')
       .attr("data-toggle", "tooltip")
-      .attr("data-container", "body")
-      .attr("html", "true")
+      // .attr('data-html',"true")
+      // .attr("data-container", "body")
+      // .attr("html", "true")
       .attr("title", d => {
-        return `<p style="text-align: left">
-        <em>mz</em>: ${d.x.toFixed(3)}Th<br> 
-        <em>Δmz</em>: ${d.y.toFixed(3)} Th<br>
-        <em>annotation</em>: ${d.annotation}<br>
-        </p>`
+        return `<em>mz</em>: ${d.x.toFixed(3)}Th<br><em>Δmz</em>: ${d.y.toFixed(3)} Th<br><em>annotation</em>: ${d.annotation}<br>`
     
       });
 
@@ -5255,11 +5229,7 @@ class SvgImage {
     .attr("data-container", "body")
     .attr("html", "true")
     .attr("title", d => {
-      return `<p style="text-align: left">
-      <em>m/z</em>: ${d.x.toFixed(3)}Th<br> 
-      <em>intensity</em>: ${d.y.toFixed(3)}<br>
-      <em>annotation</em>: ${d.annotation}<br>
-      </p>`
+      return `<em>m/z</em>: ${d.x.toFixed(3)}Th<br> <em>intensity</em>: ${d.y.toFixed(3)}<br><em>annotation</em>: ${d.annotation}<br>`
   
     });
     
@@ -5379,7 +5349,7 @@ class SvgImage {
       .attr("dy", ".75em")
       .text(data.ylabel);
 
-    // var message=`<p style="text-align: left"><em>spectrum peaknum:</em> ${data.x.length}; <em>filename</em>: abc <em>scan</em>: 123 charge: 2 <em>pepitde:</em> ${this.peptide}</p>`;
+
 
     // d3.select(divId + " .title").attr("class","container").attr("width","90%").attr("margin",5).html( message); 
     // this.element.append("text").attr("class","title message")

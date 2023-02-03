@@ -43,7 +43,9 @@
 
     .tooltip-inner {
       max-width: 100% !important;
-      /* text-align: left !important; */
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      text-align: left !important;
     }
 
     #denovoplot {
@@ -182,7 +184,7 @@
                 <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="port">
                     <a href="#" data-toggle="tooltip"
-                      title="the port for searching service. Default: 8700; Valid range  8700~8710">
+                      title="Port for searching service.">
                       Service Port
                     </a>
                   </label>
@@ -199,7 +201,7 @@
                 <!--neighbor-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
                   <label for="topn">
-                    <a href="#" data-toggle="tooltip" title="Number of nodes returned ">
+                    <a href="#" data-toggle="tooltip" title="Maximum number of nodes to keep ">
                       #Neighbors
                     </a>
                   </label>
@@ -233,7 +235,7 @@
                 <!--bucketnum-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
                   <label for="NPROBE">
-                    <a href="#" data-toggle="tooltip" title="The number of buckets to lookup.">
+                    <a href="#" data-toggle="tooltip" title="Number of buckets to lookup.">
                       #Buckets
                     </a>
                   </label>
@@ -254,7 +256,7 @@
                 <!--queryid-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="QUERYID">
-                    <a href="#" data-toggle="tooltip" title="The archive unique id for query. ">
+                    <a href="#" data-toggle="tooltip" title="A unique ID for a spectrum in the archive.">
                       Query ID
                     </a>
                   </label>
@@ -265,7 +267,7 @@
                 <!--Prev-->
                 <div class="form-group  col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1  align-self-end ">
                   <label for="searchprevbtn">
-                    <a href="#" data-toggle="tooltip" title="Search for previous query id. ">
+                    <a href="#" data-toggle="tooltip" title="Search  previous query ID. ">
                       Prev
                     </a>
                   </label>
@@ -279,9 +281,9 @@
                 
 
                 <!--Next-->
-                <div class="form-group  col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1  align-self-end ">
+                <div class="form-group  col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1  ">
                   <label for="searchnextbtn">
-                    <a href="#" data-toggle="tooltip" title="Search for next query ID. ">
+                    <a href="#" data-toggle="tooltip" title="Search next query ID. ">
                       Next
                     </a>
                   </label>
@@ -294,7 +296,7 @@
                 </div>
 
                 <!--search-->
-                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3  align-self-end ">
+                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3   ">
                   <label for="searchbtn">
                     <a href="#" data-toggle="tooltip" title="Search current query ID. ">
                       Search
@@ -309,10 +311,10 @@
                   </button>
                 </div>
 
-                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3  align-self-end ">
+                <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 ">
                   <label for="shufflebtn">
-                    <a href="#" data-toggle="tooltip" title="Search a random query ID. Start a random walk in archive!">
-                      Random Walk
+                    <a href="#" data-toggle="tooltip" title="Generate a random query ID and search it.">
+                      Random
 
                     </a>
                   </label>
@@ -330,10 +332,10 @@
 
 
               <!--        label pull down list-->
-              <div class="form-group col-3 col-lg-1  align-self-end align-bottom" >
+              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 " >
 
               <label for="peptidelabel_flag">
-                <a href="#" data-toggle="tooltip" title="enable peptide label.">
+                <a href="#" data-toggle="tooltip" title="Enable peptide label.">
                   Label Nodes 
                 </a>
               </label>
@@ -344,9 +346,9 @@
             </div>
 
               <!--tooltips-->
-              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 ">
                 <label for="tooltip_flag">
-                  <a href="#" data-toggle="tooltip" title="Enable or disable tooltip (YES) or not (NO).">
+                  <a href="#" data-toggle="tooltip" title="Enable tooltip or not.">
                     Enable Tooltip
                   </a>
                 </label>
@@ -358,9 +360,9 @@
 
 
               <!--showpeaklist-->
-              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display:none">
+              <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3 " style="display:none">
                 <label for="showpeaklistflag">
-                  <a href="#" data-toggle="showpeaklist" title="search with peak list">
+                  <a href="#" data-toggle="showpeaklist" title="Search peak list">
                     Search Peaklist
                   </a>
                 </label>
@@ -390,8 +392,8 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="svgnoderepulsivecoef">
                     <a href="#" data-toggle="tooltip"
-                      title="the strength of repulsive force between nodes. Valid range: 0.01 ~ 100">
-                      Repulsive Force Strength
+                      title="Strength of repulsive force between nodes.">
+                      Repulsion
                     </a>
                   </label>
 
@@ -411,8 +413,8 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="svggravitystrength">
                     <a href="#" data-toggle="tooltip"
-                      title="the strength of gravity to the center of the svg figure for spectral network visualization. Valid range: 0.01 ~ 100">
-                      Gravity Strength
+                      title="Strength of gravity to the center">
+                      Gravity
                     </a>
                   </label>
 
@@ -486,8 +488,8 @@
                 <!--score-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="ProbType">
-                    <a href="#" data-toggle="tooltip"
-                      title="Coloring nodes if it is 1. identified (FDR <1% ); 2, PeptideProphet/iPropht probability > score cut off.">
+                    <a href="#" data-toggle="tooltip" data-html="true"
+                      title="Coloring nodes.</br>Significance: assign non-black color to PSMs with FDR <1% ; </br>PeptideProphet: PeptideProphet probability greater than Min-Probability cut-off；</br>iProphet: iProphet probability greater than Min-Probability cut-off.">
                       Coloring Nodes 
                     </a>
                   </label>
@@ -502,7 +504,7 @@
                 <div id="min-prob-option" class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display: none;">
                   <label for="MinProb">
                     <a href="#" data-toggle="tooltip"
-                      title="Minimal peptideProphet or iProphet probability reqiured to show a node as identified by a peptide. ">
+                      title="Minimum probability reqiured to assign non-black color to a PSM node. ">
                       Min Probability
                     </a>
                   </label>
@@ -527,8 +529,8 @@
                 <!--max dist-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="MAXDist">
-                    <a href="#" data-toggle="tooltip"
-                      title="Maximal Euclidian distance (r) allowed for a edge. r<0.8 implies cos θ>0.68">
+                    <a href="#" data-toggle="tooltip" data-html="true"
+                      title="Remove an edge if its Euclidian distance is greater than this threshold. </br>Max-Dist > 0.8 implies cosθ < 0.68">
                       Max Dist
                     </a>
                   </label>
@@ -541,7 +543,7 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="NeighborDistance">
                     <a href="#" data-toggle="tooltip"
-                      title="Calculate distance between candidates/neighbors (YES) or not (NO).">
+                      title="Keep connections between neighbors (Network) or not (Star).">
                       Connectivity
                     </a>
                   </label>
@@ -555,7 +557,7 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="NeighborCircles">
                     <a href="#" data-toggle="tooltip"
-                      title="put neighbos in to circles (YES) or not (NO).">
+                      title="Fix neighbors on concentric circles.">
                       Onto Circles
                     </a>
                   </label>
@@ -582,7 +584,8 @@
                 <!--edge width-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="edgewidth">
-                    <a href="#" data-toggle="tooltip" title="The width of edges in the network.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="The width of edges in the network.">
                       Edge Width
                     </a>
                   </label>
@@ -604,8 +607,8 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="DeltaMassToBeHighlighted">
                     <a href="#" data-toggle="tooltip"
-                      title="For visualization of potentional PTM, the minimum delta mass (Da) for an edge to be highlighted">
-                      Min ΔMass To Highlight
+                      title="The minimum ΔMass (Da) for an edge to be highlighted">
+                      ΔM to highlight
                     </a>
                   </label>
 
@@ -664,7 +667,8 @@
                 <!-- Lorikeet  -->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="plotPSM">
-                    <a href="#" data-toggle="tooltip" title="Switch between different lorikeet and native PSM viewer.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Switch between different lorikeet and native PSM viewer.">
                       PSM Viewers
                     </a>
                   </label>
@@ -678,7 +682,8 @@
                 
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="mzRangeMax">
-                    <a href="#" data-toggle="tooltip" title="Max m/z value in native PSM viewer.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Max m/z value in native PSM viewer.">
                       Max Mz
                     </a>
                   </label>
@@ -691,7 +696,8 @@
                 <!-- Lorikeet mz tol-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="psm_mz_tol">
-                    <a href="#" data-toggle="tooltip" title="The m/z tolerance for native PSM viewer for peak matching.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="The m/z tolerance for native PSM viewer for peak matching.">
                       Mz Tolerance
                     </a>
                   </label>
@@ -706,7 +712,8 @@
                 <!-- Lorikeet noise baseline-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="noise_baseline">
-                    <a href="#" data-toggle="tooltip" title="Ignore peaks below a user defined relative intensity threshold.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Ignore peaks below a user defined relative intensity threshold.">
                       Ignore Peaks
                     </a>
                   </label>
@@ -723,8 +730,9 @@
                 <!-- Native PSM viewer, annotation-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="pepForSpecPair">
-                    <a href="#" data-toggle="tooltip"  title='Only works for back-to-back plot;  Selected: annotate selected spectrum and query spectrum with peptide of selected node; Query: annotate the selected spectrum and query spectrum with the peptide of query node; Separate: annotate selected node and query node with their own peptde; Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
-                      Peptide Annotation 
+                    <a href="#" data-toggle="tooltip"  data-html="true"
+                    title='Only works for native Butterfly Plot;  </br>Selected: annotate selected spectrum and query spectrum with peptide of selected node; </br>Query: annotate the selected spectrum and query spectrum with the peptide of query node; </br>Separate: annotate selected node and query node with their own peptde; </br>Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
+                      Annotation 
                     </a>
                   </label>
                   <select class="form-control" id="pepForSpecPair" onchange="onViewerChange()">

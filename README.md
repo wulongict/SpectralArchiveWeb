@@ -21,7 +21,7 @@ cd scripts/
 # create spectral archive server config file
 ./generate_param_for_small_archive.bash 
 # start spectral archive web interface
-# ATTENTION: BEFORE you run the following command, make sure edit it to set the correct path for fastcgi_similarity.fcgi.
+# ATTENTION: BEFORE you run the following command, make sure edit it to set the correct path for spectroscape.
 ./launch_archive.bash 
 ```
 

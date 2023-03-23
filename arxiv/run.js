@@ -2550,6 +2550,7 @@ function filterjsonstringwithMaxDistance(jsonstring, maxdist) {
   }
 
   for (var i = data.nodes.length - 1; i >= 0; i--) {
+    get_rescued_peptides(data.nodes[i].id);
     if (data.nodes[i].peptide == "UNKNOWN") {
       data.nodes[i].score = "N/A";
     }
@@ -3086,6 +3087,26 @@ function onViewerChange() {
 
   
   
+}
+
+function get_rescued_peptides(id) {
+  console.log('---start to rescue peptides from server---', id)
+  var http = new XMLHttpRequest();
+  var url = "http://omics.ust.hk:5000/peptide"
+
+  var params='{"id": "' + id + '"}';
+  http.open('POST', url, true);
+  http.timeout = 25000;
+  //Send the proper header information along with the request
+  http.setRequestHeader('Content-type', 'application/json');
+  http.onreadystatechange = function () { //Call a function when the state changes.
+    if (this.readyState == 4 && this.status == 200) {
+      // alert(this.responseText);
+      ErrorInfo.log(this.responseText);
+      console.log(this.responseText, "rescued peptides");
+    }
+  }
+  http.send(params);
 }
 
 function submit_remarks_for_id() {

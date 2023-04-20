@@ -21,6 +21,10 @@
       /*stroke-width: 1.5px;*/
     }
 
+    .svgtext-no-response {
+      pointer-events: none;
+  }
+
     .contextmenu {
       position: absolute;
       padding: 0px;
@@ -673,9 +677,9 @@
                     </a>
                   </label>
                   <select class="form-control" id="plotPSM" onchange="onViewerChange()">
-                    <option value="2">Native Butterfly Plot</option>
-                    <option value="1" >Native</option>
-                    <option value="0" selected >Lorikeet</option>
+                    <option value="2" >Native Butterfly Plot</option>
+                    <option value="1" selected>Native</option>
+                    <option value="0"  >Lorikeet</option>
                   </select>
                 </div>
                 <!-- Lorikeet x axis limit-->
@@ -736,8 +740,8 @@
                     </a>
                   </label>
                   <select class="form-control" id="pepForSpecPair" onchange="onViewerChange()">
-                    <option value="neighbor" >Selected</option>
-                    <option value="query" selected>Query</option>
+                    <option value="neighbor" selected >Selected</option>
+                    <option value="query" >Query</option>
                     <option value="separate" >Separate</option>
                     <option value="mixture" >Mixture</option>
                     

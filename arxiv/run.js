@@ -796,6 +796,8 @@ class SpectralNetwork {
         return `<em>id</em>: ${d.id}<br/><em>scan</em>: ${d.scan}<br/><em>Peptide</em>: ${getModifiedSequence(d)}<br/><em>pProb</em>: ${d.pProb.toFixed(4)}<br/><em>iProb</em>: ${d.iProb.toFixed(4)}<br/><em>rfscore</em>: ${d.rfscore.toFixed(4)}<br/><em>Score</em>: ${d.score}<br/><em>Precursor</em>: ${d.precursor}<br/><em>Charge</em>: ${d.charge}<br/><em>RT</em>: ${d.rt.toFixed(0)}s<br/><em>protein</em>: ${d.protein}<br/><em>File</em>: ${d.filename}`;
       });
 
+
+
     /**@type {d3.selection} svg nodes */
     let circles = node.append("circle")
       // .attr("fill","#FFFFFF")
@@ -818,6 +820,11 @@ class SpectralNetwork {
       .on("mouseout", () => {
         $(document).unbind("keydown");
       });
+
+      // add text to nodes.
+      node.append("text").style('fill','white').style('font-size', '16px')
+      .attr("x", 0).attr("y", 0).attr("dy", ".35em").attr("text-anchor", "middle")
+      .text( (d)=>{if (d.rescued) return "R"; else return "";}).attr('class','svgtext-no-response');
 
     // let's try annimation:
 
@@ -2549,10 +2556,21 @@ function filterjsonstringwithMaxDistance(jsonstring, maxdist) {
     }
   }
 
+  // get the rescued peptides for all id together. 
+  rescued_peptides = get_all_rescued_peptides(data.nodes)
+  console.log("===========================",rescued_peptides);
+
   for (var i = data.nodes.length - 1; i >= 0; i--) {
-    get_rescued_peptides(data.nodes[i].id);
-    if (data.nodes[i].peptide == "UNKNOWN") {
+    rescued_pep=get_rescued_peptides(data.nodes[i]);
+    
+    console.log('rescued peptide is <|', rescued_pep, '|>.');
+    if (data.nodes[i].peptide == "UNKNOWN" && rescued_pep!="not_found") {
+      data.nodes[i].peptide = rescued_pep;
       data.nodes[i].score = "N/A";
+      data.nodes[i].iProb=1.0;
+      data.nodes[i].pProb=1.0
+      data.nodes[i].significance=1.0;
+      data.nodes[i].rescued=true;
     }
     if (data.nodes[i].id == $("#QUERYID").val() || data.nodes[i].id == -1) {
       $("#peptideptm").val(getModifiedSequence(data.nodes[i]));
@@ -2649,6 +2667,7 @@ function redraw2(queryindex, hitrank, pk_str) {
   document.getElementById("lorikeet2").innerHTML = "";
   // if queryindex = -1
   graph = JSON.parse(g_jsonstring);
+  // because you parse the graph again. the rescued information is not avaialbe. 
   // console.log(g_jsonstring, graph)
   console.log(queryindex);
   var thenode = graph.nodes.find(x => x.id === queryindex);
@@ -2666,6 +2685,7 @@ function redraw2(queryindex, hitrank, pk_str) {
 
   // console.log("redraw 2 : the node we find : ", thenode);
   var modified_sequence = getModifiedSequence(thenode);
+  console.log('modified sequence is <|', modified_sequence, '|>. and the node is <|', thenode, '|>.');
   var modstring = parseModifiedPeptide(modified_sequence);
   sequence = modstring.Peptide;
 
@@ -2684,8 +2704,17 @@ function redraw2(queryindex, hitrank, pk_str) {
     intensity.push(parseFloat(z[1]));
   }
   // var sequence = document.getElementById("peptide").value;
-  if (sequence == "UNKNOWN") {
-    sequence = "";
+  if (sequence == "UNKNOWN" ) {
+    console.log("the rescued peptide is ", thenode.rescued_peptide, thenode, "!")
+    if(thenode.rescued_peptide == "NULL"){
+      sequence = "";
+      modified_sequence = "";
+    }else{
+      modified_sequence = thenode.rescued_peptide;
+      sequence = thenode.rescued_peptide;
+    }
+    console.log("Sequence is ", sequence );
+    
   }
   // var chargevalue = parseInt(document.getElementById("charge").value);
   var peaks = [
@@ -3077,6 +3106,7 @@ function onViewerChange() {
   console.log('==================plot Again ====================');
   // StoreValues();
   localStorage.setItem("PEAKTYPE", $('#PEAKTYPE').val());
+  localStorage.setItem("plotPSM", $('#plotPSM').val());
   // console.log("peak type: ", $('#PEAKTYPE').val());
   var PeakType = $("#PEAKTYPE").val();
   var queryid = $("#QUERYID").val();
@@ -3089,7 +3119,96 @@ function onViewerChange() {
   
 }
 
-function get_rescued_peptides(id) {
+function get_all_rescued_peptides_ajax(nodes){
+  var params = '{"ids": [';
+  for(var i=0; i<nodes.length; i++){
+    params += '"' + nodes[i].id + '"';
+    if(i != nodes.length-1){
+      params += ',';
+    }
+  }
+  params += ']}';
+  // now params ready.
+  return $.ajax({
+    type: "POST",
+    url: "http://omics.ust.hk:5000/peptides",
+    async: false,
+    data: params,
+    timeout: 5000,
+    processData: false,
+    contentType: 'application/json',
+    cache: false,
+    // contentType: "application/x-www-form-urlencoded",
+    dataType: "text",
+    error:(xhr, status, error) =>{
+      console.log(err);
+      alert(`${Error(error)} at get_all_rescued_peptides_ajax(...) ${err}  ${xhr}`);
+    },
+
+  });
+
+}
+
+function get_rescued_peptides_ajax(d){
+  var params='{"id": "' + d.id + '"}';
+  return $.ajax({
+    type: "POST",
+    url: "http://omics.ust.hk:5000/peptide",
+    async: false,
+    data: params,
+    timeout: 5000,
+    processData: false,
+    contentType: 'application/json',
+    cache: false,
+    // contentType: "application/x-www-form-urlencoded",
+    dataType: "text",
+    error:(xhr, status, error) =>{
+      console.log(err);
+      alert(`${Error(error)} at get_rescued_peptides_ajax(...) ${err}  ${xhr}`);
+    },
+
+  });
+}
+
+function get_all_rescued_peptides(nodes){
+  var rescued_peptides = {};
+  $.when(get_all_rescued_peptides_ajax(nodes)).done((data, status, xhr) => {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      // console.log("Get back data from server... Done-------------------------- update_lorikeet_1", data);
+
+      // g_pkdata = JSON.parse(data);
+      // re-plot
+      // redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+      console.log(data, status);
+      rescued_peptides=JSON.parse(data);
+    }
+  });
+  return rescued_peptides;
+
+}
+
+function get_rescued_peptides(d) {
+  var rescued_peptide = 'not_found';
+  console.log(d.rescued_peptide)
+  if(d.rescued_peptide != "NULL"){
+    rescued_peptide = d.rescued_peptide;
+  }
+  // $.when(get_rescued_peptides_ajax(d)).done((data, status, xhr) => {
+  //   if (xhr.readyState == 4 && xhr.status == 200) {
+  //     // console.log("Get back data from server... Done-------------------------- update_lorikeet_1", data);
+
+  //     // g_pkdata = JSON.parse(data);
+  //     // re-plot
+  //     // redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+  //     console.log(data, status);
+  //     rescued_peptide=data.trim().split(',')[1]
+  //   }
+  // });
+  return rescued_peptide;
+
+
+  var rescued_peptide='not_found'
+  id=d.id 
   console.log('---start to rescue peptides from server---', id)
   var http = new XMLHttpRequest();
   var url = "http://omics.ust.hk:5000/peptide"
@@ -3099,14 +3218,19 @@ function get_rescued_peptides(id) {
   http.timeout = 25000;
   //Send the proper header information along with the request
   http.setRequestHeader('Content-type', 'application/json');
+  http.setRequestHeader('Access-Control-Allow-Origin', '*');
   http.onreadystatechange = function () { //Call a function when the state changes.
     if (this.readyState == 4 && this.status == 200) {
       // alert(this.responseText);
       ErrorInfo.log(this.responseText);
-      console.log(this.responseText, "rescued peptides");
+      rescued_peptide=this.responseText.trim().split(',')[1]
+      console.log(this.responseText, "rescued peptides", rescued_peptide);
+      // return rescued_peptide;
     }
   }
   http.send(params);
+  console.log('return peptide as ', rescued_peptide)
+  return rescued_peptide;
 }
 
 function submit_remarks_for_id() {
@@ -3530,7 +3654,7 @@ function StoreValues() {
   localStorage.setItem("MAXDist", $("#MAXDist").val());
   localStorage.setItem("topn", $("#topn").val());
   localStorage.setItem("dp_norm", $("#dp_norm").val());
-  localStorage.setItem("plot_psm", $("#plot_psm").val());
+  localStorage.setItem("plotPSM", $("#plotPSM").val());
   // console.log("top n i s", localStorage.getItem("topn"), '=');
 
   // ryan @ 6/7/2020: commented to prevent redraw.
@@ -3540,12 +3664,12 @@ function StoreValues() {
 }
 
 function RestoreValues() {
-  var plot_psm = localStorage.getItem("plot_psm");
+  var plot_psm = localStorage.getItem("plotPSM");
   if (plot_psm == null) {
-    plot_psm = $("#plot_psm").val();
-    localStorage.setItem("plot_psm", $("#plot_psm").val());
+    plot_psm = $("#plotPSM").val();
+    localStorage.setItem("plotPSM", $("#plotPSM").val());
   } else {
-    $("#plot_psm").val(plot_psm);
+    $("#plotPSM").val(plot_psm);
   }
 
   var dp_norm = localStorage.getItem("dp_norm");
@@ -4896,6 +5020,7 @@ class SvgImage {
     this.divId = divId;
     this.xbodderOffset = borderOffset[0];
     this.ybodderOffset = borderOffset[1];
+    this.dy_val = 1.6;
   }
   static removeSvgImage(divId, svgId) {
     d3.select('#' + divId).selectAll('svg').remove();
@@ -5169,7 +5294,7 @@ class SvgImage {
     var radius = markersizer;
     // the data should contain the following information
     // data={"x":[1,2,3,4,5], "y":[3,4,5,6,7], "annotation":[], "xlabel":"x"; "ylabel": "y"};
-    this.ybodderOffset[0] += fontsize*2;
+    this.ybodderOffset[0] += fontsize*3*this.dy_val;
     this.chartArea = this.element.append("g").attr('class', 'peaks')
       .attr("transform",
         "translate(" + this.xbodderOffset[0] + "," + this.ybodderOffset[0] + ")"
@@ -5377,16 +5502,16 @@ class SvgImage {
     this.element.append("text")
       .attr('style', "font-family: 'Trebuchet MS',Arial,'consolas','Courier New', monospace; font-size: "+ fontsize+"pt")
       .attr("text-anchor", "start")
-      .attr("x", 0)
-      .attr("y", 10+fontsize)
-      .html(textTitle);//nnerHTML=message;
-    this.element.append("text")
-      .attr('style', "font-family: monospace, 'Trebuchet MS',Arial,sans-serif; font-size: "+fontsize+"pt") //font-family: 'Courier New', monospace;")
-      .attr("text-anchor", "start")
-      .attr("x", 0)
-      .attr("y", 10 + fontsize + fontsize+fontsize/2)
-      // .attr("dy", "2em")
-      .html(textTitle2);//nnerHTML=message;
+      .attr("x", 40)
+      .attr("y", 0)
+      .html(textTitle +textTitle2);//nnerHTML=message;
+    // this.element.append("text")
+    //   .attr('style', "font-family: monospace, 'Trebuchet MS',Arial,sans-serif; font-size: "+fontsize+"pt") //font-family: 'Courier New', monospace;")
+    //   .attr("text-anchor", "start")
+    //   .attr("x", 0)
+    //   .attr("y", 10 + fontsize + fontsize+fontsize/2)
+    //   // .attr("dy", "2em")
+    //   .html(textTitle2);//nnerHTML=message;
 
     // now start plot this figure
 
@@ -6042,9 +6167,10 @@ class PSMViewer {
 
     var nameprefix = filename.slice(0, filename.lastIndexOf('.'));
     var nameprefix2 = filename2.slice(0, filename2.lastIndexOf('.'));
-    var textTitle = `(&uarr;): ${nameprefix}.${scan}.${scan}.${charge} mz: ${twoPSM.neighbor.precursor} seq: ${twoPSM.neighbor.peptide} (&darr;): ${nameprefix2}.${scan2}.${scan2}.${charge2} mz: ${twoPSM.query.precursor} seq: ${twoPSM.query.peptide}`;
+    var dy_val = 1.5;
+    var textTitle = `<tspan x=20 dy=${dy_val}em>(&uarr;): ${nameprefix}.${scan}.${scan}.${charge} mz: ${twoPSM.neighbor.precursor} seq: ${twoPSM.neighbor.peptide} </tspan><tspan x=20 dy=${dy_val}em>(&darr;): ${nameprefix2}.${scan2}.${scan2}.${charge2} mz: ${twoPSM.query.precursor} seq: ${twoPSM.query.peptide}</tspan>`;
 
-    var textTitle2 = `annotation method: ${$("#pepForSpecPair").val()} ${upArrow}: ${twoPSM.neighbor.peptide} ${downArrow}: ${twoPSM.query.peptide} ${mixStatStr}`;
+    var textTitle2 = `<tspan x=20 dy=${dy_val}em>annotation method: ${$("#pepForSpecPair").val()} ${upArrow}: ${twoPSM.neighbor.peptide} ${downArrow}: ${twoPSM.query.peptide} ${mixStatStr}</tspan>`;
     
     // if(precursormass1!=null) textTitle += ` mz: ${precursormass1} Th`
     var minInten = d3.min(this.intensity) < 0 ? d3.min(this.intensity) * 1.2 : 0;
@@ -6102,15 +6228,17 @@ class PSMViewer {
 
     let psmPlot = new SvgImage(this.width, this.height, [[70, 50], [30, 30]], divId, "svgId_psm");
     var nameprefix = filename.slice(0, filename.lastIndexOf('.'));
-    var textTitle = `${nameprefix}.${scan}.${scan}.${charge} `;
-    var textTitle2 = `${this.peptide}`;
-    if(precursorMass !=null) textTitle += ` mz: ${precursorMass} Th`;
+    var dy_val = 1.6;
+    var textTitle = `<tspan x=20  dy=${dy_val}em>${nameprefix}.${scan}.${scan}.${charge}  mz: ${precursorMass} Th </tspan> `;
+    
+    // if(precursorMass !=null) textTitle += `  mz: ${precursorMass} Th`;
     // the peptide mass
     var pepmass = ions['M']['0'].slice(-1)[0];
     var MH_ion = ions['M']['0'].slice(0,1)[0];
-    if(pepmass!=null){
-      textTitle2 += ` mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}`;
-    }
+    var textTitle2 = `<tspan x=20 dy=${dy_val}em >${this.peptide} mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
+    // if(pepmass!=null){
+    //   textTitle2 += `<tspan x=20 dy=${dy_val}em > mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
+    // }
     let errorPlot_b_y = new SvgImage(this.width, this.height / 3, [[70, 50], [5, 40]], divId, 'svgId_byError');
     var fontsize=parseInt($('#fontsize').val());
     var linewidth=parseInt($("#linewidth").val());

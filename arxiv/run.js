@@ -2556,9 +2556,9 @@ function filterjsonstringwithMaxDistance(jsonstring, maxdist) {
     }
   }
 
-  // get the rescued peptides for all id together. 
-  rescued_peptides = get_all_rescued_peptides(data.nodes)
-  console.log("===========================",rescued_peptides);
+  // // get the rescued peptides for all id together. 
+  // rescued_peptides = get_all_rescued_peptides(data.nodes)
+  // console.log("===========================",rescued_peptides);
 
   for (var i = data.nodes.length - 1; i >= 0; i--) {
     rescued_pep=get_rescued_peptides(data.nodes[i]);
@@ -6168,9 +6168,10 @@ class PSMViewer {
     var nameprefix = filename.slice(0, filename.lastIndexOf('.'));
     var nameprefix2 = filename2.slice(0, filename2.lastIndexOf('.'));
     var dy_val = 1.5;
-    var textTitle = `<tspan x=20 dy=${dy_val}em>(&uarr;): ${nameprefix}.${scan}.${scan}.${charge} mz: ${twoPSM.neighbor.precursor} seq: ${twoPSM.neighbor.peptide} </tspan><tspan x=20 dy=${dy_val}em>(&darr;): ${nameprefix2}.${scan2}.${scan2}.${charge2} mz: ${twoPSM.query.precursor} seq: ${twoPSM.query.peptide}</tspan>`;
+    var tspancolor='#880000';
+    var textTitle = `<tspan x=20 dy=${dy_val}em fill="${tspancolor}">(&uarr;): ${nameprefix}.${scan}.${scan}.${charge} mz: ${twoPSM.neighbor.precursor} seq: ${twoPSM.neighbor.peptide} </tspan><tspan x=20 dy=${dy_val}em fill="${tspancolor}">(&darr;): ${nameprefix2}.${scan2}.${scan2}.${charge2} mz: ${twoPSM.query.precursor} seq: ${twoPSM.query.peptide}</tspan>`;
 
-    var textTitle2 = `<tspan x=20 dy=${dy_val}em>annotation method: ${$("#pepForSpecPair").val()} ${upArrow}: ${twoPSM.neighbor.peptide} ${downArrow}: ${twoPSM.query.peptide} ${mixStatStr}</tspan>`;
+    var textTitle2 = `<tspan x=20 dy=${dy_val}em fill="${tspancolor}">annotation method: ${$("#pepForSpecPair").val()} ${upArrow}: ${twoPSM.neighbor.peptide} ${downArrow}: ${twoPSM.query.peptide} ${mixStatStr}</tspan>`;
     
     // if(precursormass1!=null) textTitle += ` mz: ${precursormass1} Th`
     var minInten = d3.min(this.intensity) < 0 ? d3.min(this.intensity) * 1.2 : 0;
@@ -6229,13 +6230,14 @@ class PSMViewer {
     let psmPlot = new SvgImage(this.width, this.height, [[70, 50], [30, 30]], divId, "svgId_psm");
     var nameprefix = filename.slice(0, filename.lastIndexOf('.'));
     var dy_val = 1.6;
-    var textTitle = `<tspan x=20  dy=${dy_val}em>${nameprefix}.${scan}.${scan}.${charge}  mz: ${precursorMass} Th </tspan> `;
+    var tspancolor='#880000';
+    var textTitle = `<tspan x=20  dy=${dy_val}em fill="${tspancolor}">${nameprefix}.${scan}.${scan}.${charge}  mz: ${precursorMass} Th </tspan> `;
     
     // if(precursorMass !=null) textTitle += `  mz: ${precursorMass} Th`;
     // the peptide mass
     var pepmass = ions['M']['0'].slice(-1)[0];
     var MH_ion = ions['M']['0'].slice(0,1)[0];
-    var textTitle2 = `<tspan x=20 dy=${dy_val}em >${this.peptide} mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
+    var textTitle2 = `<tspan x=20 dy=${dy_val}em  fill="${tspancolor}">${this.peptide} mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
     // if(pepmass!=null){
     //   textTitle2 += `<tspan x=20 dy=${dy_val}em > mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
     // }

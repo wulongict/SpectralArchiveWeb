@@ -6236,7 +6236,13 @@ class PSMViewer {
     // if(precursorMass !=null) textTitle += `  mz: ${precursorMass} Th`;
     // the peptide mass
     var pepmass = ions['M']['0'].slice(-1)[0];
+    if(pepmass==null){
+      pepmass=[0];
+    }
     var MH_ion = ions['M']['0'].slice(0,1)[0];
+    if(MH_ion==null){
+      MH_ion=[0];
+    }
     var textTitle2 = `<tspan x=20 dy=${dy_val}em  fill="${tspancolor}">${this.peptide} mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;
     // if(pepmass!=null){
     //   textTitle2 += `<tspan x=20 dy=${dy_val}em > mz: ${pepmass[0].toFixed(3)} Th MH+: ${MH_ion[0].toFixed(3)}</tsapn>`;

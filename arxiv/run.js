@@ -2706,7 +2706,7 @@ function redraw2(queryindex, hitrank, pk_str) {
   // var sequence = document.getElementById("peptide").value;
   if (sequence == "UNKNOWN" ) {
     console.log("the rescued peptide is ", thenode.rescued_peptide, thenode, "!")
-    if(thenode.rescued_peptide == "NULL"){
+    if(thenode.rescued_peptide == "NULL" || thenode.rescued_peptide == ""){
       sequence = "";
       modified_sequence = "";
     }else{
@@ -3190,7 +3190,7 @@ function get_all_rescued_peptides(nodes){
 function get_rescued_peptides(d) {
   var rescued_peptide = 'not_found';
   console.log(d.rescued_peptide)
-  if(d.rescued_peptide != "NULL"){
+  if(d.rescued_peptide != "NULL" && d.rescued_peptide != ""){
     rescued_peptide = d.rescued_peptide;
   }
   // $.when(get_rescued_peptides_ajax(d)).done((data, status, xhr) => {

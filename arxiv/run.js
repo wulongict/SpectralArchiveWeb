@@ -2804,12 +2804,13 @@ function redraw2(queryindex, hitrank, pk_str) {
     var modstring_querynode = document.getElementById("peptideptm").value;
     if($("#pepForSpecPair").val()=="query"){
       // good
+      modified_sequence = modstring_querynode;
     } else if ($("#pepForSpecPair").val()=="neighbor"){
       modstring_querynode = modified_sequence;
     }
 
     if($("#pepForSpecPair").val()=="mixture"){
-      // good
+      // mixture mode, the two peaks list will be the same. 
       mz = JSON.parse(JSON.stringify(mz1));
       intensity = JSON.parse(JSON.stringify(intensity1));
       // mz=mz1;
@@ -2818,8 +2819,10 @@ function redraw2(queryindex, hitrank, pk_str) {
 
     // console.log('width, and height', f.width, e.height, e, f);
     var twoPSM={
+      // the downside one
       "query": {"peptide": modstring_querynode, "mz": mz1, "intensity":intensity1, "charge": theQueryNode.charge, "scan": theQueryNode.scan, "filename": theQueryNode.filename, 'precursor': theQueryNode.precursor},
-    "neighbor": {"peptide": modified_sequence, "mz": mz, "intensity":intensity, "charge": thenode.charge, "scan": thescan, "filename": thefilename, 'precursor':precursormass}
+    // the upside one.
+      "neighbor": {"peptide": modified_sequence, "mz": mz, "intensity":intensity, "charge": thenode.charge, "scan": thescan, "filename": thefilename, 'precursor':precursormass}
       };
       // console.log(twoPSM, '------- the two psm ------ as an object')
     PSMViewer.plotTwoPSMs(modstring_querynode, mz, mz1, intensity, intensity1, "my_dataviz2", 'svg12', thenode.charge, thescan, thefilename, f.width, e.height * 0.75, theQueryNode.filename, theQueryNode.scan, theQueryNode.charge, precursormass,twoPSM);
@@ -3342,7 +3345,7 @@ function redraw_with_peakinfo(info, PeakType, queryid) {
     async: true,
     timeout: 25000,
     error: (xhr, status, error) => {
-      alert(`${Error(error)} at get_summary(...)`);
+      alert(`${error} at get_summary(...)`);
       ErrorInfo.log(error);
     }
   });
@@ -3592,9 +3595,12 @@ function search_with_queryid(queryid) {
     cache: false,
     // contentType: "application/x-www-form-urlencoded",
     dataType: "text",
-    error:(err) =>{
-      console.log(err);
-      alert(`${Error(error)} at search_with_queryid(...) ${err}  ${xhr}`);
+    success: (data, status, xhr) => {
+      console.log(data);
+    },
+    error:(xhr, status, err) =>{
+      console.log(err, `${err} at search_with_queryid(...) ${err}  ${xhr};`);
+      // alert(` Please try a smaller query id. ${err} at search_with_queryid(...) ${err}  ${xhr};`);
     },
     // error: (xhr, status, error) => {
     //   console.log('error on safari: ', error, "status ",  status, "xhr", xhr.statusText);

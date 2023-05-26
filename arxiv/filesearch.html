@@ -13,6 +13,10 @@
             stroke: #fff;
             /*stroke-width: 1.5px;*/
         }
+
+        #PSM_List tbody tr td:first-child {
+            cursor: pointer;
+        }
     </style>
 
     <!-- Required meta tags -->
@@ -79,41 +83,40 @@
 
 <div id="archive_navigation_bar"></div>
 
-<div class="container">
+<div class="container-fluid">
 
 
-    <div class="row">
-        <!--                <h2>File Search</h2>-->
+    <div class="row no-gutters">
 
-        <!-- <div class="col-lg-2"></div> -->
-        <div class="form-row">
-            <div class="form-group col-lg-3">
+        <div class="form-row col-12">
+            <div class="form-group col-lg-5">
                 <label for="filename" class="form-conrol">
                     <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
-                        FileName
+                        File
                     </a>
                 </label>
-                <input type="text" class="form-control " id="filename" name="file name" value="Heart">
-        </div>
-            <div class="form-group col-lg-3">
+                <input type="text" class="form-control " id="filename" name="file name" value="Adult_Heart_bRP_Elite_81_f01">
+            </div>
 
+            <div class="form-group col-lg-2">
                 <label for="startscan" class="form-conrol">
                     <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
-                        Start Scan
+                        Start scan
                     </a>
                 </label>
-                <input type="text" class="form-control" id="startscan" name="startscan" value="0">
-            </div><div class="form-group col-lg-3">
+                <input type="text" class="form-control" id="startscan" name="startscan" value="2599">
+            </div>
+        
+            <div class="form-group col-lg-2">
+                <label for="endscan" class="form-conrol">
+                    <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
+                        End scan
+                    </a>
+                </label>
+                <input type="text" class="form-control" id="endscan" name="endscan" value="2699">
+            </div>
 
-            <label for="endscan" class="form-conrol">
-                <a href="#" data-toggle="tooltip" title="the peptide sequence we are interested">
-                    End Scan
-                </a>
-            </label>
-            <input type="text" class="form-control" id="endscan" name="endscan" value="100">
-        </div>
-
-            <div class="form-group col-lg-3 align-self-end">
+            <div class="form-group col-lg-2 align-self-end">
                 <button id="getspectra" type="button" class="btn btn-primary form-control"
                         onclick="get_spectra_by_filename_and_scanrange()">Go!
                 </button>

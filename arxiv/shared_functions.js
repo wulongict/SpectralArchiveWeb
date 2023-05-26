@@ -439,7 +439,7 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item ${spectralclusterActive}">
-        <a class="nav-link" href="/">Spectral Cluster </a>
+        <a class="nav-link" href="/id/16190">Spectral Cluster </a>
       </li>
       <li class="nav-item ${peptidesearchActive}">
         <a class="nav-link" href="/peptidesearch.html">Peptide Search</a>

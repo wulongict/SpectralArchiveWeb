@@ -398,6 +398,30 @@ function add_navigation_bar_doc_page() {
   add_navigation_bar("documentation");
 }
 
+/**
+ * request a spectra.
+ * @param {*} queryid 
+ * @returns {Deferred} an ajax call to be handled
+ */
+function get_summary() {
+  console.log('-----------------summary-------------');
+  // refactored get, get2 into get, update1, update2
+  return $.ajax({
+    type: "GET",
+    url: `${window.location.origin}/summary`,
+    dataType: "text",
+    contentType: "application/x-www-form-urlencoded",
+    async: false,
+    timeout: 25000,
+    error: (xhr, status, error) => {
+      alert(`${error} at get_summary(...)`);
+      ErrorInfo.log(error);
+    }
+  });
+}
+
+
+
 function add_navigation_bar(activeItem="Spectral Cluster") {
   var x = $(".page-header").text();
   var platform = "CPU";
@@ -428,6 +452,7 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
 
 
   var totalnum = x.split("from ")[1].split("(")[0]
+  // console.log("total, platform, launchtime", totalnum, platform, launchtime);
   var htmlnavstring = String.raw`<nav class="navbar fixed-top  navbar-expand-sm navbar-expand-lg navbar-dark bg-primary " >
   <!-- Navbar content -->
   <!-- <nav class="navbar  navbar-light bg-light"> -->
@@ -461,7 +486,7 @@ function add_navigation_bar(activeItem="Spectral Cluster") {
       </li>
     </ul>
     <span class="navbar-text">
-       ${totalnum} Spectra | ${platform} | ${launchtime}
+       ${g_summary.total} Spectra | ${g_summary.platform} | ${g_summary.date}
     </span>
   </div>
 

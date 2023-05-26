@@ -1608,9 +1608,9 @@ function onInitCloudSearch() {
     return l;
   };
 
-  var thePath = getLocation(document.URL);
+  var thePath = getLocation(window.location.href);
   color = generate_color();
-  var portval = document.URL.split(':')[2].split("/")[0];
+  var portval = window.location.href.split(':')[2].split("/")[0];
   // console.log('port: ', portval);
   $('#port').val(portval);
 
@@ -1822,8 +1822,24 @@ function onDocReady() {
 
 }
 // end of the onload function
+function init_summary(){
+  g_summary={};
+
+  // getting summary, the total number of spectra in archive.
+$.when(get_summary()).done((data, status, xhr)=>{
+  if(xhr.readyState==4 && xhr.status == 200){
+    console.log('running here.===============', data)
+    g_summary=JSON.parse(data);
+    console.log(g_summary);
+  }
+});
+return g_summary;
+
+}
+
 
 function initializePage() {
+  g_summary=init_summary();
   d3.select("#searchprevbtn").on("click", searchPrev);
   d3.select("#searchnextbtn").on("click", searchNext);
 
@@ -1835,6 +1851,7 @@ function initializePage() {
   // two data
   g_pkdata2 = '';
   g_pkdata = '';
+
 
   // ryan @ 8/7/2020: commented, see below
   //d3.select("#searchbtn").on("click", clicksearchbtn); // onclick event binded in html
@@ -1848,17 +1865,17 @@ function initializePage() {
     return l;
   };
 
-  var thePath = getLocation(document.URL);
+  var thePath = getLocation(window.location.href);
   color = generate_color();
-  var portval = document.URL.split(":")[2].split("/")[0];
+  var portval = window.location.href.split(":")[2].split("/")[0];
   console.log("port: ", portval);
   $("#port").val(portval);
   console.log(
     "This is how I parse the param: ",
-    document.URL,
+    window.location.href,
     location.TOPN
   );
-  var param_in_url = document.URL.split("?")[1];
+  var param_in_url = window.location.href.split("?")[1];
   var newtopN = "20";
   if (param_in_url) {
     var multipleparam = param_in_url.split("&");
@@ -2586,11 +2603,8 @@ function filterjsonstringwithMaxDistance(jsonstring, maxdist) {
 
 
 function generate_base_url() {
-  var theport = $("#port").val();
-  var hostname=window.location.hostname;
-  var url = 'http://'+ hostname +':' + theport;
-  // console.log("base url: ", url);
-  return url;
+  return window.location.origin;
+
 }
 
 function activaTab(tab){
@@ -2916,7 +2930,7 @@ function redraw(queryindex, hitrank) {
   var thescan = graph.nodes[0].scan;
   var thefilename = "demo";
   var precursormass_mz = 0;
-  if (queryindex == -1 && document.URL != generate_base_url() +"/peaklistsearch.html") { // make sure it is not for peaks list.
+  if (queryindex == -1 && window.location.href != generate_base_url() +"/peaklistsearch.html") { // make sure it is not for peaks list.
     thefilename = "localfile --> " + graph.nodes[hitrank].filename;
     console.log('the first filename is : ', graph.nodes);
     var offset = 0;
@@ -3329,27 +3343,7 @@ function redraw_with_peakinfo(info, PeakType, queryid) {
   redraw(queryid, -1);
 }
 
-/**
- * request a spectra.
- * @param {*} queryid 
- * @returns {Deferred} an ajax call to be handled
- */
- function get_summary() {
-  console.log('-----------------summary-------------');
-  // refactored get, get2 into get, update1, update2
-  return $.ajax({
-    type: "GET",
-    url: `${generate_base_url()}/summary`,
-    dataType: "text",
-    contentType: "application/x-www-form-urlencoded",
-    async: true,
-    timeout: 25000,
-    error: (xhr, status, error) => {
-      alert(`${error} at get_summary(...)`);
-      ErrorInfo.log(error);
-    }
-  });
-}
+
 
 /**
  * request a spectra. 
@@ -3419,20 +3413,13 @@ function update_lorikeet_1() {
   }
   let PeakType = $("#PEAKTYPE").val(), queryid = $("#QUERYID").val();
 
-  // getting summary, the total number of spectra in archive.
-  $.when(get_summary()).done((data, status, xhr)=>{
-    if(xhr.readyState==4 && xhr.status == 200){
-      console.log('running here.===============', data)
-      g_summary=JSON.parse(data);
-      console.log(g_summary);
-    }
-  })
+  
   console.log("Error in --------------------------------case that query id is -1", queryid);
   if(queryid == -1){
     console.log("Error in --------------------------------case that query id is -1");
     // if the query id is -1, we will not use the follow logic. 
 
-    if (document.URL == generate_base_url() +"/peaklistsearch.html"){
+    if (window.location.href == generate_base_url() +"/peaklistsearch.html"){
       console.log("Error in --------------------------------case that query id is -1");
       console.log("----------------------------------HERE");
       var pk_str = $('#peaksforsearching').val().trim();
@@ -3488,8 +3475,8 @@ function update_lorikeet_2(queryid) {
   g_global_id_selected = queryid;
   if (queryid === "-1") {
 
-    console.log('query id is -1', queryid, "  try to get the query spectra from cloud/or local area?. ", document.URL, generate_base_url);
-    if (document.URL == generate_base_url() +"/cloudsearch.html"){
+    console.log('query id is -1', queryid, "  try to get the query spectra from cloud/or local area?. ", window.location.href, generate_base_url);
+    if (window.location.href == generate_base_url() +"/cloudsearch.html"){
       console.log('=================haha, in else');
       var spec = getQueryForCloud();
       let PeakType = 0;  // use top 50 peaks.
@@ -3514,7 +3501,7 @@ function update_lorikeet_2(queryid) {
       // todo: make a string out of the list of float values. space sep. 
       redraw_with_peakinfo2(g_pkdata2, PeakType, queryid);
     } 
-    else if (document.URL == generate_base_url() +"/peaklistsearch.html"){
+    else if (window.location.href == generate_base_url() +"/peaklistsearch.html"){
       console.log(" -- peak list search! -- ",$("#peaks").val());
       // use all peaks.
       let PeakType = 1;
@@ -3619,7 +3606,7 @@ function StoreNPROBE() {
   // localStorage.setItem("EdgeDist", $("#NeighborDistance").val());
   localStorage.setItem("NPROBE", $("#NPROBE").val());
   let queryindex = $("#QUERYID").val();
-  if (queryindex == -1 && document.URL == generate_base_url() +"/peaklistsearch.html"){
+  if (queryindex == -1 && window.location.href == generate_base_url() +"/peaklistsearch.html"){
     clickpeaklistsearchbtn();
   }else{
     clicksearchbtn();
@@ -3754,8 +3741,8 @@ function RestoreValues() {
 function isTopNChanged() {
   StoreValues();
   let queryindex = $("#QUERYID").val();
-  console.log('query index is ', queryindex, document.URL)
-  if (queryindex == -1 && document.URL == generate_base_url() +"/peaklistsearch.html"){
+  console.log('query index is ', queryindex, window.location.href)
+  if (queryindex == -1 && window.location.href == generate_base_url() +"/peaklistsearch.html"){
     clickpeaklistsearchbtn();
   }else{
     clicksearchbtn();
@@ -3921,7 +3908,7 @@ function search_with_spec(spec) {
   // console.log("queryid: ", + queryid + "; topN: " + topN);
   var http = new XMLHttpRequest();
   var url = generate_base_url() + "/id/";
-  if (document.URL == generate_base_url() + "/cloudsearch.html") {
+  if (window.location.href == generate_base_url() + "/cloudsearch.html") {
     console.log("already there! do nothing");
   } else {
     console.log("Error: the local url is wrong");

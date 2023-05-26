@@ -16,7 +16,7 @@ function get_spectra_by_peptide() {
 
     //Send the proper header information along with the request
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
+    $("body").css("cursor", "progress");
 
     http.onreadystatechange = function () {//Call a function when the state changes.
         if (this.readyState == 4 && this.status == 200) {
@@ -31,6 +31,7 @@ function get_spectra_by_peptide() {
 
             table.clear().draw();
             console.log("clear");
+            $("body").css("cursor", "default");
             var table = $('#PSM_List').DataTable();
             // console.log("show data:", graph.nodes);
             let nodesdata = [];
@@ -65,10 +66,10 @@ function get_spectra_by_filename_and_scanrange() {
 
 
     var http = new XMLHttpRequest();
-    var port = document.URL.split("/")[2].split(":")[1];
-    var hostname=window.location.hostname;
-    var base_url = "http://"+ hostname +":"+ port;
-    var url = base_url + "/peptideseq";
+
+
+    // var base_url = "http://"+ hostname +":"+ port;
+    var url = window.location.origin + "/peptideseq";
 
     var params = 'FILENAME=' + filename+";"+ 'STARTSCAN='+start +";"+"ENDSCAN="+end;
     console.log("searching for file with url \n ", url, ' and param: ', params)
@@ -77,7 +78,8 @@ function get_spectra_by_filename_and_scanrange() {
 
     //Send the proper header information along with the request
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
+    ErrorInfo.log("Start searching for file name, currently, this step is slow. It takes a few seconds. We will optimize it soon!");
+    $("body").css("cursor", "progress");
 
     http.onreadystatechange = function () {//Call a function when the state changes.
         if (this.readyState == 4 && this.status == 200) {
@@ -91,7 +93,9 @@ function get_spectra_by_filename_and_scanrange() {
             table = $('#PSM_List').DataTable();
 
             table.clear().draw();
-            console.log("clear");
+            console.log("clear: ", this.responseText, graph);
+            ErrorInfo.log("data ready!");
+            $("body").css("cursor", "default");
             var table = $('#PSM_List').DataTable();
             // console.log("show data:", graph.nodes);
             let nodesdata = [];

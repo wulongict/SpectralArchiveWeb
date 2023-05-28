@@ -62,9 +62,14 @@ function get_spectra_by_peptide() {
 }
 
 function get_spectra_by_filename_and_scanrange() {
+    
     var filename = $("#filename").val();
     var start = $("#startscan").val();
     var end = $("#endscan").val();
+    ErrorInfo.show("Searching for file: "+filename+" with scan range: "+start+"-"+end, "info");
+    table = $('#PSM_List').DataTable();
+
+            table.clear().draw();
     // var topN = $("#topn").val();
 
 
@@ -81,7 +86,6 @@ function get_spectra_by_filename_and_scanrange() {
 
     //Send the proper header information along with the request
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    ErrorInfo.log("Start searching for file name, currently, this step is slow. It takes a few seconds. We will optimize it soon!");
     $("body").css("cursor", "progress");
 
     http.onreadystatechange = function () {//Call a function when the state changes.
@@ -93,11 +97,9 @@ function get_spectra_by_filename_and_scanrange() {
             var graph = JSON.parse(this.responseText)
             // console.log(graph);
 
-            table = $('#PSM_List').DataTable();
-
-            table.clear().draw();
-            console.log("clear: ", this.responseText, graph);
-            ErrorInfo.log("data ready!");
+            
+            // console.log("clear: ", this.responseText, graph);
+            
             $("body").css("cursor", "default");
             var table = $('#PSM_List').DataTable();
             // console.log("show data:", graph.nodes);
@@ -115,6 +117,7 @@ function get_spectra_by_filename_and_scanrange() {
 
             // console.log("refresh!", nodesdata);
             table.rows.add(nodesdata).draw();
+            ErrorInfo.log("Data loaded! number of rows = "+nodesdata.length, "success")
 
 
         }

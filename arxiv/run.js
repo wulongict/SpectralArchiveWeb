@@ -1194,6 +1194,10 @@ class ErrorInfo {
   static clear() {
     this.element.innerHTML = "";
   }
+
+  static show(text) {
+    this.element.innerHTML = `${gettimestr()} <strong>Note: </strong> ${text}<br/>`;
+  }
 }
 
 class DataTable {

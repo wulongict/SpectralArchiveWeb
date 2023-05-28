@@ -1,3 +1,4 @@
+// version May 28, 2023
 function openInNewTab(url) {
     var win = window.open(url, '_blank');
     win.focus();

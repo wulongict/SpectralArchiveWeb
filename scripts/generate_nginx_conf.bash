@@ -81,6 +81,8 @@ http {
         }
 
         location ~ ^/(html|js|images) {
+            add_header Cache-Control "private, max-age=60";
+		# expires 1min;
             #autoindex on;
         }
 
@@ -135,6 +137,8 @@ http {
         }
 
         location ~ ^/(html|js|images) {
+            expires 1m;
+            add_header Cache-Control "private, max-age=60";
             #autoindex on;
         }
 
@@ -182,6 +186,8 @@ http {
         }
 
         location ~ ^/(html|js|images) {
+            add_header Cache-Control "private, max-age=60";
+    		# expires 1min;
             #autoindex on;
         }
 
@@ -230,6 +236,8 @@ http {
         }
 
         location ~ ^/(html|js|images) {
+            add_header Cache-Control "private, max-age=60";
+		# expires 1min;
             #autoindex on;
         }
 

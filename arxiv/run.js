@@ -5645,7 +5645,7 @@ class Peptide2Frag{
 
   calcBions(peptide, aamass, charge = 1, NL = "0") {
     var bions = []
-    if (peptide == 'UNKNOWN') return bions;
+    if (peptide == 'UNKNOWN' || peptide == "") return bions;
     const proton_mass = 1.007276466621; // Da
     const hydrogen = 1.007825035;// Da
     const oxygen = 15.994915;// Da

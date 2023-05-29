@@ -1188,7 +1188,7 @@ class ErrorInfo {
   static get element() { return document.getElementById("errorinfo"); }
 
   static log(text) {
-    this.element.innerHTML += `${gettimestr()} <strong>Warning: </strong> ${text}<br/>`;
+    this.element.innerHTML += `${gettimestr()} <strong>Note: </strong> ${text}<br/>`;
   }
 
   static clear() {

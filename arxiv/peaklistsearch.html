@@ -21,6 +21,10 @@
       /*stroke-width: 1.5px;*/
     }
 
+    .svgtext-no-response {
+      pointer-events: none;
+  }
+
     .contextmenu {
       position: absolute;
       padding: 0px;
@@ -42,9 +46,10 @@
     }
 
     .tooltip-inner {
-      /* white-space: pre-wrap; */
       max-width: 100% !important;
-      /* text-align: left !important; */
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      text-align: left !important;
     }
 
     #denovoplot {
@@ -63,15 +68,11 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
     integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous" />
   <link href="/lorikeet/css/my.css" rel="stylesheet" type="text/css">
-  <!-- <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script> -->
-  <!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script data-require="snap.svg@*" data-semver="0.3.0" src="//cdn.jsdelivr.net/snap.svg/0.3.0/snap.svg-min.js">
   </script>
-  <!-- add our script for bootstrap -->
-  <!-- We are happy now -->
-  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
-  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+  
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
@@ -86,12 +87,10 @@
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-  <script src="../shared_functions.js?v=1"></script>
-  <script src="../run.js?v=1"></script>
-  <script src="../chromatogram.js?v=1"></script>
-  <!-- those are for lorikeet -->
-  <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
-  <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js" ></script> -->
+  <script src="../shared_functions.js?v=1.0"></script>
+  <script src="../run.js?v=1.0"></script>
+  <script src="../chromatogram.js?v=1.0"></script>
+  
   <script type="text/javascript" src="/lorikeet/js/jquery.flot.js"></script>
   <script type="text/javascript" src="/lorikeet/js/jquery.flot.selection.js"></script>
   <script type="text/javascript" src="/lorikeet/js/specview.js"></script>
@@ -149,12 +148,10 @@
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#queryParam">Query Param</a>
             </li>
-     
-
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#graphnodeparam">Graph Node Param</a>
             </li>
-
+            
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#graphedgeparam">Graph Edge Param</a>
             </li>
@@ -185,7 +182,7 @@
                 <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="port">
                     <a href="#" data-toggle="tooltip"
-                      title="the port for searching service. Default: 8700; Valid range  8700~8710">
+                      title="Port for searching service.">
                       Service Port
                     </a>
                   </label>
@@ -202,7 +199,7 @@
                 <!--neighbor-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
                   <label for="topn">
-                    <a href="#" data-toggle="tooltip" title="Number of nodes returned ">
+                    <a href="#" data-toggle="tooltip" title="Maximum number of nodes to keep ">
                       #Neighbors
                     </a>
                   </label>
@@ -236,7 +233,7 @@
                 <!--bucketnum-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-2 col-xd-2">
                   <label for="NPROBE">
-                    <a href="#" data-toggle="tooltip" title="The number of buckets to lookup.">
+                    <a href="#" data-toggle="tooltip" title="Number of buckets to lookup.">
                       #Buckets
                     </a>
                   </label>
@@ -257,7 +254,7 @@
                 <!--queryid-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display: none;">
                   <label for="QUERYID">
-                    <a href="#" data-toggle="tooltip" title="The archive unique id for query. ">
+                    <a href="#" data-toggle="tooltip" title="A unique ID for a spectrum in the archive.">
                       Query ID
                     </a>
                   </label>
@@ -268,7 +265,7 @@
                 <!--Prev-->
                 <div class="form-group  col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1  align-self-end " style="display: none;">
                   <label for="searchprevbtn">
-                    <a href="#" data-toggle="tooltip" title="Search for previous query id. ">
+                    <a href="#" data-toggle="tooltip" title="Search  previous query ID. ">
                       Prev
                     </a>
                   </label>
@@ -284,7 +281,7 @@
                 <!--Next-->
                 <div class="form-group  col-2 col-md-1 col-lg-1  col-sm-1 col-xd-1  align-self-end " style="display: none;">
                   <label for="searchnextbtn">
-                    <a href="#" data-toggle="tooltip" title="Search for next query ID. ">
+                    <a href="#" data-toggle="tooltip" title="Search next query ID. ">
                       Next
                     </a>
                   </label>
@@ -314,9 +311,9 @@
 
                 <div class="form-group  col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3  align-self-end " style="display: none;">
                   <label for="shufflebtn">
-                    <a href="#" data-toggle="tooltip" title="Search a random query ID. Start a random walk in archive!">
-                      Random Walk
-                      
+                    <a href="#" data-toggle="tooltip" title="Generate a random query ID and search it.">
+                      Random
+
                     </a>
                   </label>
                   <button id="shufflebtn" type="button" class="btn btn-primary form-control  " onclick="feellucky()">
@@ -326,8 +323,8 @@
                     </svg>
                     
                     
-                  </button>
-                </div>
+                </button>
+              </div>
 
 
 
@@ -336,7 +333,7 @@
               <div class="form-group col-3 col-lg-1  align-self-end align-bottom">
 
               <label for="peptidelabel_flag">
-                <a href="#" data-toggle="tooltip" title="enable peptide label.">
+                <a href="#" data-toggle="tooltip" title="Enable peptide label.">
                   Label Nodes 
                 </a>
               </label>
@@ -349,7 +346,7 @@
               <!--tooltips-->
               <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                 <label for="tooltip_flag">
-                  <a href="#" data-toggle="tooltip" title="Enable or disable tooltip (YES) or not (NO).">
+                  <a href="#" data-toggle="tooltip" title="Enable tooltip or not.">
                     Enable Tooltip
                   </a>
                 </label>
@@ -363,7 +360,7 @@
               <!--showpeaklist-->
               <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display: none;">
                 <label for="showpeaklistflag">
-                  <a href="#" data-toggle="showpeaklist" title="search with peak list">
+                  <a href="#" data-toggle="showpeaklist" title="Search peak list">
                     Search Peaklist
                   </a>
                 </label>
@@ -393,8 +390,8 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="svgnoderepulsivecoef">
                     <a href="#" data-toggle="tooltip"
-                      title="the strength of repulsive force between nodes. Valid range: 0.01 ~ 100">
-                      Repulsive Force Strength
+                      title="Strength of repulsive force between nodes.">
+                      Repulsion
                     </a>
                   </label>
 
@@ -414,8 +411,8 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="svggravitystrength">
                     <a href="#" data-toggle="tooltip"
-                      title="the strength of gravity to the center of the svg figure for spectral network visualization. Valid range: 0.01 ~ 100">
-                      Gravity Strength
+                      title="Strength of gravity to the center">
+                      Gravity
                     </a>
                   </label>
 
@@ -486,11 +483,11 @@
                   </select>
                 </div>
 
-                           <!--score-->
+                <!--score-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="ProbType">
-                    <a href="#" data-toggle="tooltip"
-                      title="Coloring nodes if it is 1. identified (FDR <1% ); 2, PeptideProphet/iPropht probability > score cut off.">
+                    <a href="#" data-toggle="tooltip" data-html="true"
+                      title="Coloring nodes.</br>Significance: assign non-black color to PSMs with FDR <1% ; </br>PeptideProphet: PeptideProphet probability greater than Min-Probability cut-off；</br>iProphet: iProphet probability greater than Min-Probability cut-off.">
                       Coloring Nodes 
                     </a>
                   </label>
@@ -505,7 +502,7 @@
                 <div id="min-prob-option" class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display: none;">
                   <label for="MinProb">
                     <a href="#" data-toggle="tooltip"
-                      title="Minimal peptideProphet or iProphet probability reqiured to show a node as identified by a peptide. ">
+                      title="Minimum probability reqiured to assign non-black color to a PSM node. ">
                       Min Probability
                     </a>
                   </label>
@@ -530,8 +527,8 @@
                 <!--max dist-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="MAXDist">
-                    <a href="#" data-toggle="tooltip"
-                      title="Maximal Euclidian distance (r) allowed for a edge. r<0.8 implies cos θ>0.68">
+                    <a href="#" data-toggle="tooltip" data-html="true"
+                      title="Remove an edge if its Euclidian distance is greater than this threshold. </br>Max-Dist > 0.8 implies cosθ < 0.68">
                       Max Dist
                     </a>
                   </label>
@@ -544,7 +541,7 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="NeighborDistance">
                     <a href="#" data-toggle="tooltip"
-                      title="Calculate distance between candidates/neighbors (YES) or not (NO).">
+                      title="Keep connections between neighbors (Network) or not (Star).">
                       Connectivity
                     </a>
                   </label>
@@ -558,7 +555,7 @@
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="NeighborCircles">
                     <a href="#" data-toggle="tooltip"
-                      title="put neighbos in to circles (YES) or not (NO).">
+                      title="Fix neighbors on concentric circles.">
                       Onto Circles
                     </a>
                   </label>
@@ -568,7 +565,7 @@
                   </select>
                 </div>
 
-                <!--norm dp-->
+                <!--norm dp: to be removed.-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3" style="display:none">
                   <label for="dp_norm">
                     <a href="#" data-toggle="tooltip"
@@ -585,7 +582,8 @@
                 <!--edge width-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="edgewidth">
-                    <a href="#" data-toggle="tooltip" title="The width of edges in the network.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="The width of edges in the network.">
                       Edge Width
                     </a>
                   </label>
@@ -602,13 +600,13 @@
 
                 </div>
 
-
+               
                 <!--DeltaMassToBeHighlighted-->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="DeltaMassToBeHighlighted">
                     <a href="#" data-toggle="tooltip"
-                      title="For visualization of potentional PTM, the minimum delta mass (Da) for an edge to be highlighted">
-                      Min ΔMass To Highlight
+                      title="The minimum ΔMass (Da) for an edge to be highlighted">
+                      ΔM to highlight
                     </a>
                   </label>
 
@@ -667,25 +665,27 @@
                 <!-- Lorikeet  -->
                 <div class="form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="plotPSM">
-                    <a href="#" data-toggle="tooltip" title="Switch between different lorikeet and native PSM viewer.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Switch between different lorikeet and native PSM viewer.">
                       PSM Viewers
                     </a>
                   </label>
-                  <select class="form-control" id="plotPSM" onchange="plotAgain()">
-                    <option value="2">Native Butterfly Plot</option>
-                    <option value="1" >Native</option>
-                    <option value="0" selected >Lorikeet</option>
+                  <select class="form-control" id="plotPSM" onchange="onViewerChange()">
+                    <option value="2" >Native Butterfly Plot</option>
+                    <option value="1" selected>Native</option>
+                    <option value="0"  >Lorikeet</option>
                   </select>
                 </div>
                 <!-- Lorikeet x axis limit-->
                 
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="mzRangeMax">
-                    <a href="#" data-toggle="tooltip" title="Max m/z value in native PSM viewer.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Max m/z value in native PSM viewer.">
                       Max Mz
                     </a>
                   </label>
-                  <select class="form-control" id="mzRangeMax" onchange="plotAgain()">
+                  <select class="form-control" id="mzRangeMax" onchange="onViewerChange()">
                     <option value="2000" selected>2000</option>
                     <option value="0" >auto</option>
                   </select>
@@ -694,11 +694,12 @@
                 <!-- Lorikeet mz tol-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="psm_mz_tol">
-                    <a href="#" data-toggle="tooltip" title="The m/z tolerance for native PSM viewer for peak matching.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="The m/z tolerance for native PSM viewer for peak matching.">
                       Mz Tolerance
                     </a>
                   </label>
-                  <select class="form-control" id="psm_mz_tol" onchange="plotAgain()">
+                  <select class="form-control" id="psm_mz_tol" onchange="onViewerChange()">
                     <option value="0.01" >0.01</option>
                     <option value="0.02" selected >0.02</option>
                     <option value="0.05" >0.05</option>
@@ -709,11 +710,12 @@
                 <!-- Lorikeet noise baseline-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
                   <label for="noise_baseline">
-                    <a href="#" data-toggle="tooltip" title="Ignore peaks below a user defined relative intensity threshold.">
+                    <a href="#" data-toggle="tooltip" 
+                    title="Ignore peaks below a user defined relative intensity threshold.">
                       Ignore Peaks
                     </a>
                   </label>
-                  <select class="form-control" id="noise_baseline" onchange="plotAgain()">
+                  <select class="form-control" id="noise_baseline" onchange="onViewerChange()">
                     <option value="0.001" >0.001</option>
                     <option value="0.005" >0.005</option>
                     <option value="0.01" selected>0.01</option>
@@ -723,7 +725,22 @@
                   </select>
                 </div>
 
-                
+                <!-- Native PSM viewer, annotation-->
+                <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
+                  <label for="pepForSpecPair">
+                    <a href="#" data-toggle="tooltip"  data-html="true"
+                    title='Only works for native Butterfly Plot;  </br>Selected: annotate selected spectrum and query spectrum with peptide of selected node; </br>Query: annotate the selected spectrum and query spectrum with the peptide of query node; </br>Separate: annotate selected node and query node with their own peptde; </br>Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
+                      Annotation 
+                    </a>
+                  </label>
+                  <select class="form-control" id="pepForSpecPair" onchange="onViewerChange()">
+                    <option value="neighbor" selected >Selected</option>
+                    <option value="query" >Query</option>
+                    <option value="separate" >Separate</option>
+                    <option value="mixture" >Mixture</option>
+                    
+                  </select>
+                </div>
 
                 <!-- Lorikeet annotation font size-->
                 <div class="native-plot-options form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
@@ -732,7 +749,7 @@
                       Font Size
                     </a>
                   </label>
-                  <select class="form-control" id="fontsize" onchange="plotAgain()">
+                  <select class="form-control" id="fontsize" onchange="onViewerChange()">
                     <option value="4" >4pt</option>
                     <option value="8" selected>8pt</option>
                     <option value="10" >10pt</option>
@@ -749,7 +766,7 @@
                       Line Width
                     </a>
                   </label>
-                  <select class="form-control" id="linewidth" onchange="plotAgain()">
+                  <select class="form-control" id="linewidth" onchange="onViewerChange()">
                     <option value="1" selected>1pt</option>
                     <option value="2" >2pt</option>
                     <!-- <option value="3" >3pt</option>
@@ -765,7 +782,7 @@
                       H2O Loss
                     </a>
                   </label>
-                  <select class="form-control" id="h2o_nl" onchange="plotAgain()">
+                  <select class="form-control" id="h2o_nl" onchange="onViewerChange()">
                     <option value="1" selected >YES</option>
                     <option value="0"  >NO</option>
                   </select>
@@ -778,25 +795,9 @@
                       NH3 Loss
                     </a>
                   </label>
-                  <select class="form-control" id="nh3_nl" onchange="plotAgain()">
+                  <select class="form-control" id="nh3_nl" onchange="onViewerChange()">
                     <option value="1" selected >YES</option>
                     <option value="0"  >NO</option>
-                  </select>
-                </div>
-
-                <!-- Native PSM viewer, annotation-->
-                <div class="native-plot-options-back2back form-group col-3 col-md-2 col-lg-1  col-sm-3 col-xd-3">
-                  <label for="pepForSpecPair">
-                    <a href="#" data-toggle="tooltip"  title='Only works for back-to-back plot;  Selected: annotate selected spectrum and query spectrum with peptide of selected node; Query: annotate the selected spectrum and query spectrum with the peptide of query node; Separate: annotate selected node and query node with their own peptde; Mixture: annotate query spectrum with peptide of selected node and peptide of query node.' >
-                      Peptide Annotation 
-                    </a>
-                  </label>
-                  <select class="form-control" id="pepForSpecPair" onchange="plotAgain()">
-                    <option value="neighbor" >Selected</option>
-                    <option value="query" selected>Query</option>
-                    <option value="separate" >Separate</option>
-                    <option value="mixture" >Mixture</option>
-                    
                   </select>
                 </div>
 
@@ -867,7 +868,7 @@
         <!--      ---------------->
 
         <div class="container-fluid row justify-content-left" style="margin: 0px; padding: 2px;">
-          <div  class="col-lg-1" id="peaklistsearcharea" style="padding: 0px; visibility: hidden;">
+          <div  id="peaklistsearcharea" style="padding: 0px; visibility: hidden;">
           </div>
 
 
@@ -948,7 +949,7 @@
           </div>
 
           <div class="form-group">
-            <button id="showspecview" type="button" class="btn btn-primary form-control" onclick="plotAgain()">
+            <button id="showspecview" type="button" class="btn btn-primary form-control" onclick="refreshPSMViewer()">
               Update PSM
             </button>
           </div>

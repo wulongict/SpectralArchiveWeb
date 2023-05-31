@@ -163,7 +163,7 @@
         <h2>Search query</h2>
         <p class="text-justify">Each MS2 spectrum in the archive is designated with an identifier (id). The identifier
           ranges from 0 to size of the archive (exclusive). The following example shows how to search an query spectra
-          from NIST library. The query id is <a href="http://omics.ust.hk:8709/id/25757878">25757878</a>. </p>
+          from NIST library. The query id is <a href="/id/25757878">25757878</a>. </p>
         <figure class="figure">
           <img src="/images/library-bridge.gif" class="figure-img img-fluid rounded"
             alt="A generic square placeholder image with rounded corners in a figure.">
@@ -195,7 +195,7 @@
 
         <h2>Investigate unidentified PSM corresponding to semitryptic peptide</h2>
         <p class="text-justify"> The following examples shows how to find the correct solution of an unidentified
-          peptide. The query id is <a href="http://omics.ust.hk:8709/id/18497303">18497303 </a>. In this case, the query
+          peptide. The query id is <a href="/id/18497303">18497303 </a>. In this case, the query
           node is in black color which means it is not identified. However, there are many neighbors in red are
           identified as DDPLTNLNTAFDVAEK, and the highlighted edge suggests that the delta mass is 230Da, which equals
           to mass of "DD". So we can guess if we remove the DD from "DDPLTNLNTAFDVAEK", the remaining part
@@ -212,7 +212,7 @@
 
         <h2>Investigate into mixture spectra of two similar peptides</h2>
         <p class="text-justify"> The following example shows two similar peptides co-fragmented into one MS2 spectrum.
-          The query id is <a href="http://omics.ust.hk:8709/id/18793053">18793053 </a>. In this case, the neighbors of
+          The query id is <a href="/id/18793053">18793053 </a>. In this case, the neighbors of
           the query node form one tightly connected cluster. All of them are identified, but as two different peptides,
           ADIDVSGPK and ADVDISGPK. Thse two peptides share many fragment ions. From the back-to-back PSM plot
           implemented in Spectroscape interface, one can clearly see the query spectra contains peaks of both peptides.
@@ -278,7 +278,7 @@
 
         </p>
         <p class="text-justify"> This Peak list above actually is the query spectrum <a
-            href="http://omics.ust.hk:8709/id/21958751">21958751</a>. Now we can open the Spectroscape web interface,
+            href="/id/21958751">21958751</a>. Now we can open the Spectroscape web interface,
           choose to search a peak list, then we can paste the peaks above to the text box and click button "search peak
           list". It's done. The web interface will show the network between the query spectra and its neighbors. Note
           that this spectrum is out of the archive, therefore its query id become "-1".
@@ -287,7 +287,7 @@
           <img src="/images/search-a-peak-list.gif" class="figure-img img-fluid rounded"
             alt="A generic square placeholder image with rounded corners in a figure.">
           <figcaption>Fig.6 - Search a peak list. It turns out that this is a mixture spectrum. It is actually from the
-            archive, where the query id is <a href="http://omics.ust.hk:8709/id/21958751">21958751</a>. </figcaption>
+            archive, where the query id is <a href="/id/21958751">21958751</a>. </figcaption>
         </figure>
 
       </section>

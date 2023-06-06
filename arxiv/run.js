@@ -5623,6 +5623,7 @@ class Peptide2Frag{
     const NH3 = 3 * hydrogen + nitrogen;
 
     var peptideTokens = this.pepitdeToTokens(peptide);
+    console.log('tokens', peptideTokens);
     var pep_mass =  2* hydrogen + oxygen;
     if (NL == "H2O") {
       pep_mass -= H2O;
@@ -5633,8 +5634,10 @@ class Peptide2Frag{
     if(NL=='H2O&NH3'){
       pep_mass -= H2O + NH3;
     }
-    for(var i = 1; i < peptideTokens.length; i ++){
-      pep_mass += this.getMassOfToken_safe(aamass, peptideTokens[i]);
+    for(var i = 0; i < peptideTokens.length; i ++){
+      var new_mass = this.getMassOfToken_safe(aamass, peptideTokens[i]);
+      console.log(new_mass, peptideTokens[i])
+      pep_mass += new_mass;
     }
     pep_mass += charge * proton_mass;
     pep_mass /= charge;
@@ -5764,7 +5767,9 @@ class Peptide2Frag{
             the_ions = this.calcYions(this.peptide, aamass, i, theNLtype);
             // console.log('the y8 ion is ', the_ions[8], theNLtype);
           } else if (theIonType=='M' && theNLtype!='M[147]'){
+            console.log("calculating peptide mass: ",this.peptide, aamass, i, theNLtype);
             the_ions = this.calcPepMass(this.peptide,aamass,i,theNLtype);
+            console.log("calculating peptide mass done: ", the_ions);
           }
           this.ions[theIonType][theNLtype].push(the_ions);
           // console.log('ions to be added! == ', the_ions);

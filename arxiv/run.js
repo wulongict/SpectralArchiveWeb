@@ -5623,7 +5623,7 @@ class Peptide2Frag{
     const NH3 = 3 * hydrogen + nitrogen;
 
     var peptideTokens = this.pepitdeToTokens(peptide);
-    console.log('tokens', peptideTokens);
+    // console.log('tokens', peptideTokens);
     var pep_mass =  2* hydrogen + oxygen;
     if (NL == "H2O") {
       pep_mass -= H2O;
@@ -5636,7 +5636,7 @@ class Peptide2Frag{
     }
     for(var i = 0; i < peptideTokens.length; i ++){
       var new_mass = this.getMassOfToken_safe(aamass, peptideTokens[i]);
-      console.log(new_mass, peptideTokens[i])
+      // console.log(new_mass, peptideTokens[i])
       pep_mass += new_mass;
     }
     pep_mass += charge * proton_mass;

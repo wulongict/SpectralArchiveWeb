@@ -427,11 +427,9 @@ svg.append("text")
 
 
 //Read the data
-  var port = document.URL.split("/")[2].split(":")[1];
 
-  var hostname = window.location.hostname;
-  var url = 'http://' + hostname + ':' + port;
-  d3.json(url + "/spectrum?id=" + queryid + "&chrom=1&rtTol=" + rt_width + "&mzTol=" + mz_tol + "&charge=" + charge,
+
+  d3.json(window.location.orign + "/spectrum?id=" + queryid + "&chrom=1&rtTol=" + rt_width + "&mzTol=" + mz_tol + "&charge=" + charge,
 
   // When reading the csv, I must format variables:
 

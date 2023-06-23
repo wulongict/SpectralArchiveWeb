@@ -7,10 +7,8 @@ function get_spectra_by_peptide() {
 
 
     var http = new XMLHttpRequest();
-    var port = document.URL.split("/")[2].split(":")[1];
-    var hostname=window.location.hostname;
-    var base_url = "http://"+ hostname +":"+ port;
-    var url = base_url + "/peptideseq";
+
+    var url = window.location.origin + "/peptideseq";
 
     var params = 'Peptide_Sequence=' + peptide;
     console.log('invalid url ', url );
@@ -76,7 +74,7 @@ function get_spectra_by_filename_and_scanrange() {
     var http = new XMLHttpRequest();
 
 
-    // var base_url = "http://"+ hostname +":"+ port;
+
     var url = window.location.origin + "/peptideseq";
 
     var params = 'FILENAME=' + filename+";"+ 'STARTSCAN='+start +";"+"ENDSCAN="+end;

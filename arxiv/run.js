@@ -1614,7 +1614,8 @@ function onInitCloudSearch() {
 
   var thePath = getLocation(window.location.href);
   color = generate_color();
-  var portval = window.location.href.split(':')[2].split("/")[0];
+
+  var portval = window.location.href.split(':')[2].split("/")[0] || '80';
   // console.log('port: ', portval);
   $('#port').val(portval);
 
@@ -1871,7 +1872,7 @@ function initializePage() {
 
   var thePath = getLocation(window.location.href);
   color = generate_color();
-  var portval = window.location.href.split(":")[2].split("/")[0];
+  var portval = window.location.href.split(":")[2].split("/")[0] || '80';
   console.log("port: ", portval);
   $("#port").val(portval);
   console.log(

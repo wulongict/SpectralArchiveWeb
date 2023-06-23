@@ -232,13 +232,8 @@
                     console.log("first column", idx);
                 }
                 else if (idx.column == 0) {
-                    console.log("Index column: ", idx);
-                    var port = document.URL.split("/")[2].split(":")[1];
-
-                    var hostname = window.location.hostname;
-                    var url = 'http://' + hostname + ':' + port;
-                    console.log('peptide search .html base url ', url);
-                    openInNewTab(url + "/id/" + thedata);
+            
+                    openInNewTab(window.location.origin + "/id/" + thedata);
                 }
                 console.log('cell data clicked', thedata);
                 // alert('You clicked on ' + thedata["id"] + '\'s row');

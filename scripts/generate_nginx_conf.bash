@@ -64,6 +64,7 @@ http {
         }
 
         error_page 404 /custom_404.html;
+        error_page 502 /custom_404.html;
         location = /custom_404.html {
                 #root /usr/share/nginx/html;
                 internal;
@@ -71,6 +72,7 @@ http {
         }
 
         error_page 403 /custom_403.html;
+        
         location /custom_403.html {
             allow all;
         }
@@ -113,6 +115,7 @@ http {
         }
 
         error_page 404 /custom_404.html;
+        error_page 502 /custom_404.html;
         location = /custom_404.html {
                 #root /usr/share/nginx/html;
                 internal;
@@ -218,7 +221,7 @@ http {
         }
 
         error_page 404 /custom_404.html;
-
+        error_page 502 /custom_404.html;
         error_page 404 /custom_404.html;
         location = /custom_404.html {
                 #root /usr/share/nginx/html;
@@ -268,6 +271,7 @@ http {
         }
   
         error_page 404 /custom_404.html;
+        error_page 502 /custom_404.html;
         location = /custom_404.html {
                 #root /usr/share/nginx/html;
                 internal;

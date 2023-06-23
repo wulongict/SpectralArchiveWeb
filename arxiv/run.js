@@ -1872,9 +1872,13 @@ function initializePage() {
 
   var thePath = getLocation(window.location.href);
   color = generate_color();
-  var portval = window.location.href.split(":")[2].split("/")[0] || '80';
-  console.log("port: ", portval);
-  $("#port").val(portval);
+  // var portval = window.location.href.split(":")[2].split("/")[0] || '80';
+  // console.log("port: ", portval);
+  
+  $("#port").val(window.location.port);
+  if(window.location.port===''){
+    $("#port").val('80');
+  }
   console.log(
     "This is how I parse the param: ",
     window.location.href,

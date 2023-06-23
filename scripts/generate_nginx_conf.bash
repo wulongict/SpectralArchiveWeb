@@ -53,6 +53,55 @@ http {
 
     server {
         root $ROOT_PATH;
+        listen 80;
+        server_name localhost ${SERVER_NAME};
+        location / {
+            include  /etc/nginx/mime.types;
+            
+            #return 200 $document_root;
+            allow $IP_ALLOWED;
+            deny all;
+        }
+
+        error_page 404 /custom_404.html;
+        location = /custom_404.html {
+                #root /usr/share/nginx/html;
+                internal;
+                allow all;
+        }
+
+        error_page 403 /custom_403.html;
+        location /custom_403.html {
+            allow all;
+        }
+
+
+        location /cloudsearch {
+            index cloudsearch.html;
+        }
+
+        location ~ ^/(html|js|images) {
+            add_header Cache-Control "private, max-age=60";
+		# expires 1min;
+            #autoindex on;
+        }
+
+        location /css/ {
+            #autoindex on;
+            add_header  Content-Type    text/css;
+        }
+
+
+
+        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
+            fastcgi_pass   127.0.0.1:8700;
+        }
+
+
+    }
+
+    server {
+        root $ROOT_PATH;
         listen 8701;
         server_name localhost ${SERVER_NAME};
         location / {

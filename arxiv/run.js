@@ -5007,7 +5007,32 @@ function add_denovo_section_to_page() {
 
 /**onchange handler of port selector, redirect to new url */
 function portOnChange() {
-  window.location.replace(generate_base_url())
+
+  // Get the current URL and port
+var url = window.location.protocol + '//' + window.location.hostname;
+
+var port = $('#port').val(); // the new port number
+if(port==='80'){
+  port='';
+}
+
+// Create the new URL with the updated port
+var newUrl = url + ':' + port + window.location.pathname + window.location.search;
+
+// Navigate to the new URL
+window.location = newUrl;
+
+  // var newurl = window.location.hostname;
+  // if($("port").val()!='80'){
+  //   window.location.port=$("port").val();
+    
+  //   console.log('the port is ', window.location.port);
+  // }else{
+  //   window.location.port='';
+    
+  //   console.log('the port is 80');
+  // }
+  // window.location.replace(generate_base_url())
 }
 
 class SvgImage {

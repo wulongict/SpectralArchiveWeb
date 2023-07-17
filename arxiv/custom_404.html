@@ -29,5 +29,37 @@
 	<h1>Spectroscape Server Under Maintenance</h1>
 	<p>We're sorry, but our server is currently undergoing maintenance and will be back soon.</p>
 	<p>If you have any enquiries, please email the main developer at <a href="mailto:lwuai@connect.ust.hk">lwuai@connect.ust.hk</a>.</p>
+	<p> Currently, we have four demos online. Please choose from the following list to get a different one.</p>
+	<div id="demos""></div>
 </body>
+<script>
+	var demos = [
+		{
+			name: " Spectroscape (Demo 1)", 
+			url: "http://spectroscape.cc"
+		}, 
+		{
+			name: "Spectroscape (Demo 2)",
+			url: "http://spectroscape.cc:8709"
+		}, 
+		{ 
+			name: "Spectroscape (Demo 3)", 
+			url: "http://omics.ust.hk" 
+		}, 
+		{
+			name: "Spectroscape (Demo 4)", 
+			url: "http://omics.ust.hk:8709"
+		}]; 
+		var demosDiv = document.getElementById("demos"); 
+		for (var i = 0; i < demos.length; i++) {
+			var demo = demos[i]; 
+			var	demoLink = document.createElement("a"); 
+			demoLink.href = demo.url; 
+			demoLink.innerHTML = demo.name;
+			demosDiv.appendChild(demoLink); 
+			if (i < demos.length - 1) {
+				demosDiv.appendChild(document.createTextNode(" | "));
+			}
+		}
+</script>
 </html>

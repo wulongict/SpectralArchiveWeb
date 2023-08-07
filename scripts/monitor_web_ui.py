@@ -48,10 +48,10 @@ def check_status_urls(urls):
         
         
 def check_specroscape_web_ui_status():
-    urls = ['http://omics.ust.hk:8709',
+    urls = [
         'http://omics.ust.hk',
-        'http://spectroscape.cc',
-        'http://spectroscape.cc:8709']
+        'http://spectroscape.cc'
+        ]
     
     url_dict={}
     error_found = False
@@ -65,17 +65,16 @@ def check_specroscape_web_ui_status():
         url_dict[url]=status
         
     if error_found:
-        print('\"Dear Admin,\n\n')
+        print('Dear Admin,\n\n')
         print('The Spectroscape web UI is not working properly. Please check the following URLs:')
         for url in url_dict:
             print(f'{url:20s}\t{url_dict[url]:5s}\t{code}')
             
-        print('\n\nBest regards,\nSpectroscape Team\"')
+        print('\n\nBest regards,\nSpectroscape Team')
         exit(1)
         
     exit(0)
     
-        
         
     
         
@@ -83,15 +82,3 @@ check_specroscape_web_ui_status()
 
 
  
-# # list of urls to check
-# URLS = ['http://omics.ust.hk:8709/summary',
-#         'http://omics.ust.hk/summary',
-
-#         'http://spectroscape.cc/summary',
-#         'http://spectroscape.cc:8709/summary']
-# # check all urls
-# check_status_urls(URLS)
-
-# 'http://omics.ust.hk:8704/summary',
-# 'http://omics.ust.hk:8701/summary',
-# 'http://omics.ust.hk:8702/summary',

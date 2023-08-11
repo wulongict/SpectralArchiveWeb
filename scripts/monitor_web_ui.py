@@ -49,7 +49,7 @@ def check_status_urls(urls):
         
 def check_specroscape_web_ui_status():
     urls = [
-        'http://omics.ust.hk',
+        'http://omics.ust.hk:8709',
         'http://spectroscape.cc'
         ]
     

@@ -51,56 +51,58 @@ http {
     fastcgi_param  SERVER_PORT        \$server_port;
     fastcgi_param  SERVER_NAME        \$server_name;
 
-    server {
-        root $ROOT_PATH;
-        listen 80;
-        server_name localhost ${SERVER_NAME};
-        location / {
-            include  /etc/nginx/mime.types;
+    # server {
+    #     root $ROOT_PATH;
+    #     listen 80;
+    #     server_name localhost ${SERVER_NAME};
+    #     location / {
+    #         include  /etc/nginx/mime.types;
             
-            #return 200 $document_root;
-            allow $IP_ALLOWED;
-            deny all;
-        }
+    #         #return 200 $document_root;
+    #         allow $IP_ALLOWED;
+    #         deny all;
+    #     }
 
-        error_page 404 /custom_404.html;
-        error_page 502 /custom_404.html;
-        location = /custom_404.html {
-                #root /usr/share/nginx/html;
-                internal;
-                allow all;
-        }
+    #     include `pwd`/shared_location.conf
 
-        error_page 403 /custom_403.html;
+    #     # error_page 404 /custom_404.html;
+    #     # error_page 502 /custom_404.html;
+    #     # location = /custom_404.html {
+    #     #         #root /usr/share/nginx/html;
+    #     #         internal;
+    #     #         allow all;
+    #     # }
+
+    #     # error_page 403 /custom_403.html;
         
-        location /custom_403.html {
-            allow all;
-        }
+    #     # location /custom_403.html {
+    #     #     allow all;
+    #     # }
 
 
-        location /cloudsearch {
-            index cloudsearch.html;
-        }
+    #     # location /cloudsearch {
+    #     #     index cloudsearch.html;
+    #     # }
 
-        location ~ ^/(html|js|images) {
-            add_header Cache-Control "private, max-age=60";
-		# expires 1min;
-            #autoindex on;
-        }
+    #     # location ~ ^/(html|js|images) {
+    #     #     add_header Cache-Control "private, max-age=60";
+	# 	# # expires 1min;
+    #     #     #autoindex on;
+    #     # }
 
-        location /css/ {
-            #autoindex on;
-            add_header  Content-Type    text/css;
-        }
-
-
-
-        location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
-            fastcgi_pass   127.0.0.1:8700;
-        }
+    #     # location /css/ {
+    #     #     #autoindex on;
+    #     #     add_header  Content-Type    text/css;
+    #     # }
 
 
-    }
+
+    #     location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
+    #         fastcgi_pass   127.0.0.1:8700;
+    #     }
+
+
+    # }
 
     server {
         root $ROOT_PATH;
@@ -114,34 +116,36 @@ http {
             deny all;
         }
 
-        error_page 404 /custom_404.html;
-        error_page 502 /custom_404.html;
-        location = /custom_404.html {
-                #root /usr/share/nginx/html;
-                internal;
-                allow all;
-        }
+        include `pwd`/shared_location.conf
 
-        error_page 403 /custom_403.html;
-        location /custom_403.html {
-            allow all;
-        }
+        # error_page 404 /custom_404.html;
+        # error_page 502 /custom_404.html;
+        # location = /custom_404.html {
+        #         #root /usr/share/nginx/html;
+        #         internal;
+        #         allow all;
+        # }
+
+        # error_page 403 /custom_403.html;
+        # location /custom_403.html {
+        #     allow all;
+        # }
 
 
-        location /cloudsearch {
-            index cloudsearch.html;
-        }
+        # location /cloudsearch {
+        #     index cloudsearch.html;
+        # }
 
-        location ~ ^/(html|js|images) {
-            add_header Cache-Control "private, max-age=60";
-		# expires 1min;
-            #autoindex on;
-        }
+        # location ~ ^/(html|js|images) {
+        #     add_header Cache-Control "private, max-age=60";
+		# # expires 1min;
+        #     #autoindex on;
+        # }
 
-        location /css/ {
-            #autoindex on;
-            add_header  Content-Type    text/css;
-        }
+        # location /css/ {
+        #     #autoindex on;
+        #     add_header  Content-Type    text/css;
+        # }
 
 
 
@@ -168,36 +172,38 @@ http {
                 deny all;
         }
 
-        error_page 404 /custom_404.html;
-        error_page 502 /custom_404.html;
+        include `pwd`/shared_location.conf
 
-        error_page 404 /custom_404.html;
-        location = /custom_404.html {
-                #root /usr/share/nginx/html;
-                internal;
-                allow all;
-        }
+        # error_page 404 /custom_404.html;
+        # error_page 502 /custom_404.html;
 
-        error_page 403 /custom_403.html;
-        location /custom_403.html {
-            allow all;
-        }
+        # error_page 404 /custom_404.html;
+        # location = /custom_404.html {
+        #         #root /usr/share/nginx/html;
+        #         internal;
+        #         allow all;
+        # }
+
+        # error_page 403 /custom_403.html;
+        # location /custom_403.html {
+        #     allow all;
+        # }
 
 
-        location /cloudsearch {
-            index cloudsearch.html;
-        }
+        # location /cloudsearch {
+        #     index cloudsearch.html;
+        # }
 
-        location ~ ^/(html|js|images) {
-            expires 1m;
-            add_header Cache-Control "private, max-age=60";
-            #autoindex on;
-        }
+        # location ~ ^/(html|js|images) {
+        #     expires 1m;
+        #     add_header Cache-Control "private, max-age=60";
+        #     #autoindex on;
+        # }
 
-        location /css/ {
-            #autoindex on;
-            add_header  Content-Type    text/css;
-        }
+        # location /css/ {
+        #     #autoindex on;
+        #     add_header  Content-Type    text/css;
+        # }
 
 
         location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
@@ -219,34 +225,35 @@ http {
             allow $IP_ALLOWED;
             deny all;
         }
+        include `pwd`/shared_location.conf
 
-        error_page 404 /custom_404.html;
-        error_page 502 /custom_404.html;
-        error_page 404 /custom_404.html;
-        location = /custom_404.html {
-                #root /usr/share/nginx/html;
-                internal;
-                allow all;
-        }
+        # error_page 404 /custom_404.html;
+        # error_page 502 /custom_404.html;
+        # error_page 404 /custom_404.html;
+        # location = /custom_404.html {
+        #         #root /usr/share/nginx/html;
+        #         internal;
+        #         allow all;
+        # }
 
-        error_page 403 /custom_403.html;
-        location /custom_403.html {
-            allow all;
-        }
-        location /cloudsearch {
-            index cloudsearch.html;
-        }
+        # error_page 403 /custom_403.html;
+        # location /custom_403.html {
+        #     allow all;
+        # }
+        # location /cloudsearch {
+        #     index cloudsearch.html;
+        # }
 
-        location ~ ^/(html|js|images) {
-            add_header Cache-Control "private, max-age=60";
-    		# expires 1min;
-            #autoindex on;
-        }
+        # location ~ ^/(html|js|images) {
+        #     add_header Cache-Control "private, max-age=60";
+    	# 	# expires 1min;
+        #     #autoindex on;
+        # }
 
-        location /css/ {
-            #autoindex on;
-            add_header  Content-Type    text/css;
-        }
+        # location /css/ {
+        #     #autoindex on;
+        #     add_header  Content-Type    text/css;
+        # }
 
 
         location ~ ^/(id|spectrum|peptideseq|identification|remark|summary) {
@@ -269,35 +276,37 @@ http {
             allow $IP_ALLOWED;
             deny all;
         }
+
+        include `pwd`/shared_location.conf
   
-        error_page 404 /custom_404.html;
-        error_page 502 /custom_404.html;
-        location = /custom_404.html {
-                #root /usr/share/nginx/html;
-                internal;
-                allow all;
-        }
+        # error_page 404 /custom_404.html;
+        # error_page 502 /custom_404.html;
+        # location = /custom_404.html {
+        #         #root /usr/share/nginx/html;
+        #         internal;
+        #         allow all;
+        # }
 
-        error_page 403 /custom_403.html;
-        location /custom_403.html {
-            allow all;
-        }
+        # error_page 403 /custom_403.html;
+        # location /custom_403.html {
+        #     allow all;
+        # }
 
 
-        location /cloudsearch {
-            index cloudsearch.html;
-        }
+        # location /cloudsearch {
+        #     index cloudsearch.html;
+        # }
 
-        location ~ ^/(html|js|images) {
-            add_header Cache-Control "private, max-age=60";
-		# expires 1min;
-            #autoindex on;
-        }
+        # location ~ ^/(html|js|images) {
+        #     add_header Cache-Control "private, max-age=60";
+		# # expires 1min;
+        #     #autoindex on;
+        # }
 
-        location /css/ {
-            #autoindex on;
-            add_header  Content-Type    text/css;
-        }
+        # location /css/ {
+        #     #autoindex on;
+        #     add_header  Content-Type    text/css;
+        # }
 
 
 

@@ -149,7 +149,11 @@
 
   <script>
     function startSearch() {
-      window.location.href = "/id/5105809";
+      if (window.location.origin == "http://spectroscape.cc:8709"){
+        window.location.href = "/id/295482";
+      }else{
+        window.location.href = "/id/5105809";
+      }
     }
   </script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

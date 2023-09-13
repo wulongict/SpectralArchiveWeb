@@ -3090,14 +3090,16 @@ function plotAgain() {
   // StoreValues();
   localStorage.setItem("PEAKTYPE", $('#PEAKTYPE').val());
   // console.log("peak type: ", $('#PEAKTYPE').val());
-  var PeakType = $("#PEAKTYPE").val();
-  var queryid = $("#QUERYID").val();
+  clicksearchbtn(); 
+  //update_lorikeet_2($("#QUERYID").val());
+  //var PeakType = $("#PEAKTYPE").val();
+  //var queryid = $("#QUERYID").val();
 
 
-  redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
+  //redraw_with_peakinfo2(g_pkdata2, PeakType, g_global_id_selected);
 
   // update PSM Viewer. with updated peptide sequence
-  redraw_with_peakinfo(g_pkdata, PeakType, queryid);
+  //redraw_with_peakinfo(g_pkdata, PeakType, queryid);
   
   
 }

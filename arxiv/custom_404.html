@@ -36,14 +36,20 @@
 <script>
 	var demos = [
 		{
-			name: "(Demo 1: Spectral archive of 100 million spectra) http://spectroscape.cc", 
+			name: "(Demo 1: Spectral archive of 25 million spectra) http://spectroscape.cc", 
 			url: "http://spectroscape.cc"
 		}, 
 		
 		{ 
-			name: "(Demo 2: Spectral archive of 25 million spectra) http://omics.ust.hk:8709", 
+			name: "(Demo 2: Spectral archive of 100 million spectra) http://omics.ust.hk:8709", 
 			url: "http://omics.ust.hk:8709" 
-		}]; 
+		}, 
+		
+		{	
+			 name: "(Demo 3: Spectral archive of 24 data files) http://spectroscape.cc:8709",
+                        url: "http://spectroscape.cc:8709"
+		}
+		]; 
 		var demosDiv = document.getElementById("demos"); 
 		for (var i = 0; i < demos.length; i++) {
 			var demo = demos[i]; 

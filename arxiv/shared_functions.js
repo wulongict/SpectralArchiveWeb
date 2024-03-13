@@ -54,6 +54,8 @@ function getAAMass()
   // oxygen is not 15.959..., it is 15.9949... Da
   const proton_mass=1.007276466621; // Da
   const plus57=57.021464; // Da
+  const tmt6_mass=229.162932; // Da
+
   aamass['proton']=1.007276466621; // Da;
   aamass['nterm']=0;
   aamass['C[160]']=aamass['C'] + plus57; // Da
@@ -65,6 +67,8 @@ function getAAMass()
   // aamass['n[43]']=41.992724 ; // Da
   aamass['n[43]'] = 42.010565;
   aamass['n[58]']=plus57 ; // Da
+  aamass['n[230]']=tmt6_mass;
+  aamass['K[357]']=aamass['K'] + tmt6_mass;
 
   // add several new modifications from uermod
     //   n|+128.094963|Lys
